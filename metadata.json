@@ -1,0 +1,17 @@
+{
+  "name": "puppetlabs-f5",
+  "version": "1.0.0",
+  "author": "puppetlabs",
+  "summary": "Manages F5 loadbalancers.",
+  "license": "Apache 2.0",
+  "source": "https://github.com/puppetlabs/puppetlabs-f5",
+  "project_page": "https://github.com/puppetlabs/puppetlabs-f5",
+  "issues_url": "https://github.com/puppetlabs/puppetlabs-f5/issues",
+  "dependencies": [
+    {
+      "name": "puppetlabs-stdlib",
+      "version_range": ">= 1.0.0"
+    }
+  ]
+}
+
