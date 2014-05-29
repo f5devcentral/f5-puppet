@@ -11,8 +11,11 @@ class Puppet::Provider::F5 < Puppet::Provider
 
   def self.call(url)
     result = connection.get(url)
+    output = JSON.parse(result.body)
     # Return only the items for now.
-    JSON.parse(result.body)["items"]
+    output["items"]
+  rescue JSON::ParserError
+    return nil
   end
 
 end
