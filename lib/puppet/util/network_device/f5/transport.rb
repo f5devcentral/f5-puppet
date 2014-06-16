@@ -19,7 +19,23 @@ class Puppet::Util::NetworkDevice::F5::Transport
 
   def post(url, json)
     if valid_json?(json)
-      connection.post(url, json)
+      connection.post do |req|
+        req.url url
+        req.headers['Content-Type'] = 'application/json'
+        req.body = json
+      end
+    else
+      fail('Invalid JSON detected.')
+    end
+  end
+
+  def put(url, json)
+    if valid_json?(json)
+      connection.put do |req|
+        req.url url
+        req.headers['Content-Type'] = 'application/json'
+        req.body = json
+      end
     else
       fail('Invalid JSON detected.')
     end

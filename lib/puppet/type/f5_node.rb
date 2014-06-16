@@ -22,9 +22,9 @@ Puppet::Type.newtype(:f5_node) do
     newvalues(:disabled, :enabled, :true, :false)
   end
 
-  newproperty(:monitors, :array_matching => :all) do
+  newproperty(:monitor, :array_matching => :all) do
     options = '<["/Partition/Objects"]|default|none>'
-    desc "The health monitors for the node object.
+    desc "The health monitor(s) for the node object.
     Valid options: #{options}"
 
     validate do |value|
@@ -52,10 +52,10 @@ Puppet::Type.newtype(:f5_node) do
   newproperty(:connection_rate_limit, :parent => Puppet::Property::F5ConnectionRateLimit)
 
   validate do
-    if self[:monitors].is_a?(Array) && ! self[:availability]
+    if self[:monitor].is_a?(Array) && ! self[:availability]
       raise ArgumentError 'ERROR:  Availability must be set when monitors are assigned.'
-    elsif self[:monitors].is_a?(String) && self[:availability]
-      raise ArgumentError 'ERROR:  Availability cannot be set when no monitors are assigned.'
+    elsif self[:monitor].is_a?(String) && self[:availability]
+      raise ArgumentError 'ERROR:  Availability cannot be set when no monitor is assigned.'
     end
   end
 

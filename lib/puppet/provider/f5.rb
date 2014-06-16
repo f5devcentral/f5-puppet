@@ -19,11 +19,21 @@ class Puppet::Provider::F5 < Puppet::Provider
     transport.post(url, message)
   end
 
+  def self.put(url, message)
+    transport.put(url, message)
+  end
+
   def self.find_availability(string)
     transport.find_availability(string)
   end
 
   def self.find_objects(string)
     transport.find_objects(string)
+  end
+
+  def self.integer?(str)
+    !!Integer(str)
+  rescue ArgumentError, TypeError
+    false
   end
 end

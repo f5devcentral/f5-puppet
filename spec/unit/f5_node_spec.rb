@@ -10,7 +10,7 @@ describe Puppet::Type.type(:f5_node).provider(:rest) do
       :state                 => 'up',
       :description           => 'test node',
       :logging               => 'disabled',
-      :monitors              => ['/Common/gateway_icmp', '/Common/icmp'],
+      :monitor               => ['/Common/gateway_icmp', '/Common/icmp'],
       :availability          => '1',
       :ratio                 => '1',
       :connection_limit      => '2',
