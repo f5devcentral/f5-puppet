@@ -17,9 +17,9 @@ Puppet::Type.newtype(:f5_node) do
 
   newproperty(:logging) do
     desc 'The logging state of the node object.
-    Valid options:  <true|false'
+    Valid options:  <disabled|enabled|true|false>'
 
-    newvalues(:true, :false)
+    newvalues(:disabled, :enabled, :true, :false)
   end
 
   newproperty(:monitors, :array_matching => :all) do

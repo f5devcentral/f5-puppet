@@ -1,40 +1,29 @@
 require 'puppet/util/network_device/f5'
+require 'puppet/util/network_device/f5/transport'
 require 'json'
 
 class Puppet::Provider::F5 < Puppet::Provider
-
+  def self.transport
+    @transport ||= Puppet::Util::NetworkDevice::F5::Transport.new(Facter.value(:url))
+  end
 
   def self.connection
-    @connection ||= Puppet::Util::NetworkDevice::F5::Connection.new(Facter.value(:url))
-    @connection.connection
+    transport.connection
   end
 
   def self.call(url)
-    result = connection.get("#{url}/?expandSubcollections=true")
-    output = JSON.parse(result.body)
-    # Return only the items for now.
-    output["items"]
-  rescue JSON::ParserError
-    return nil
+    transport.call(url)
   end
 
-  # Given a string containing objects matching /Partition/Object, return an
-  # array of all found objects.
-  def self.find_objects(string)
-    string.scan(/(\/\S+)/).flatten
+  def self.post(url, message)
+    transport.post(url, message)
   end
 
-  # Monitoring:  Parse out the availability integer.
   def self.find_availability(string)
-    value = 'all'
-
-    # Look for integers within the string.
-    matches = string.match(/min\s(\d+)/)
-    if matches
-      value = matches[1]
-    end
-
-    return value
+    transport.find_availability(string)
   end
 
+  def self.find_objects(string)
+    transport.find_objects(string)
+  end
 end
