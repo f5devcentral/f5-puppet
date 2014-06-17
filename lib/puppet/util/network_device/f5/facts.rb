@@ -3,8 +3,6 @@ class Puppet::Util::NetworkDevice::F5::Facts
   attr_reader :transport
 
   def initialize(transport)
-    #require 'pry'
-    #binding.pry
     @transport = transport
     @facts = {}
   end

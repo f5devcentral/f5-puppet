@@ -75,7 +75,6 @@ Puppet::Type.type(:f5_node).provide(:rest, parent: Puppet::Provider::F5) do
 
     # We don't want to pass an ensure into the final message.
     message.reject! { |k, _| k == :ensure }
-    require 'pry';binding.pry
     Puppet::Provider::F5.put("/mgmt/tm/ltm/node/#{name}", message.to_json)
   end
 

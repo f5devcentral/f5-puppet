@@ -38,7 +38,8 @@ describe Puppet::Type.type(:f5_node).provider(:rest) do
       result = nil
       VCR.use_cassette('f5_node/flush') do
         provider.class.prefetch({ '/Common/test' => resource})
-        result = resource.flush
+        provider.state= 'user-down'
+        result = provider.flush
       end
       expect(result.status).to eq(200)
     end
