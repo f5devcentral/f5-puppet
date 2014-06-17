@@ -5,7 +5,7 @@ describe Puppet::Type.type(:f5_node).provider(:rest) do
     Puppet::Type.type(:f5_node).new(
       name:                   '/Common/test',
       ensure:                 :present,
-      state:                  'up',
+      state:                  'user-down',
       description:            'test node',
       logging:                'disabled',
       monitor:                ['/Common/gateway_icmp', '/Common/icmp'],
@@ -37,8 +37,8 @@ describe Puppet::Type.type(:f5_node).provider(:rest) do
     it 'gets a response from the api' do
       result = nil
       VCR.use_cassette('f5_node/flush') do
-        provider.class.prefetch({})
-        result = provider.flush
+        provider.class.prefetch({ '/Common/test' => resource})
+        result = resource.flush
       end
       expect(result.status).to eq(200)
     end

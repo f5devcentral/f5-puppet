@@ -53,7 +53,7 @@ Puppet::Type.type(:f5_node).provide(:rest, parent: Puppet::Provider::F5) do
 
     # We need to rename some properties back to the API.
     map.each do |k, v|
-      next unless @property_hash.key(k)
+      next unless @property_hash[k]
       value = @property_hash[k]
       @property_hash.delete(k)
       @property_hash[v] = value
@@ -73,6 +73,8 @@ Puppet::Type.type(:f5_node).provide(:rest, parent: Puppet::Provider::F5) do
       message[:monitor] = "min #{@property_hash[:availability]} of #{@property_hash[:monitor].join(' ')}"
     end
 
+    # We don't want to pass an ensure into the final message.
+    message.reject! { |k, _| k == :ensure }
     require 'pry';binding.pry
     Puppet::Provider::F5.put("/mgmt/tm/ltm/node/#{name}", message.to_json)
   end
