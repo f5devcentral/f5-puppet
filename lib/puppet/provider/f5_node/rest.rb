@@ -8,16 +8,16 @@ Puppet::Type.type(:f5_node).provide(:rest, parent: Puppet::Provider::F5) do
     nodes = Puppet::Provider::F5.call('/mgmt/tm/ltm/node')
     nodes.each do |node|
       instances << new(
-        ensure:                 :present,
-        name:                   node['fullPath'],
-        availability:           find_availability(node['monitor']),
-        connection_limit:       node['connectionLimit'].to_s,
-        connection_rate_limit:  node['rateLimit'],
-        description:            node['description'],
-        logging:                node['logging'],
+        ensure:                :present,
+        name:                  node['fullPath'],
+        availability:          find_availability(node['monitor']),
+        connection_limit:      node['connectionLimit'].to_s,
+        connection_rate_limit: node['rateLimit'],
+        description:           node['description'],
+        logging:               node['logging'],
         monitor:               find_objects(node['monitor']),
-        ratio:                  node['ratio'].to_s,
-        state:                  node['state']
+        ratio:                 node['ratio'].to_s,
+        state:                 node['state']
       )
     end
 
@@ -53,6 +53,7 @@ Puppet::Type.type(:f5_node).provide(:rest, parent: Puppet::Provider::F5) do
 
     # We need to rename some properties back to the API.
     map.each do |k, v|
+      next unless @property_hash.key(k)
       value = @property_hash[k]
       @property_hash.delete(k)
       @property_hash[v] = value
@@ -72,11 +73,12 @@ Puppet::Type.type(:f5_node).provide(:rest, parent: Puppet::Provider::F5) do
       message[:monitor] = "min #{@property_hash[:availability]} of #{@property_hash[:monitor].join(' ')}"
     end
 
+    require 'pry';binding.pry
     Puppet::Provider::F5.put("/mgmt/tm/ltm/node/#{name}", message.to_json)
   end
 
   def exists?
-    true
+    @property_hash[:ensure] == :present
   end
 
   mk_resource_methods
