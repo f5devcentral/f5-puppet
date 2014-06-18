@@ -29,7 +29,7 @@ Puppet::Type.newtype(:f5_node) do
 
     validate do |value|
       unless value =~ /^(default|none|\/\S+)$/
-        raise ArgumentError, "Valid options: #{options}"
+        fail ArgumentError, "Valid options: #{options}"
       end
     end
   end
@@ -42,7 +42,7 @@ Puppet::Type.newtype(:f5_node) do
 
     validate do |value|
       unless value =~ /^(all|\d+)$/
-        raise ArgumentError, "Valid options: #{options}"
+        fail ArgumentError, "Valid options: #{options}"
       end
     end
   end
@@ -53,9 +53,9 @@ Puppet::Type.newtype(:f5_node) do
 
   validate do
     if self[:monitor].is_a?(Array) && ! self[:availability]
-      raise ArgumentError 'ERROR:  Availability must be set when monitors are assigned.'
-    elsif self[:monitor].is_a?(String) && self[:availability]
-      raise ArgumentError 'ERROR:  Availability cannot be set when no monitor is assigned.'
+      fail ArgumentError, 'ERROR:  Availability must be set when monitors are assigned.'
+    elsif ! self[:monitor] && self[:availability]
+      fail ArgumentError, 'ERROR:  Availability cannot be set when no monitor is assigned.'
     end
   end
 

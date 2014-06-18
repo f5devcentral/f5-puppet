@@ -20,18 +20,6 @@ describe Puppet::Type.type(:f5_node) do
     end
   end
 
-  describe 'description' do
-    it 'should allow description to be set' do
-      description = 'Test Description String Here'
-      @node[:description] = description
-      expect(@node[:description]).to eq(description)
-    end
-
-    it 'should fail when description is not a string' do
-      expect { @node[:description] = {} }.to raise_error(/must be a String/)
-    end
-  end
-
   describe 'logging' do
     %w(disabled enabled true false).each do |logging|
       it "should allow logging to be set to #{logging}" do
@@ -77,4 +65,19 @@ describe Puppet::Type.type(:f5_node) do
     end
   end
 
+  describe 'global validation' do
+    it 'should fail if monitor is an array and no availability set' do
+      expect { Puppet::Type.type(:f5_node).new(
+          :name    => '/Common/testing',
+          :monitor => ['/Common/monitor'])
+      }.to raise_error(/Availability must be set when monitors are assigned./)
+    end
+
+    it 'should fail if monitor is a string and availability set' do
+      expect { Puppet::Type.type(:f5_node).new(
+          :name         => '/Common/testing',
+          :availability => '2',)
+      }.to raise_error(/Availability cannot be set when no monitor is assigned./)
+    end
+  end
 end
