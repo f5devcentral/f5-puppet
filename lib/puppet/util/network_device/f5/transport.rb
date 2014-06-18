@@ -41,6 +41,18 @@ class Puppet::Util::NetworkDevice::F5::Transport
     end
   end
 
+  def delete(url, json)
+    if valid_json?(json)
+      connection.delete do |req|
+        req.url url
+        req.headers['Content-Type'] = 'application/json'
+        req.body = json
+      end
+    else
+      fail('Invalid JSON detected.')
+    end
+  end
+
   def valid_json?(json)
     JSON.parse(json)
     return true

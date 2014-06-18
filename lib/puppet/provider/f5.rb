@@ -23,6 +23,10 @@ class Puppet::Provider::F5 < Puppet::Provider
     transport.put(url, message)
   end
 
+  def self.delete(url, message)
+    transport.delete(url, message)
+  end
+
   def self.find_availability(string)
     transport.find_availability(string)
   end

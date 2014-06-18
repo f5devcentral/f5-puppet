@@ -33,21 +33,23 @@ Puppet::Type.type(:f5_node).provide(:rest, parent: Puppet::Provider::F5) do
     end
   end
 
-  def flush
-    return false unless @property_hash
+  def basename
+    File.basename(resource[:name])
+  end
 
+  def partition
+    File.dirname(resource[:name])
+  end
+
+  def message
     # Map for conversion in the message.
     map = {
       connection_limit: :connectionLimit,
       connection_rate_limit: :rateLimit
     }
 
-    # We need to seperate out the full name into components.
-    name      = File.basename(resource[:name])
-    partition = File.dirname(resource[:name])
-
     message = {
-      name: name,
+      name: basename,
       partition: partition
     }
 
@@ -75,11 +77,26 @@ Puppet::Type.type(:f5_node).provide(:rest, parent: Puppet::Provider::F5) do
 
     # We don't want to pass an ensure into the final message.
     message.reject! { |k, _| k == :ensure }
-    Puppet::Provider::F5.put("/mgmt/tm/ltm/node/#{name}", message.to_json)
+    message.to_json
+  end
+
+  def flush
+    return false unless @property_hash
+    Puppet::Provider::F5.put("/mgmt/tm/ltm/node/#{basename}", message)
   end
 
   def exists?
     @property_hash[:ensure] == :present
+  end
+
+  def create
+    require 'pry'
+    binding.pry
+    Puppet::Provider::F5.post("/mgmt/tm/ltm/node/#{basename}", message)
+  end
+
+  def destroy
+    Puppet::Provider::F5.delete("/mgmt/tm/ltm/node/#{basename}")
   end
 
   mk_resource_methods
