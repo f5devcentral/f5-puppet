@@ -3,8 +3,6 @@ require 'spec_helper'
 describe Puppet::Type.type(:f5_node) do
 
   before :each do
-    #allow(Facter).to receive(:value).with(:url).and_return('https://admin:admin@bigip')
-    #allow(Facter).to receive(:value).with(:feature)
     @node = Puppet::Type.type(:f5_node).new(:name => '/Common/testing')
   end
 
@@ -19,21 +17,6 @@ describe Puppet::Type.type(:f5_node) do
 
     it 'should require a name' do
       expect{ Puppet::Type.type(:f5_node).new(:state => 'up') }.to raise_error(/Title or name must be provided/)
-    end
-  end
-
-  describe 'state' do
-    %w(up, enabled, user-down).each do |state|
-      it "should allow state to be set to #{state}" do
-        @node[:state] = state
-        expect(@node[:state]).to eq(state)
-      end
-    end
-
-    %w(down, disabled, offline).each do |state|
-      it "should fail when state is set to #{state}" do
-        expect { @node[:state] = state }.to raise_error(/must be: up|enabled|user-down/)
-      end
     end
   end
 
@@ -60,6 +43,36 @@ describe Puppet::Type.type(:f5_node) do
     %w(yes please magic present superenabled).each do |logging|
       it "should fail when logging is set to #{logging}" do
         expect { @node[:logging] = logging }.to raise_error()
+      end
+    end
+  end
+
+  describe 'monitor' do
+    %w(default none /Common/value).each do |monitor|
+      it "should allow monitor to be set to #{monitor}" do
+        @node[:monitor] = monitor
+        expect(@node[:monitor]).to eq([monitor])
+      end
+    end
+
+    %w(yes please magic present superenabled).each do |monitor|
+      it "should fail when monitor is set to #{monitor}" do
+        expect { @node[:monitor] = monitor }.to raise_error()
+      end
+    end
+  end
+
+  describe 'availability' do
+    %w(all 1 20 300 400 5000).each do |availability|
+      it "should allow availability to be set to #{availability}" do
+        @node[:availability] = availability
+        expect(@node[:availability]).to eq(availability)
+      end
+    end
+
+    %w(yes please magic present superenabled).each do |availability|
+      it "should fail when availability is set to #{availability}" do
+        expect { @node[:availability] = availability }.to raise_error()
       end
     end
   end
