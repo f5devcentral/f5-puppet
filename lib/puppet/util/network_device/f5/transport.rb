@@ -17,13 +17,20 @@ class Puppet::Util::NetworkDevice::F5::Transport
     return nil
   end
 
+  def failure?(result)
+    unless result.status == 200
+      fail("REST failure: HTTP status code #{result.status} detected.  Body of failure is: #{result.body}")
+    end
+  end
+
   def post(url, json)
     if valid_json?(json)
-      connection.post do |req|
+      result = connection.post do |req|
         req.url url
         req.headers['Content-Type'] = 'application/json'
         req.body = json
       end
+      failure?(result)
     else
       fail('Invalid JSON detected.')
     end
@@ -31,26 +38,20 @@ class Puppet::Util::NetworkDevice::F5::Transport
 
   def put(url, json)
     if valid_json?(json)
-      connection.put do |req|
+      result = connection.put do |req|
         req.url url
         req.headers['Content-Type'] = 'application/json'
         req.body = json
       end
+      failure?(result)
     else
       fail('Invalid JSON detected.')
     end
   end
 
-  def delete(url, json)
-    if valid_json?(json)
-      connection.delete do |req|
-        req.url url
-        req.headers['Content-Type'] = 'application/json'
-        req.body = json
-      end
-    else
-      fail('Invalid JSON detected.')
-    end
+  def delete(url)
+    result = connection.delete(url)
+    failure?(result)
   end
 
   def valid_json?(json)

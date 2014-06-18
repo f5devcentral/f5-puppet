@@ -10,6 +10,7 @@ Puppet::Type.type(:f5_node).provide(:rest, parent: Puppet::Provider::F5) do
       instances << new(
         ensure:                :present,
         name:                  node['fullPath'],
+        address:               node['address'],
         availability:          find_availability(node['monitor']),
         connection_limit:      node['connectionLimit'].to_s,
         connection_rate_limit: node['rateLimit'],
@@ -41,48 +42,46 @@ Puppet::Type.type(:f5_node).provide(:rest, parent: Puppet::Provider::F5) do
     File.dirname(resource[:name])
   end
 
-  def message
+  def message(object)
+    # Allows us to pass in resources and get all the attributes out
+    # in the form of a hash.
+    hash = object.to_hash
+
     # Map for conversion in the message.
     map = {
       connection_limit: :connectionLimit,
       connection_rate_limit: :rateLimit
     }
 
-    message = {
-      name: basename,
-      partition: partition
-    }
+    # Create the message by stripping :present.
+    message             = hash.reject { |k, _| [:ensure, :loglevel, :provider].include?(k) }
+    message[:name]      = basename
+    message[:partition] = partition
 
     # We need to rename some properties back to the API.
     map.each do |k, v|
-      next unless @property_hash[k]
-      value = @property_hash[k]
-      @property_hash.delete(k)
-      @property_hash[v] = value
+      next unless hash[k]
+      value = hash[k]
+      message.delete(k)
+      message[v] = value
     end
 
     # Apply transformations
-    @property_hash.each do |k, v|
-      @property_hash[k] = Integer(v) if Puppet::Provider::F5.integer?(v)
+    message.each do |k, v|
+      message[k] = Integer(v) if Puppet::Provider::F5.integer?(v)
     end
 
-    # Exclude monitor as this has a unique syntax.
-    message.merge!(@property_hash)
-
-    # Handle monitor specially.
-    if @property_hash[:monitor].is_a?(Array)
+    # If monitor is an array then we need to rebuild the message.
+    if message[:monitor].is_a?(Array)
       message.reject! { |k, _| [:monitor, :availability].include?(k) }
-      message[:monitor] = "min #{@property_hash[:availability]} of #{@property_hash[:monitor].join(' ')}"
+      message[:monitor] = "min #{hash[:availability]} of #{hash[:monitor].join(' ')}"
     end
 
-    # We don't want to pass an ensure into the final message.
-    message.reject! { |k, _| k == :ensure }
     message.to_json
   end
 
   def flush
-    return false unless @property_hash
-    Puppet::Provider::F5.put("/mgmt/tm/ltm/node/#{basename}", message)
+    Puppet::Provider::F5.put("/mgmt/tm/ltm/node/#{basename}", message(@property_hash)) if @property_hash != {}
   end
 
   def exists?
@@ -90,13 +89,14 @@ Puppet::Type.type(:f5_node).provide(:rest, parent: Puppet::Provider::F5) do
   end
 
   def create
-    require 'pry'
-    binding.pry
-    Puppet::Provider::F5.post("/mgmt/tm/ltm/node/#{basename}", message)
+    Puppet::Provider::F5.post("/mgmt/tm/ltm/node", message(resource))
+    # We clear the hash here to stop flush from triggering.
+    @property_hash.clear
   end
 
   def destroy
     Puppet::Provider::F5.delete("/mgmt/tm/ltm/node/#{basename}")
+    @property_hash.clear
   end
 
   mk_resource_methods

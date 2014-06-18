@@ -1,9 +1,10 @@
 require 'puppet/parameter/name'
-require 'puppet/property/state'
-require 'puppet/property/description'
-require 'puppet/property/ratio'
+require 'puppet/property/address'
 require 'puppet/property/connection_limit'
 require 'puppet/property/connection_rate_limit'
+require 'puppet/property/description'
+require 'puppet/property/ratio'
+require 'puppet/property/state'
 
 Puppet::Type.newtype(:f5_node) do
   @doc = 'Manage node objects'
@@ -12,6 +13,7 @@ Puppet::Type.newtype(:f5_node) do
   ensurable
 
   newparam(:name, :parent => Puppet::Parameter::F5Name, :namevar => true)
+  newproperty(:address, :parent => Puppet::Property::F5Address)
   newproperty(:state, :parent => Puppet::Property::F5State)
   newproperty(:description, :parent => Puppet::Property::F5Description)
 
