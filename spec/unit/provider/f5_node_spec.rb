@@ -16,7 +16,6 @@ describe Puppet::Type.type(:f5_node).provider(:rest) do
       provider:               described_class.name)
   end
   let(:provider) { resource.provider }
-  #let(:instance) { provider.class.instances.first }
 
   before :each do
     allow(Facter).to receive(:value).with(:url).and_return('https://admin:admin@bigip')
@@ -44,6 +43,5 @@ describe Puppet::Type.type(:f5_node).provider(:rest) do
       expect(result.status).to eq(200)
     end
   end
-
 
 end

@@ -31,6 +31,7 @@ class Puppet::Util::NetworkDevice::F5::Transport
         req.body = json
       end
       failure?(result)
+      return result
     else
       fail('Invalid JSON detected.')
     end
@@ -44,6 +45,7 @@ class Puppet::Util::NetworkDevice::F5::Transport
         req.body = json
       end
       failure?(result)
+      return result
     else
       fail('Invalid JSON detected.')
     end
@@ -52,6 +54,7 @@ class Puppet::Util::NetworkDevice::F5::Transport
   def delete(url)
     result = connection.delete(url)
     failure?(result)
+    return result
   end
 
   def valid_json?(json)

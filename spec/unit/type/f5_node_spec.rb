@@ -66,6 +66,14 @@ describe Puppet::Type.type(:f5_node) do
   end
 
   describe 'global validation' do
+    it 'should fail if availability count > monitors' do
+      expect { Puppet::Type.type(:f5_node).new(
+          :name         => '/Common/testing',
+          :monitor      => ['/Common/monitor'],
+          :availability => '2')
+      }.to raise_error(/Availability count cannot be more than the total number of monitors./)
+    end
+
     it 'should fail if monitor is an array and no availability set' do
       expect { Puppet::Type.type(:f5_node).new(
           :name    => '/Common/testing',

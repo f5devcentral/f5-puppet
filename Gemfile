@@ -11,7 +11,7 @@ group :test, :development do
   gem 'beaker',                  :require => false
   gem 'beaker-rspec',            :require => false
   gem 'faraday', '0.8.9',        :require => false
-  gem 'vcr',                     :require => false
+  gem 'vcr',                    :require => false
 end
 
 if puppetversion = ENV['PUPPET_VERSION']
