@@ -6,20 +6,6 @@ describe Puppet::Type.type(:f5_node) do
     @node = Puppet::Type.type(:f5_node).new(:name => '/Common/testing')
   end
 
-  describe 'name' do
-    it 'should return name' do
-      expect(@node[:name]).to eq('/Common/testing')
-    end
-
-    it 'should fail if name isnt a string' do
-      expect{ Puppet::Type.type(:f5_node).new(:name => {}) }.to raise_error(/name must be a String/)
-    end
-
-    it 'should require a name' do
-      expect{ Puppet::Type.type(:f5_node).new(:state => 'up') }.to raise_error(/Title or name must be provided/)
-    end
-  end
-
   describe 'logging' do
     %w(disabled enabled true false).each do |logging|
       it "should allow logging to be set to #{logging}" do

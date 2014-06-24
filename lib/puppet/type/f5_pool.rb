@@ -1,5 +1,7 @@
 require 'puppet/parameter/name'
+require 'puppet/property/availability'
 require 'puppet/property/description'
+require 'puppet/property/monitor'
 
 Puppet::Type.newtype(:f5_pool) do
   @doc = 'Manage pool objects'
@@ -9,18 +11,8 @@ Puppet::Type.newtype(:f5_pool) do
 
   newparam(:name, :parent => Puppet::Parameter::F5Name, :namevar => true)
   newproperty(:description, :parent => Puppet::Property::F5Description)
-
-  newproperty(:availability) do
-    options = '<all|Integer>'
-    desc "The number of nodes that must be available for the pool to be up.
-    Valid options: #{options}"
-
-    validate do |value|
-      unless value =~ /^(all|\d+)$/
-        fail ArgumentError, "Valid options: #{options}"
-      end
-    end
-  end
+  newproperty(:availability, :parent => Puppet::Property::F5Availability)
+  newproperty(:monitor, :array_matching => :all, :parent => Puppet::Property::F5Monitor)
 
   newproperty(:allow_snat) do
     desc "Allow SNAT?
@@ -54,32 +46,42 @@ Puppet::Type.newtype(:f5_pool) do
   end
 
   newproperty(:ip_tos_to_client) do
-    options = '<pass|mimic|Integer>'
+    options = '<pass-through|mimic|Integer>'
     desc "The IP TOS to the client.
     Valid options: #{options}"
 
     validate do |value|
-      fail ArgumentError, "Valid options: #{options}" unless value =~ /^(pass|mimic|\d+)$/
+      fail ArgumentError, "Valid options: #{options}" unless value =~ /^(pass-through|mimic|\d+)$/
     end
   end
 
   newproperty(:ip_tos_to_server) do
-    options = '<pass|mimic|Integer>'
+    options = '<pass-through|mimic|Integer>'
     desc "The IP TOS to the server.
     Valid options: #{options}"
 
     validate do |value|
-      fail ArgumentError, "Valid options: #{options}" unless value =~ /^(pass|mimic|\d+)$/
+      fail ArgumentError, "Valid options: #{options}" unless value =~ /^(pass-through|mimic|\d+)$/
     end
   end
 
   newproperty(:link_qos_to_client) do
-    options = '<pass|Integer>'
+    options = '<pass-through|Integer>'
     desc "The Link TOS to the client.
     Valid options: #{options}"
 
     validate do |value|
-      fail ArgumentError, "Valid options: #{options}" unless value =~ /^(pass|\d+)$/
+      fail ArgumentError, "Valid options: #{options}" unless value =~ /^(pass-through|\d+)$/
+    end
+  end
+
+  newproperty(:link_qos_to_server) do
+    options = '<pass-through|Integer>'
+    desc "The Link TOS to the server.
+    Valid options: #{options}"
+
+    validate do |value|
+      fail ArgumentError, "Valid options: #{options}" unless value =~ /^(pass-through|\d+)$/
     end
   end
 
@@ -122,20 +124,25 @@ Puppet::Type.newtype(:f5_pool) do
 
   newproperty(:ip_encapsulation) do
     encapsulations = %w(gre nvgre dslite ip4ip4 ip4ip6 ip6ip4 ip6ip6 ipip)
+    encaps_with_partition = encapsulations.map { |e| "/Partition/#{e} ," }
     desc "The request queue timeout.
-    Valid options: <#{encapsulations.join('|')}>"
+    Valid options: <[#{encaps_with_partition}]>"
 
     validate do |value|
-      fail ArgumentError, "Valid options: #{encapsulations.join('|')}" unless encapsulations.include?(value)
+      # We need to check that the value conforms to /Partition/Name, as well
+      # as ensuring the Name part is from the above list of encapsulations.
+      unless encapsulations.include?(File.basename(value)) && value =~ /^\/\w+\/\w+$/
+        fail ArgumentError, "Valid options: <[#{encaps_with_partition}]>"
+      end
     end
   end
 
   newproperty(:load_balancing_method) do
-    methods = %w(round_robin ratio_member least_connections_member
-    observed_member predictive_member ratio_node least_connection_node
-    fastest_node observed_node predictive_node dynamic_ratio_member
-    weighted_least_connection_member weighted_least_connection_node
-    ratio_session ratio_least_connections_member ratio_least_connection_node)
+    methods = %w(round-robin ratio-member least-connections-member
+    observed-member predictive-member ratio-node least-connection-node
+    fastest-node observed-node predictive-node dynamic-ratio-member
+    weighted-least-connection-member weighted-least-connection-node
+    ratio-session ratio-least-connections-member ratio-least-connection-node)
 
     desc "The request queue timeout.
     Valid options: <#{methods.join('|')}>"
@@ -151,4 +158,32 @@ Puppet::Type.newtype(:f5_pool) do
 
     newvalues(:true, :false)
   end
+
+  newproperty(:priority_group_activation) do
+    options = '<disabled|Integer>'
+    desc "The priority group activation (number of nodes) for the pool.
+    Valid options: #{options}"
+
+    validate do |value|
+      fail ArgumentError, "Valid options: #{options}" unless value =~ /^(disabled|\d+)$/
+    end
+  end
+
+  validate do
+    if ! self[:monitor] && self[:availability]
+      fail ArgumentError, 'ERROR:  Availability cannot be set when no monitor is assigned.'
+    end
+
+    # You can't have a minimum of more than the total number of monitors.
+    if self[:availability] =~ /\d+/
+      if Array(self[:monitor]).count < self[:availability].to_i
+        fail ArgumentError, 'ERROR:  Availability count cannot be more than the total number of monitors.'
+      end
+    end
+
+    if self[:monitor].is_a?(Array) && ! self[:availability]
+      fail ArgumentError, 'ERROR:  Availability must be set when monitors are assigned.'
+    end
+  end
+
 end

@@ -1,8 +1,10 @@
 require 'puppet/parameter/name'
 require 'puppet/property/address'
+require 'puppet/property/availability'
 require 'puppet/property/connection_limit'
 require 'puppet/property/connection_rate_limit'
 require 'puppet/property/description'
+require 'puppet/property/monitor'
 require 'puppet/property/ratio'
 require 'puppet/property/state'
 
@@ -24,31 +26,8 @@ Puppet::Type.newtype(:f5_node) do
     newvalues(:disabled, :enabled, :true, :false)
   end
 
-  newproperty(:monitor, :array_matching => :all) do
-    options = '<["/Partition/Objects"]|default|none>'
-    desc "The health monitor(s) for the node object.
-    Valid options: #{options}"
-
-    validate do |value|
-      unless value =~ /^(default|none|\/\S+)$/
-        fail ArgumentError, "Valid options: #{options}"
-      end
-    end
-  end
-
-  newproperty(:availability) do
-    options = '<all|Integer>'
-    desc "The availability requirement (number of health monitors) that must
-    be available.
-    Valid options: #{options}"
-
-    validate do |value|
-      unless value =~ /^(all|\d+)$/
-        fail ArgumentError, "Valid options: #{options}"
-      end
-    end
-  end
-
+  newproperty(:monitor, :array_matching => :all, :parent => Puppet::Property::F5Monitor)
+  newproperty(:availability, :parent => Puppet::Property::F5Availability)
   newproperty(:ratio, :parent => Puppet::Property::F5Ratio)
   newproperty(:connection_limit, :parent => Puppet::Property::F5ConnectionLimit)
   newproperty(:connection_rate_limit, :parent => Puppet::Property::F5ConnectionRateLimit)

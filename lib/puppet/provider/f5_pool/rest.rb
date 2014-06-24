@@ -6,10 +6,27 @@ Puppet::Type.type(:f5_pool).provide(:rest, parent: Puppet::Provider::F5) do
   def self.instances
     instances = []
     nodes = Puppet::Provider::F5.call('/mgmt/tm/ltm/pool')
+    return [] if nodes.nil?
+
     nodes.each do |node|
-      # Things just don't appear in the results if unset.
-      node['minActiveMembers'] == 'disabled' unless node['minActiveMembers']
+      # Map 0 nodes to disabled.
+      node['minActiveMembers'] = 'disabled' if node['minActiveMembers'] == 0
+
+      # We have to munge availability out of the monitor information.
       availability = find_availability(node['monitor']) if node['monitor']
+
+      # Instead of true/false the F5 returns yes/no
+      node.each { |_,v| v.gsub!(/^yes$/, 'true') if v.is_a?(String) }
+      node.each { |_,v| v.gsub!(/^no$/, 'false') if v.is_a?(String) }
+
+      # Select reject in the GUI, get reset from the REST api.  Who knows!
+      node['serviceDownAction'] = 'reject' if node['serviceDownAction'] == 'reset'
+
+      # We only accept true/false for some parameters.
+      node['queueOnConnectionLimit'] = :true  if node['queueOnConnectionLimit'] == 'enabled'
+      node['queueOnConnectionLimit'] = :false if node['queueOnConnectionLimit'] == 'disabled'
+      node['ignorePersistedWeight'] = :true  if node['ignorePersistedWeight'] == 'enabled'
+      node['ignorePersistedWeight'] = :false if node['ignorePersistedWeight'] == 'disabled'
 
       instances << new(
         ensure:                    :present,
@@ -60,29 +77,21 @@ Puppet::Type.type(:f5_pool).provide(:rest, parent: Puppet::Provider::F5) do
     # in the form of a hash.
     hash = object.to_hash
 
-    # Map for conversion in the message.
-    map = {
-      connection_limit: :connectionLimit,
-      connection_rate_limit: :rateLimit
-    }
-
     # Create the message by stripping :present.
-    message             = hash.reject { |k, _| [:ensure, :loglevel, :provider].include?(k) }
+    message             = hash.reject { |k, _| [:ensure, :provider].include?(k) }
     message[:name]      = basename
     message[:partition] = partition
-
-    # We need to rename some properties back to the API.
-    map.each do |k, v|
-      next unless hash[k]
-      value = hash[k]
-      message.delete(k)
-      message[v] = value
-    end
 
     # Apply transformations
     message.each do |k, v|
       message[k] = Integer(v) if Puppet::Provider::F5.integer?(v)
     end
+    message[:priority_group_activation] = 0 if hash[:priority_group_activation] == 'disabled'
+    message[:allow_nat] = 'yes' if hash[:allow_nat] == :true
+    message[:allow_nat] = 'no'  if hash[:allow_nat] == :false
+    message[:allow_snat] = 'yes' if hash[:allow_snat] == :true
+    message[:allow_snat] = 'no'  if hash[:allow_snat] == :false
+    message[:service_down] = 'reject' if hash[:service_down] == 'reject'
 
     # If monitor is an array then we need to rebuild the message.
     if message[:monitor].is_a?(Array)
@@ -95,9 +104,7 @@ Puppet::Type.type(:f5_pool).provide(:rest, parent: Puppet::Provider::F5) do
 
   def flush
     if @property_hash != {}
-      # You can only pass address to create, not modifications.
-      flush_message = @property_hash.reject { |k, _| k == :address }
-      result = Puppet::Provider::F5.put("/mgmt/tm/ltm/node/#{basename}", message(flush_message))
+      result = Puppet::Provider::F5.put("/mgmt/tm/ltm/pool/#{basename}", message(@property_hash))
     end
     return result
   end
@@ -107,13 +114,13 @@ Puppet::Type.type(:f5_pool).provide(:rest, parent: Puppet::Provider::F5) do
   end
 
   def create
-    Puppet::Provider::F5.post("/mgmt/tm/ltm/node", message(resource))
+    Puppet::Provider::F5.post("/mgmt/tm/ltm/pool", message(resource))
     # We clear the hash here to stop flush from triggering.
     @property_hash.clear
   end
 
   def destroy
-    Puppet::Provider::F5.delete("/mgmt/tm/ltm/node/#{basename}")
+    Puppet::Provider::F5.delete("/mgmt/tm/ltm/pool/#{basename}")
     @property_hash.clear
   end
 
