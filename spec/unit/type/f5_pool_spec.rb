@@ -16,7 +16,7 @@ describe Puppet::Type.type(:f5_pool) do
     'link_qos_to_server'        => { pass: %w(pass-through 0 1 2 3 4 5 6 7), fail: %w(-1 8 10 255 mimic true false enabled word 0.15) },
     'request_queue_depth'       => { pass: %w(1 20 300 400 5000), fail: %w(true false enabled word 0.15) },
     'request_queue_timeout'     => { pass: %w(1 20 300 400 5000), fail: %w(true false enabled word 0.15) },
-    'reselect_tries'            => { pass: %w(1 20 300 400 5000), fail: %w(true false enabled word 0.15) },
+    'reselect_tries'            => { pass: %w(0 1 20 300 400 5000 65535), fail: %w(-1 65536 true false enabled word 0.15) },
     'slow_ramp_time'            => { pass: %w(1 20 300 400 5000), fail: %w(true false enabled word 0.15) },
     'availability'              => { pass: %w(1 20 300 400 5000), fail: %w(true false enabled word 0.15) },
     'request_queuing'           => { pass: %w(true false), fail: %w(1 20 300 4000 enabled word 0.15)},
@@ -31,7 +31,7 @@ describe Puppet::Type.type(:f5_pool) do
         it "should allow #{test} to be set to #{item}" do
           @node[test.to_sym] = item
           # Special case the arrays we expect here.
-          if test =~ /^(ip_encapsulation|monitor)$/
+          if test == 'monitor'
             expect(@node[test.to_sym]).to eq(Array(item))
           else
             expect(@node[test.to_sym].to_sym).to eq(item.to_sym)

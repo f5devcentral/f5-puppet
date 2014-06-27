@@ -99,7 +99,7 @@ Puppet::Type.newtype(:f5_pool) do
     Valid options: #{options}"
 
     validate do |value|
-      fail ArgumentError, "Valid options: #{options}" unless value =~ /^\d+$/
+      fail ArgumentError, "Valid options: #{options}" unless value =~ /^\d+$/ && value.to_i.between?(0,65535)
     end
   end
 
@@ -130,11 +130,11 @@ Puppet::Type.newtype(:f5_pool) do
     end
   end
 
-  newproperty(:ip_encapsulation, :array_matching => :all) do
+  newproperty(:ip_encapsulation) do
     encapsulations = %w(gre nvgre dslite ip4ip4 ip4ip6 ip6ip4 ip6ip6 ipip)
-    encaps_with_partition = encapsulations.map { |e| "/Partition/#{e} ," }
+    encaps_with_partition = encapsulations.map { |e| "/Partition/#{e}|" }
     desc "The request queue timeout.
-    Valid options: <[#{encaps_with_partition}]>"
+    Valid options: <#{encaps_with_partition}]"
 
     validate do |value|
       # We need to check that the value conforms to /Partition/Name, as well

@@ -252,7 +252,6 @@ Valid options: <pass-through|0-7>
 
 ####reselect_tries
 
-[TODO: Maximums? when I set it high it just fails quietly.]
 The number of reselect tries to attempt.
 
 Valid options: <Integer>
