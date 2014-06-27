@@ -148,6 +148,8 @@ Puppet::Type.type(:f5_pool).provide(:rest, parent: Puppet::Provider::F5) do
     message.each do |k, v|
       message[k] = Integer(v) if Puppet::Provider::F5.integer?(v)
     end
+    # Despite only allowing a single entry, profiles must be an array.
+    message[:profiles] = Array(message[:profiles])
 
     # If monitor is an array then we need to rebuild the message.
     if message[:monitor].is_a?(Array)
