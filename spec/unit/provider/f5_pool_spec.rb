@@ -53,4 +53,24 @@ describe Puppet::Type.type(:f5_pool).provider(:rest) do
     end
   end
 
+  describe 'create' do
+    it 'gets a response from the api' do
+      result = nil
+      VCR.use_cassette('f5_pool/create') do
+        result = provider.create
+      end
+      expect(result.status).to eq(200)
+    end
+  end
+
+  describe 'destroy' do
+    it 'gets a response from the api' do
+      result = nil
+      VCR.use_cassette('f5_pool/destroy') do
+        result = provider.destroy
+      end
+      expect(result.status).to eq(200)
+    end
+  end
+
 end

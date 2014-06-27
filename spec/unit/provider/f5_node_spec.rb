@@ -4,6 +4,7 @@ describe Puppet::Type.type(:f5_node).provider(:rest) do
   let(:resource) do
     Puppet::Type.type(:f5_node).new(
       name:                   '/Common/test',
+      address:                '192.168.254.253',
       ensure:                 :present,
       state:                  'user-down',
       description:            'test node',
@@ -43,5 +44,26 @@ describe Puppet::Type.type(:f5_node).provider(:rest) do
       expect(result.status).to eq(200)
     end
   end
+
+  describe 'create' do
+    it 'gets a response from the api' do
+      result = nil
+      VCR.use_cassette('f5_node/create') do
+        result = provider.create
+      end
+      expect(result.status).to eq(200)
+    end
+  end
+
+  describe 'destroy' do
+    it 'gets a response from the api' do
+      result = nil
+      VCR.use_cassette('f5_node/destroy') do
+        result = provider.destroy
+      end
+      expect(result.status).to eq(200)
+    end
+  end
+
 
 end

@@ -176,14 +176,18 @@ Puppet::Type.type(:f5_pool).provide(:rest, parent: Puppet::Provider::F5) do
   end
 
   def create
-    Puppet::Provider::F5.post("/mgmt/tm/ltm/pool", message(resource))
+    result = Puppet::Provider::F5.post("/mgmt/tm/ltm/pool", message(resource))
     # We clear the hash here to stop flush from triggering.
     @property_hash.clear
+
+    return result
   end
 
   def destroy
-    Puppet::Provider::F5.delete("/mgmt/tm/ltm/pool/#{basename}")
+    result = Puppet::Provider::F5.delete("/mgmt/tm/ltm/pool/#{basename}")
     @property_hash.clear
+
+    return result
   end
 
   mk_resource_methods
