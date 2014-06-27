@@ -13,7 +13,10 @@ Puppet::Type.type(:f5_pool).provide(:rest, parent: Puppet::Provider::F5) do
       node['minActiveMembers'] = 'disabled' if node['minActiveMembers'] == 0
 
       # We have to munge availability out of the monitor information.
-      availability = find_availability(node['monitor']) if node['monitor']
+      if node['monitor']
+        availability = find_availability(node['monitor'])
+        monitor = find_objects(node['monitor'])
+      end
 
       # Instead of true/false the F5 returns yes/no
       node.each { |_,v| v.gsub!(/^yes$/, 'true') if v.is_a?(String) }
@@ -28,28 +31,34 @@ Puppet::Type.type(:f5_pool).provide(:rest, parent: Puppet::Provider::F5) do
       node['ignorePersistedWeight'] = :true  if node['ignorePersistedWeight'] == 'enabled'
       node['ignorePersistedWeight'] = :false if node['ignorePersistedWeight'] == 'disabled'
 
-      instances << new(
+      # We force everything to a string because we get Integers from the F5 and
+      # strings back from the type, meaning it churns properties for no reason.
+      create = {
         ensure:                    :present,
-        name:                      node['fullPath'],
-        availability:              availability,
-        description:               node['description'],
-        allow_snat:                node['allowSnat'],
-        allow_nat:                 node['allowNat'],
-        service_down:              node['serviceDownAction'],
-        slow_ramp_time:            node['slowRampTime'],
-        ip_tos_to_client:          node['ipTosToClient'],
-        ip_tos_to_server:          node['ipTosToServer'],
-        link_qos_to_client:        node['linkQosToClient'],
-        link_qos_to_server:        node['linkQosToServer'],
-        reselect_tries:            node['reselectTries'],
-        request_queuing:           node['queueOnConnectionLimit'],
-        request_queue_depth:       node['queueDepthLimit'],
-        request_queue_timeout:     node['queueTimeLimit'],
-        ip_encapsulation:          node['profiles'],
-        load_balancing_method:     node['loadBalancingMode'],
-        priority_group_activation: node['minActiveMembers'],
-        ignore_persisted_weight:   node['ignorePersistedWeight'],
-      )
+        name:                      node['fullPath'].to_s,
+        description:               node['description'].to_s,
+        allow_snat:                node['allowSnat'].to_s,
+        allow_nat:                 node['allowNat'].to_s,
+        service_down:              node['serviceDownAction'].to_s,
+        slow_ramp_time:            node['slowRampTime'].to_s,
+        ip_tos_to_client:          node['ipTosToClient'].to_s,
+        ip_tos_to_server:          node['ipTosToServer'].to_s,
+        link_qos_to_client:        node['linkQosToClient'].to_s,
+        link_qos_to_server:        node['linkQosToServer'].to_s,
+        reselect_tries:            node['reselectTries'].to_s,
+        request_queuing:           node['queueOnConnectionLimit'].to_s,
+        request_queue_depth:       node['queueDepthLimit'].to_s,
+        request_queue_timeout:     node['queueTimeLimit'].to_s,
+        ip_encapsulation:          node['profiles'], # An array!
+        load_balancing_method:     node['loadBalancingMode'].to_s,
+        priority_group_activation: node['minActiveMembers'].to_s,
+        ignore_persisted_weight:   node['ignorePersistedWeight'].to_s,
+      }
+      # Only create this entry if availability was found.
+      create[:availability] = availability if availability
+      create[:monitor] = monitor if monitor
+
+      instances << new(create)
     end
 
     instances
@@ -88,17 +97,34 @@ Puppet::Type.type(:f5_pool).provide(:rest, parent: Puppet::Provider::F5) do
     message[:name]      = basename
     message[:partition] = partition
 
+    # Do a bunch of renaming back to what the API expects.  This is awful.
+    # We have to wrap each of the tests that use .to_sym in a check if they
+    # even exist, otherwise we try to nil.to_sym.
     message[:'priority-group-activation'] = 0 if hash[:'priority-group-activation'] == 'disabled'
-    message[:'allow-nat']  = 'yes' if hash[:'allow-nat'] == :true
-    message[:'allow-nat']  = 'no'  if hash[:'allow-nat'] == :false
-    message[:'allow-snat'] = 'yes' if hash[:'allow-snat'] == :true
-    message[:'allow-snat'] = 'no'  if hash[:'allow-snat'] == :false
-    message[:'ignore-persisted-weight'] = 'enabled' if hash[:'ignore-persisted-weight'] == :true
-    message[:'ignore-persisted-weight'] = 'disabled' if hash[:'ignore-persisted-weight'] == :false
+
+    if hash[:'allow-nat']
+      message[:'allow-nat']  = 'yes' if hash[:'allow-nat'].to_sym == :true
+      message[:'allow-nat']  = 'no'  if hash[:'allow-nat'].to_sym == :false
+    end
+
+    if hash[:'allow-snat']
+      message[:'allow-snat'] = 'yes' if hash[:'allow-snat'].to_sym == :true
+      message[:'allow-snat'] = 'no'  if hash[:'allow-snat'].to_sym == :false
+    end
+
+    if hash[:'ignore-persisted-weight']
+      message[:'ignore-persisted-weight'] = 'enabled' if hash[:'ignore-persisted-weight'].to_sym == :true
+      message[:'ignore-persisted-weight'] = 'disabled' if hash[:'ignore-persisted-weight'].to_sym == :false
+    end
+
     # Set this in the hash so map picks it up.
-    hash[:'service-down'] = 'reset' if hash[:'service-down'] == :reject
-    hash[:'request-queuing'] = 'disabled' if hash[:'request-queuing'] == :false
-    hash[:'request-queuing'] = 'enabled' if hash[:'request-queuing'] == :true
+    if hash[:'service-down']
+      hash[:'service-down'] = 'reset' if hash[:'service-down'].to_sym == :reject
+    end
+    if hash[:'request-queuing']
+      hash[:'request-queuing'] = 'disabled' if hash[:'request-queuing'].to_sym == :false
+      hash[:'request-queuing'] = 'enabled' if hash[:'request-queuing'].to_sym == :true
+    end
 
     map = {
       :'service-down'              => :'service-down-action',
@@ -144,7 +170,6 @@ Puppet::Type.type(:f5_pool).provide(:rest, parent: Puppet::Provider::F5) do
   end
 
   def create
-    require 'pry';binding.pry
     Puppet::Provider::F5.post("/mgmt/tm/ltm/pool", message(resource))
     # We clear the hash here to stop flush from triggering.
     @property_hash.clear

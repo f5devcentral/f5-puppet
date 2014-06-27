@@ -46,42 +46,50 @@ Puppet::Type.newtype(:f5_pool) do
   end
 
   newproperty(:ip_tos_to_client) do
-    options = '<pass-through|mimic|Integer>'
+    options = '<pass-through|mimic|0-255>'
     desc "The IP TOS to the client.
     Valid options: #{options}"
 
     validate do |value|
-      fail ArgumentError, "Valid options: #{options}" unless value =~ /^(pass-through|mimic|\d+)$/
+      unless value =~ /^(pass-through|mimic)$/ || (value =~ /^\d+$/ && value.to_i.between?(0,255))
+        fail ArgumentError, "Valid options: #{options}"
+      end
     end
   end
 
   newproperty(:ip_tos_to_server) do
-    options = '<pass-through|mimic|Integer>'
+    options = '<pass-through|mimic|0-255>'
     desc "The IP TOS to the server.
     Valid options: #{options}"
 
     validate do |value|
-      fail ArgumentError, "Valid options: #{options}" unless value =~ /^(pass-through|mimic|\d+)$/
+      unless value =~ /^(pass-through|mimic)$/ || (value =~ /^\d+$/ && value.to_i.between?(0,255))
+        fail ArgumentError, "Valid options: #{options}"
+      end
     end
   end
 
   newproperty(:link_qos_to_client) do
-    options = '<pass-through|Integer>'
+    options = '<pass-through|0-7>'
     desc "The Link TOS to the client.
     Valid options: #{options}"
 
     validate do |value|
-      fail ArgumentError, "Valid options: #{options}" unless value =~ /^(pass-through|\d+)$/
+      unless value =~ /^pass-through$/ || (value =~ /^\d+$/ && value.to_i.between?(0,7))
+        fail ArgumentError, "Valid options: #{options}"
+      end
     end
   end
 
   newproperty(:link_qos_to_server) do
-    options = '<pass-through|Integer>'
+    options = '<pass-through|0-7>'
     desc "The Link TOS to the server.
     Valid options: #{options}"
 
     validate do |value|
-      fail ArgumentError, "Valid options: #{options}" unless value =~ /^(pass-through|\d+)$/
+      unless value =~ /^pass-through$/ || (value =~ /^\d+$/ && value.to_i.between?(0,7))
+        fail ArgumentError, "Valid options: #{options}"
+      end
     end
   end
 
@@ -122,7 +130,7 @@ Puppet::Type.newtype(:f5_pool) do
     end
   end
 
-  newproperty(:ip_encapsulation) do
+  newproperty(:ip_encapsulation, :array_matching => :all) do
     encapsulations = %w(gre nvgre dslite ip4ip4 ip4ip6 ip6ip4 ip6ip6 ipip)
     encaps_with_partition = encapsulations.map { |e| "/Partition/#{e} ," }
     desc "The request queue timeout.

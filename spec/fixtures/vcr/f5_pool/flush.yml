@@ -1,0 +1,95 @@
+--- 
+http_interactions: 
+- request: 
+    method: get
+    uri: https://bigip/mgmt/tm/ltm/pool/?expandSubcollections=true
+    body: 
+      encoding: US-ASCII
+      string: ""
+    headers: 
+      Authorization: 
+      - Basic YWRtaW46YWRtaW4=
+      User-Agent: 
+      - Faraday v0.8.9
+  response: 
+    status: 
+      code: 200
+      message: 
+    headers: 
+      date: 
+      - 27 Jun 2014 17:16:15 UTC
+      server: 
+      - com.f5.rest.common.RestRequestSender
+      set-cookie: 
+      - BIGIPAuthCookie=017EA784717D2DC416AFD90FB58842083DE1BD23; path=/; Secure; HttpOnly, BIGIPAuthUsernameCookie=admin; path=/; Secure; HttpOnly
+      x-frame-options: 
+      - SAMEORIGIN
+      cache-control: 
+      - no-cache
+      content-length: 
+      - "5298"
+      content-type: 
+      - application/json
+      x-content-type-options: 
+      - nosniff
+      x-xss-protection: 
+      - 1; mode=block
+      content-security-policy: 
+      - default-src 'self'  'unsafe-inline' 'unsafe-eval'
+      strict-transport-security: 
+      - max-age=16070400; includeSubDomains
+      connection: 
+      - close
+    body: 
+      encoding: US-ASCII
+      string: "{\"kind\":\"tm:ltm:pool:poolcollectionstate\",\"selfLink\":\"https://localhost/mgmt/tm/ltm/pool?expandSubcollections=true&ver=11.5.0\",\"items\":[{\"kind\":\"tm:ltm:pool:poolstate\",\"name\":\"test\",\"partition\":\"Common\",\"fullPath\":\"/Common/test\",\"generation\":749,\"selfLink\":\"https://localhost/mgmt/tm/ltm/pool/~Common~test?ver=11.5.0\",\"allowNat\":\"yes\",\"allowSnat\":\"yes\",\"description\":\"test1\",\"ignorePersistedWeight\":\"disabled\",\"ipTosToClient\":\"pass-through\",\"ipTosToServer\":\"pass-through\",\"linkQosToClient\":\"pass-through\",\"linkQosToServer\":\"pass-through\",\"loadBalancingMode\":\"round-robin\",\"minActiveMembers\":1,\"minUpMembers\":0,\"minUpMembersAction\":\"failover\",\"minUpMembersChecking\":\"disabled\",\"monitor\":\"min 1 of { /Common/gateway_icmp }\",\"queueDepthLimit\":12,\"queueOnConnectionLimit\":\"enabled\",\"queueTimeLimit\":13,\"reselectTries\":11,\"serviceDownAction\":\"reset\",\"slowRampTime\":10,\"profiles\":[\"/Common/ip4ip4\"],\"membersReference\":{\"link\":\"https://localhost/mgmt/tm/ltm/pool/~Common~test/members?ver=11.5.0\",\"isSubcollection\":true,\"items\":[{\"kind\":\"tm:ltm:pool:members:membersstate\",\"name\":\"192.168.1.1:0\",\"partition\":\"Common\",\"fullPath\":\"/Common/192.168.1.1:0\",\"generation\":749,\"selfLink\":\"https://localhost/mgmt/tm/ltm/pool/~Common~test/members/~Common~192.168.1.1:0?ver=11.5.0\",\"address\":\"192.168.1.1\",\"connectionLimit\":0,\"dynamicRatio\":1,\"inheritProfile\":\"enabled\",\"logging\":\"disabled\",\"monitor\":\"default\",\"priorityGroup\":0,\"rateLimit\":\"disabled\",\"ratio\":1,\"session\":\"monitor-enabled\",\"state\":\"up\"},{\"kind\":\"tm:ltm:pool:members:membersstate\",\"name\":\"192.168.1.2:0\",\"partition\":\"Common\",\"fullPath\":\"/Common/192.168.1.2:0\",\"generation\":749,\"selfLink\":\"https://localhost/mgmt/tm/ltm/pool/~Common~test/members/~Common~192.168.1.2:0?ver=11.5.0\",\"address\":\"192.168.1.2\",\"connectionLimit\":0,\"dynamicRatio\":1,\"inheritProfile\":\"enabled\",\"logging\":\"disabled\",\"monitor\":\"default\",\"priorityGroup\":0,\"rateLimit\":\"disabled\",\"ratio\":1,\"session\":\"monitor-enabled\",\"state\":\"down\"}]}},{\"kind\":\"tm:ltm:pool:poolstate\",\"name\":\"test2\",\"partition\":\"Common\",\"fullPath\":\"/Common/test2\",\"generation\":752,\"selfLink\":\"https://localhost/mgmt/tm/ltm/pool/~Common~test2?ver=11.5.0\",\"allowNat\":\"yes\",\"allowSnat\":\"yes\",\"description\":\"test2\",\"ignorePersistedWeight\":\"disabled\",\"ipTosToClient\":\"pass-through\",\"ipTosToServer\":\"pass-through\",\"linkQosToClient\":\"pass-through\",\"linkQosToServer\":\"pass-through\",\"loadBalancingMode\":\"round-robin\",\"minActiveMembers\":567,\"minUpMembers\":0,\"minUpMembersAction\":\"failover\",\"minUpMembersChecking\":\"disabled\",\"queueDepthLimit\":0,\"queueOnConnectionLimit\":\"disabled\",\"queueTimeLimit\":0,\"reselectTries\":0,\"slowRampTime\":10,\"membersReference\":{\"link\":\"https://localhost/mgmt/tm/ltm/pool/~Common~test2/members?ver=11.5.0\",\"isSubcollection\":true}},{\"kind\":\"tm:ltm:pool:poolstate\",\"name\":\"test3\",\"partition\":\"Common\",\"fullPath\":\"/Common/test3\",\"generation\":925,\"selfLink\":\"https://localhost/mgmt/tm/ltm/pool/~Common~test3?ver=11.5.0\",\"allowNat\":\"no\",\"allowSnat\":\"no\",\"description\":\"test3\",\"ignorePersistedWeight\":\"enabled\",\"ipTosToClient\":\"244\",\"ipTosToServer\":\"244\",\"linkQosToClient\":\"7\",\"linkQosToServer\":\"pass-through\",\"loadBalancingMode\":\"ratio-node\",\"minActiveMembers\":2,\"minUpMembers\":0,\"minUpMembersAction\":\"failover\",\"minUpMembersChecking\":\"disabled\",\"queueDepthLimit\":13,\"queueOnConnectionLimit\":\"disabled\",\"queueTimeLimit\":14,\"reselectTries\":12,\"serviceDownAction\":\"drop\",\"slowRampTime\":11,\"profiles\":[\"/Common/ip4ip4\"],\"membersReference\":{\"link\":\"https://localhost/mgmt/tm/ltm/pool/~Common~test3/members?ver=11.5.0\",\"isSubcollection\":true}},{\"kind\":\"tm:ltm:pool:poolstate\",\"name\":\"webserver\",\"partition\":\"Common\",\"fullPath\":\"/Common/webserver\",\"generation\":1,\"selfLink\":\"https://localhost/mgmt/tm/ltm/pool/~Common~webserver?ver=11.5.0\",\"allowNat\":\"yes\",\"allowSnat\":\"yes\",\"ignorePersistedWeight\":\"disabled\",\"ipTosToClient\":\"pass-through\",\"ipTosToServer\":\"pass-through\",\"linkQosToClient\":\"pass-through\",\"linkQosToServer\":\"pass-through\",\"loadBalancingMode\":\"round-robin\",\"minActiveMembers\":0,\"minUpMembers\":0,\"minUpMembersAction\":\"failover\",\"minUpMembersChecking\":\"disabled\",\"monitor\":\"/Common/http and /Common/https \",\"queueDepthLimit\":0,\"queueOnConnectionLimit\":\"disabled\",\"queueTimeLimit\":0,\"reselectTries\":0,\"slowRampTime\":10,\"membersReference\":{\"link\":\"https://localhost/mgmt/tm/ltm/pool/~Common~webserver/members?ver=11.5.0\",\"isSubcollection\":true,\"items\":[{\"kind\":\"tm:ltm:pool:members:membersstate\",\"name\":\"192.168.1.1:80\",\"partition\":\"Common\",\"fullPath\":\"/Common/192.168.1.1:80\",\"generation\":1,\"selfLink\":\"https://localhost/mgmt/tm/ltm/pool/~Common~webserver/members/~Common~192.168.1.1:80?ver=11.5.0\",\"address\":\"192.168.1.1\",\"connectionLimit\":0,\"dynamicRatio\":1,\"inheritProfile\":\"enabled\",\"logging\":\"disabled\",\"monitor\":\"default\",\"priorityGroup\":2,\"rateLimit\":\"disabled\",\"ratio\":1,\"session\":\"monitor-enabled\",\"state\":\"down\"},{\"kind\":\"tm:ltm:pool:members:membersstate\",\"name\":\"192.168.1.2:80\",\"partition\":\"Common\",\"fullPath\":\"/Common/192.168.1.2:80\",\"generation\":1,\"selfLink\":\"https://localhost/mgmt/tm/ltm/pool/~Common~webserver/members/~Common~192.168.1.2:80?ver=11.5.0\",\"address\":\"192.168.1.2\",\"connectionLimit\":0,\"dynamicRatio\":1,\"inheritProfile\":\"enabled\",\"logging\":\"disabled\",\"monitor\":\"default\",\"priorityGroup\":1,\"rateLimit\":\"disabled\",\"ratio\":1,\"session\":\"monitor-enabled\",\"state\":\"down\"}]}}]}"
+    http_version: 
+  recorded_at: Fri, 27 Jun 2014 17:16:15 GMT
+- request: 
+    method: put
+    uri: https://bigip/mgmt/tm/ltm/pool/test
+    body: 
+      encoding: UTF-8
+      string: "{\"link-qos-to-client\":4,\"name\":\"test\",\"partition\":\"/Common\"}"
+    headers: 
+      Authorization: 
+      - Basic YWRtaW46YWRtaW4=
+      User-Agent: 
+      - Faraday v0.8.9
+      Content-Type: 
+      - application/json
+  response: 
+    status: 
+      code: 200
+      message: 
+    headers: 
+      date: 
+      - 27 Jun 2014 17:16:15 UTC
+      server: 
+      - com.f5.rest.common.RestRequestSender
+      set-cookie: 
+      - BIGIPAuthCookie=017EA784717D2DC416AFD90FB58842083DE1BD23; path=/; Secure; HttpOnly, BIGIPAuthUsernameCookie=admin; path=/; Secure; HttpOnly
+      x-frame-options: 
+      - SAMEORIGIN
+      cache-control: 
+      - no-cache
+      content-length: 
+      - "829"
+      content-type: 
+      - application/json
+      x-content-type-options: 
+      - nosniff
+      x-xss-protection: 
+      - 1; mode=block
+      content-security-policy: 
+      - default-src 'self'  'unsafe-inline' 'unsafe-eval'
+      strict-transport-security: 
+      - max-age=16070400; includeSubDomains
+      connection: 
+      - close
+    body: 
+      encoding: US-ASCII
+      string: "{\"kind\":\"tm:ltm:pool:poolstate\",\"name\":\"test\",\"fullPath\":\"test\",\"generation\":927,\"selfLink\":\"https://localhost/mgmt/tm/ltm/pool/test?ver=11.5.0\",\"allowNat\":\"yes\",\"allowSnat\":\"yes\",\"description\":\"test1\",\"ignorePersistedWeight\":\"disabled\",\"ipTosToClient\":\"pass-through\",\"ipTosToServer\":\"pass-through\",\"linkQosToClient\":\"4\",\"linkQosToServer\":\"pass-through\",\"loadBalancingMode\":\"round-robin\",\"minActiveMembers\":1,\"minUpMembers\":0,\"minUpMembersAction\":\"failover\",\"minUpMembersChecking\":\"disabled\",\"monitor\":\"min 1 of { /Common/gateway_icmp }\",\"queueDepthLimit\":12,\"queueOnConnectionLimit\":\"enabled\",\"queueTimeLimit\":13,\"reselectTries\":11,\"serviceDownAction\":\"reset\",\"slowRampTime\":10,\"profiles\":[\"/Common/ip4ip4\"],\"membersReference\":{\"link\":\"https://localhost/mgmt/tm/ltm/pool/~Common~test/members?ver=11.5.0\",\"isSubcollection\":true}}"
+    http_version: 
+  recorded_at: Fri, 27 Jun 2014 17:16:15 GMT
+recorded_with: VCR 2.9.2
