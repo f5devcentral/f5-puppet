@@ -73,25 +73,55 @@ Puppet::Type.type(:f5_pool).provide(:rest, parent: Puppet::Provider::F5) do
   end
 
   def message(object)
-    # Allows us to pass in resources and get all the attributes out
-    # in the form of a hash.
-    hash = object.to_hash
+    # Here lies some evil magic.  We want to replace all _'s with -'s in the
+    # key names of the hash we create from the object we've passed into message.
+    #
+    # We do this by passing in an object along with .each, giving us an empty
+    # hash to then build up with the fixed names.
+    hash = object.to_hash.each_with_object({}) do |(k ,v), obj|
+      key = k.to_s.gsub(/_/, '-').to_sym
+      obj[key] = v
+    end
 
     # Create the message by stripping :present.
-    message             = hash.reject { |k, _| [:ensure, :provider].include?(k) }
+    message             = hash.reject { |k, _| [:ensure, :loglevel, :provider].include?(k) }
     message[:name]      = basename
     message[:partition] = partition
+
+    message[:'priority-group-activation'] = 0 if hash[:'priority-group-activation'] == 'disabled'
+    message[:'allow-nat']  = 'yes' if hash[:'allow-nat'] == :true
+    message[:'allow-nat']  = 'no'  if hash[:'allow-nat'] == :false
+    message[:'allow-snat'] = 'yes' if hash[:'allow-snat'] == :true
+    message[:'allow-snat'] = 'no'  if hash[:'allow-snat'] == :false
+    message[:'ignore-persisted-weight'] = 'enabled' if hash[:'ignore-persisted-weight'] == :true
+    message[:'ignore-persisted-weight'] = 'disabled' if hash[:'ignore-persisted-weight'] == :false
+    # Set this in the hash so map picks it up.
+    hash[:'service-down'] = 'reset' if hash[:'service-down'] == :reject
+    hash[:'request-queuing'] = 'disabled' if hash[:'request-queuing'] == :false
+    hash[:'request-queuing'] = 'enabled' if hash[:'request-queuing'] == :true
+
+    map = {
+      :'service-down'              => :'service-down-action',
+      :'request-queuing'           => :'queue-on-connection-limit',
+      :'request-queue-depth'       => :'queue-depth-limit',
+      :'request-queue-timeout'     => :'queue-time-limit',
+      :'ip-encapsulation'          => :'profiles',
+      :'load-balancing-method'     => :'load-balancing-mode',
+      :'priority-group-activation' => :'min-active-members',
+    }
+
+    # We need to rename some properties back to the API.
+    map.each do |k, v|
+      next unless hash[k]
+      value = hash[k]
+      message.delete(k)
+      message[v] = value
+    end
 
     # Apply transformations
     message.each do |k, v|
       message[k] = Integer(v) if Puppet::Provider::F5.integer?(v)
     end
-    message[:priority_group_activation] = 0 if hash[:priority_group_activation] == 'disabled'
-    message[:allow_nat] = 'yes' if hash[:allow_nat] == :true
-    message[:allow_nat] = 'no'  if hash[:allow_nat] == :false
-    message[:allow_snat] = 'yes' if hash[:allow_snat] == :true
-    message[:allow_snat] = 'no'  if hash[:allow_snat] == :false
-    message[:service_down] = 'reject' if hash[:service_down] == 'reject'
 
     # If monitor is an array then we need to rebuild the message.
     if message[:monitor].is_a?(Array)
@@ -114,6 +144,7 @@ Puppet::Type.type(:f5_pool).provide(:rest, parent: Puppet::Provider::F5) do
   end
 
   def create
+    require 'pry';binding.pry
     Puppet::Provider::F5.post("/mgmt/tm/ltm/pool", message(resource))
     # We clear the hash here to stop flush from triggering.
     @property_hash.clear
