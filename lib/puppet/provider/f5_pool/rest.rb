@@ -9,6 +9,10 @@ Puppet::Type.type(:f5_pool).provide(:rest, parent: Puppet::Provider::F5) do
     return [] if nodes.nil?
 
     nodes.each do |node|
+      # We get back an array from profiles, but we need a string.  We take
+      # the first element of the array as we SHOULD only have one entry here.
+      node['profiles'] = node['profiles'].first if node['profiles']
+
       # Map 0 nodes to disabled.
       node['minActiveMembers'] = 'disabled' if node['minActiveMembers'] == 0
 
@@ -49,7 +53,7 @@ Puppet::Type.type(:f5_pool).provide(:rest, parent: Puppet::Provider::F5) do
         request_queuing:           node['queueOnConnectionLimit'].to_s,
         request_queue_depth:       node['queueDepthLimit'].to_s,
         request_queue_timeout:     node['queueTimeLimit'].to_s,
-        ip_encapsulation:          node['profiles'], # An array!
+        ip_encapsulation:          node['profiles'].to_s,
         load_balancing_method:     node['loadBalancingMode'].to_s,
         priority_group_activation: node['minActiveMembers'].to_s,
         ignore_persisted_weight:   node['ignorePersistedWeight'].to_s,
