@@ -166,8 +166,6 @@ Valid options: <user-up|user-down>
 * request_queuing requires us to have pool members, and we can't validate that yet.
 * pool_member{} is a seperate resource currently so we can't set
   request_queuing to true at pool creation.
-* Right now the number of entries ip_encapsulation can have depends on some
-  other criteria I don't know yet, so I can't validate how many you can have.
 
 ####name
 
