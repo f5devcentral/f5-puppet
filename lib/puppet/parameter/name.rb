@@ -7,6 +7,6 @@ class Puppet::Parameter::F5Name < Puppet::Parameter
 
   validate do |value|
     fail ArgumentError, "#{name} must be a String" unless value.is_a?(String)
-    fail ArgumentError, "#{name} must match the pattern /Partition/name" unless value =~ /^\/\w+\/\w+$/
+    fail ArgumentError, "#{name} must match the pattern /Partition/name" unless value =~ /^\/\w+\/(\w|\d|\.)+$/
   end
 end

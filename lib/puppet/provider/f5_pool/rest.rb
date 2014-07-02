@@ -5,58 +5,58 @@ Puppet::Type.type(:f5_pool).provide(:rest, parent: Puppet::Provider::F5) do
 
   def self.instances
     instances = []
-    nodes = Puppet::Provider::F5.call('/mgmt/tm/ltm/pool')
-    return [] if nodes.nil?
+    pools = Puppet::Provider::F5.call('/mgmt/tm/ltm/pool')
+    return [] if pools.nil?
 
-    nodes.each do |node|
+    pools.each do |pool|
       # We get back an array from profiles, but we need a string.  We take
       # the first element of the array as we SHOULD only have one entry here.
-      node['profiles'] = node['profiles'].first if node['profiles']
+      pool['profiles'] = pool['profiles'].first if pool['profiles']
 
-      # Map 0 nodes to disabled.
-      node['minActiveMembers'] = 'disabled' if node['minActiveMembers'] == 0
+      # Map 0 pools to disabled.
+      pool['minActiveMembers'] = 'disabled' if pool['minActiveMembers'] == 0
 
       # We have to munge availability out of the monitor information.
-      if node['monitor']
-        availability = find_availability(node['monitor'])
-        monitor = find_objects(node['monitor'])
+      if pool['monitor']
+        availability = find_availability(pool['monitor'])
+        monitor = find_objects(pool['monitor'])
       end
 
       # Instead of true/false the F5 returns yes/no
-      node.each { |_,v| v.gsub!(/^yes$/, 'true') if v.is_a?(String) }
-      node.each { |_,v| v.gsub!(/^no$/, 'false') if v.is_a?(String) }
+      pool.each { |_,v| v.gsub!(/^yes$/, 'true') if v.is_a?(String) }
+      pool.each { |_,v| v.gsub!(/^no$/, 'false') if v.is_a?(String) }
 
       # Select reject in the GUI, get reset from the REST api.  Who knows!
-      node['serviceDownAction'] = 'reject' if node['serviceDownAction'] == 'reset'
+      pool['serviceDownAction'] = 'reject' if pool['serviceDownAction'] == 'reset'
 
       # We only accept true/false for some parameters.
-      node['queueOnConnectionLimit'] = :true  if node['queueOnConnectionLimit'] == 'enabled'
-      node['queueOnConnectionLimit'] = :false if node['queueOnConnectionLimit'] == 'disabled'
-      node['ignorePersistedWeight'] = :true  if node['ignorePersistedWeight'] == 'enabled'
-      node['ignorePersistedWeight'] = :false if node['ignorePersistedWeight'] == 'disabled'
+      pool['queueOnConnectionLimit'] = :true  if pool['queueOnConnectionLimit'] == 'enabled'
+      pool['queueOnConnectionLimit'] = :false if pool['queueOnConnectionLimit'] == 'disabled'
+      pool['ignorePersistedWeight'] = :true  if pool['ignorePersistedWeight'] == 'enabled'
+      pool['ignorePersistedWeight'] = :false if pool['ignorePersistedWeight'] == 'disabled'
 
       # We force everything to a string because we get Integers from the F5 and
       # strings back from the type, meaning it churns properties for no reason.
       create = {
         ensure:                    :present,
-        name:                      node['fullPath'].to_s,
-        description:               node['description'].to_s,
-        allow_snat:                node['allowSnat'].to_s,
-        allow_nat:                 node['allowNat'].to_s,
-        service_down:              node['serviceDownAction'].to_s,
-        slow_ramp_time:            node['slowRampTime'].to_s,
-        ip_tos_to_client:          node['ipTosToClient'].to_s,
-        ip_tos_to_server:          node['ipTosToServer'].to_s,
-        link_qos_to_client:        node['linkQosToClient'].to_s,
-        link_qos_to_server:        node['linkQosToServer'].to_s,
-        reselect_tries:            node['reselectTries'].to_s,
-        request_queuing:           node['queueOnConnectionLimit'].to_s,
-        request_queue_depth:       node['queueDepthLimit'].to_s,
-        request_queue_timeout:     node['queueTimeLimit'].to_s,
-        ip_encapsulation:          node['profiles'].to_s,
-        load_balancing_method:     node['loadBalancingMode'].to_s,
-        priority_group_activation: node['minActiveMembers'].to_s,
-        ignore_persisted_weight:   node['ignorePersistedWeight'].to_s,
+        name:                      pool['fullPath'].to_s,
+        description:               pool['description'].to_s,
+        allow_snat:                pool['allowSnat'].to_s,
+        allow_nat:                 pool['allowNat'].to_s,
+        service_down:              pool['serviceDownAction'].to_s,
+        slow_ramp_time:            pool['slowRampTime'].to_s,
+        ip_tos_to_client:          pool['ipTosToClient'].to_s,
+        ip_tos_to_server:          pool['ipTosToServer'].to_s,
+        link_qos_to_client:        pool['linkQosToClient'].to_s,
+        link_qos_to_server:        pool['linkQosToServer'].to_s,
+        reselect_tries:            pool['reselectTries'].to_s,
+        request_queuing:           pool['queueOnConnectionLimit'].to_s,
+        request_queue_depth:       pool['queueDepthLimit'].to_s,
+        request_queue_timeout:     pool['queueTimeLimit'].to_s,
+        ip_encapsulation:          pool['profiles'].to_s,
+        load_balancing_method:     pool['loadBalancingMode'].to_s,
+        priority_group_activation: pool['minActiveMembers'].to_s,
+        ignore_persisted_weight:   pool['ignorePersistedWeight'].to_s,
       }
       # Only create this entry if availability was found.
       create[:availability] = availability if availability
@@ -69,9 +69,9 @@ Puppet::Type.type(:f5_pool).provide(:rest, parent: Puppet::Provider::F5) do
   end
 
   def self.prefetch(resources)
-    nodes = instances
+    pools = instances
     resources.keys.each do |name|
-      if provider = nodes.find { |node| node.name == name }
+      if provider = pools.find { |pool| pool.name == name }
         resources[name].provider = provider
       end
     end

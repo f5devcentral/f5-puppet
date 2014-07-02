@@ -177,6 +177,49 @@ Puppet::Type.newtype(:f5_pool) do
     end
   end
 
+  newproperty(:members, :array_matching => :all) do
+    options = "[{ name => '/Partition/name', port => '1-65535', enable => <true|false> , ratio => <Integer>, connection_limit => <Integer> } ]"
+    desc "An array of hashes containing pool members.
+    Valid options: #{options}"
+
+    validate do |value|
+      # First we check that all required keys exist in the hash.
+      [:name, :port, :enable].each do |k|
+        fail ArgumentError, "Key #{k} is missing.  Valid options: #{options}" unless value.key?(k)
+      end
+
+      # Next we ensure unwanted keys don't exist.
+      value.each do |k, v|
+        unless [:name, :port, :enable, :ratio, :connection_limit].include?(k)
+          fail ArgumentError "Key #{k} is invalid.  Valid options: #{options}"
+        end
+
+        # Then we check each value in turn.
+        case k.to_sym
+        when :name
+          fail ArgumentError, "#{v} must be a String" unless v.is_a?(String)
+          fail ArgumentError, "#{v} must match the pattern /Partition/name" unless v =~ /^\/\w+\/(\w|\.)+$/
+        when :port
+          unless v.to_s =~ /^\d+$/ && v.to_i.between?(1,65535)
+            fail ArgumentError, "Valid options: #{options}"
+          end
+        when :enable
+          unless v.to_s =~ /^(enabled|disabled|true|false)+$/
+            fail ArgumentError, "Valid options: #{options}"
+          end
+        when :ratio
+          unless v.to_s =~ /^\d+$/
+            raise ArgumentError, "#{name} must be an Integer"
+          end
+        when :connection_limit
+          unless v.to_s =~ /^\d+$/
+            raise ArgumentError, "#{name} must be an Integer"
+          end
+        end
+      end
+    end
+  end
+
   validate do
     if ! self[:monitor] && self[:availability]
       fail ArgumentError, 'ERROR:  Availability cannot be set when no monitor is assigned.'
