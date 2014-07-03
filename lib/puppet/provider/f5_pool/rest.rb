@@ -35,6 +35,16 @@ Puppet::Type.type(:f5_pool).provide(:rest, parent: Puppet::Provider::F5) do
       pool['ignorePersistedWeight'] = :true  if pool['ignorePersistedWeight'] == 'enabled'
       pool['ignorePersistedWeight'] = :false if pool['ignorePersistedWeight'] == 'disabled'
 
+      # Handle members.  This gets messy.
+      members = []
+      if pool['membersReference']['items']
+        pool['membersReference']['items'].each do |member|
+          name, port = member['fullPath'].split(':')
+          members << { 'name' => name, 'connection_limit' => member['connectionLimit'].to_s,
+                       'ratio' => member['ratio'].to_s, 'port' => port.to_s, 'enable' => enable(member) }
+        end
+      end
+
       # We force everything to a string because we get Integers from the F5 and
       # strings back from the type, meaning it churns properties for no reason.
       create = {
@@ -61,11 +71,34 @@ Puppet::Type.type(:f5_pool).provide(:rest, parent: Puppet::Provider::F5) do
       # Only create this entry if availability was found.
       create[:availability] = availability if availability
       create[:monitor] = monitor if monitor
+      create[:members] = members if members
 
       instances << new(create)
     end
 
     instances
+  end
+
+  # state: unchecked, session: user-enabled  -> GUI enabled.
+  # state: unchecked, session: user-disabled -> GUI disabled.
+  # state: user-down, session: user-disabled -> GUI forced offline.
+  def self.enable(member)
+    case member['state']
+    when 'down'
+    # Temporary hack while I figure out how to handle monitor down.
+      return 'enabled' if member['session'] == 'monitor-enabled'
+    when 'unchecked', 'up'
+      case member['session']
+      when 'user-enabled', 'monitor-enabled'
+        return 'enabled'
+      else
+        return 'disabled'
+      end
+    when 'user-down'
+      return 'forced_offline' if member['session'] = 'user-disabled'
+    else
+      fail ArgumentError, 'Unknown state detected for enable.'
+    end
   end
 
   def self.prefetch(resources)
@@ -85,21 +118,48 @@ Puppet::Type.type(:f5_pool).provide(:rest, parent: Puppet::Provider::F5) do
     File.dirname(resource[:name])
   end
 
-  def message(object)
+  def convert_underscores(hash)
     # Here lies some evil magic.  We want to replace all _'s with -'s in the
     # key names of the hash we create from the object we've passed into message.
     #
     # We do this by passing in an object along with .each, giving us an empty
     # hash to then build up with the fixed names.
-    hash = object.to_hash.each_with_object({}) do |(k ,v), obj|
+    hash.each_with_object({}) do |(k ,v), obj|
       key = k.to_s.gsub(/_/, '-').to_sym
       obj[key] = v
     end
+  end
+
+  def message(object)
+    hash = convert_underscores(object.to_hash)
 
     # Create the message by stripping :present.
     message             = hash.reject { |k, _| [:ensure, :loglevel, :provider].include?(k) }
     message[:name]      = basename
     message[:partition] = partition
+
+    # Members is a whole world of pain.
+    members = []
+    message[:members].each do |member|
+      member[:name] = "#{member['name']}:#{member['port']}"
+      member.delete('port')
+      case member['enable']
+      when 'enabled'
+        member['state'] = 'user-up'
+        member['session'] = 'user-enabled'
+      when 'disabled'
+        member['state'] = 'user-down'
+        member['session'] = 'user-disabled'
+      when 'forced_offline'
+        member['state'] = 'user-down'
+        member['session'] = 'user-disabled'
+      end
+      member.delete('enable')
+
+      converted = convert_underscores(member)
+      members << converted
+    end
+    message[:members] = members
 
     # Do a bunch of renaming back to what the API expects.  This is awful.
     # We have to wrap each of the tests that use .to_sym in a check if they
