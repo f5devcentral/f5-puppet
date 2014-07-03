@@ -195,7 +195,7 @@ Puppet::Type.newtype(:f5_pool) do
         end
 
         # Then we check each value in turn.
-        case k.to_sym
+        case k
         when 'name'
           fail ArgumentError, "#{v} must be a String" unless v.is_a?(String)
           fail ArgumentError, "#{v} must match the pattern /Partition/name" unless v =~ /^\/\w+\/(\w|\.)+$/

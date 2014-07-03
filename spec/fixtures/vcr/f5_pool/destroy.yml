@@ -17,7 +17,7 @@ http_interactions:
       message: 
     headers: 
       date: 
-      - 27 Jun 2014 22:31:49 UTC
+      - 03 Jul 2014 22:29:16 UTC
       server: 
       - com.f5.rest.common.RestRequestSender
       set-cookie: 
@@ -44,5 +44,5 @@ http_interactions:
       encoding: US-ASCII
       string: ""
     http_version: 
-  recorded_at: Fri, 27 Jun 2014 22:31:49 GMT
+  recorded_at: Thu, 03 Jul 2014 22:29:16 GMT
 recorded_with: VCR 2.9.2

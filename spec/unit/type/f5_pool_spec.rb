@@ -49,86 +49,86 @@ describe Puppet::Type.type(:f5_pool) do
 
   describe 'members' do
     it 'should contain all main keys' do
-      input = [{ name: '/Common/node1', port: '80', enable: true }]
+      input = [{ 'name' => '/Common/node1', 'port' => '80', 'enable' => true }]
       @node[:members] = input
       expect(@node[:members]).to eq(input)
     end
     it 'should fail if keys are missing' do
-      input = [{ name: '/Common/node1', enable: true }]
+      input = [{ 'name' => '/Common/node1', 'enable' => true }]
       expect { @node[:members] = input }.to raise_error()
     end
     it 'should fail if keys arent known' do
-      input = [{ name: '/Common/node1', port: '80', enable: true, weirdkey: true }]
+      input = [{ 'name' => '/Common/node1', 'port' => '80', 'enable' => true, 'weirdkey' => true }]
       expect { @node[:members] = input }.to raise_error()
     end
 
     describe 'validation' do
       it 'should accept valid names' do
         ['/Common/node1', '/Common/192.168.1.1'].each do |nodename|
-          input = [{ name: nodename, port: '80', enable: true }]
+          input = [{ 'name' => nodename, 'port' => '80', 'enable' => true }]
           @node[:members] = input
           expect(@node[:members]).to eq(input)
         end
       end
       it 'should fail on invalid names' do
         ['node1', 'Common/192.168.1.1/'].each do |nodename|
-          input = [{ name: nodename, port: '80', enable: true }]
+          input = [{ 'name' => nodename, 'port' => '80', 'enable' => true }]
           expect { @node[:members] = input }.to raise_error()
         end
       end
 
       it 'should accept valid ports' do
         ['1', '10', '200', '3000', '65535'].each do |port|
-          input = [{ name: '/Common/node1', port: port, enable: true }]
+          input = [{ 'name' => '/Common/node1', 'port' => port, 'enable' => true }]
           @node[:members] = input
           expect(@node[:members]).to eq(input)
         end
       end
       it 'should fail on invalid ports' do
         ['0', '65536'].each do |port|
-          input = [{ name: '/Common/node1', port: port, enable: true }]
+          input = [{ 'name' => '/Common/node1', 'port' => port, 'enable' => true }]
           expect { @node[:members] = input }.to raise_error()
         end
       end
 
       it 'should accept valid enable' do
         ['enabled', 'disabled', 'true', 'false'].each do |e|
-          input = [{ name: '/Common/node1', port: '80', enable: e }]
+          input = [{ 'name' => '/Common/node1', 'port' => '80', 'enable' => e }]
           @node[:members] = input
           expect(@node[:members]).to eq(input)
         end
       end
       it 'should fail on invalid ports' do
         ['present', 'negative', '0', '65536'].each do |e|
-          input = [{ name: '/Common/node1', port: '80', enable: e }]
+          input = [{ 'name' => '/Common/node1', 'port' => '80', 'enable' => e }]
           expect { @node[:members] = input }.to raise_error()
         end
       end
 
       it 'should accept valid ratio' do
         ['1', '10', '200', '3000', '65535'].each do |ratio|
-          input = [{ name: '/Common/node1', port: '80', enable: true, ratio: ratio }]
+          input = [{ 'name' => '/Common/node1', 'port' => '80', 'enable' => true, 'ratio' => ratio }]
           @node[:members] = input
           expect(@node[:members]).to eq(input)
         end
       end
       it 'should fail on invalid ratios' do
         ['true', 'false', '0.1'].each do |ratio|
-          input = [{ name: '/Common/node1', port: '80', enable: true, ratio: ratio }]
+          input = [{ 'name' => '/Common/node1', 'port' => '80', 'enable' => true, 'ratio' => ratio }]
           expect { @node[:members] = input }.to raise_error()
         end
       end
 
       it 'should accept valid connection_limit' do
         ['1', '10', '200', '3000', '65535'].each do |cl|
-          input = [{ name: '/Common/node1', port: '80', enable: true, connection_limit: cl }]
+          input = [{ 'name' => '/Common/node1', 'port' => '80', 'enable' => true, 'connection_limit' => cl }]
           @node[:members] = input
           expect(@node[:members]).to eq(input)
         end
       end
       it 'should fail on invalid ratios' do
         ['true', 'false', '0.1'].each do |cl|
-          input = [{ name: '/Common/node1', port: '80', enable: true, connection_limit: cl }]
+          input = [{ 'name' => '/Common/node1', 'port' => '80', 'enable' => true, 'connection_limit' => cl }]
           expect { @node[:members] = input }.to raise_error()
         end
       end

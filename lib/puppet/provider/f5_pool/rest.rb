@@ -138,28 +138,30 @@ Puppet::Type.type(:f5_pool).provide(:rest, parent: Puppet::Provider::F5) do
     message[:name]      = basename
     message[:partition] = partition
 
-    # Members is a whole world of pain.
-    members = []
-    message[:members].each do |member|
-      member[:name] = "#{member['name']}:#{member['port']}"
-      member.delete('port')
-      case member['enable']
-      when 'enabled'
-        member['state'] = 'user-up'
-        member['session'] = 'user-enabled'
-      when 'disabled'
-        member['state'] = 'user-down'
-        member['session'] = 'user-disabled'
-      when 'forced_offline'
-        member['state'] = 'user-down'
-        member['session'] = 'user-disabled'
-      end
-      member.delete('enable')
+    if message[:members]
+      # Members is a whole world of pain.
+      members = []
+      message[:members].each do |member|
+        member[:name] = "#{member['name']}:#{member['port']}"
+        member.delete('port')
+        case member['enable']
+        when 'enabled'
+          member['state'] = 'user-up'
+          member['session'] = 'user-enabled'
+        when 'disabled'
+          member['state'] = 'user-down'
+          member['session'] = 'user-disabled'
+        when 'forced_offline'
+          member['state'] = 'user-down'
+          member['session'] = 'user-disabled'
+        end
+        member.delete('enable')
 
-      converted = convert_underscores(member)
-      members << converted
+        converted = convert_underscores(member)
+        members << converted
+      end
+      message[:members] = members
     end
-    message[:members] = members
 
     # Do a bunch of renaming back to what the API expects.  This is awful.
     # We have to wrap each of the tests that use .to_sym in a check if they
