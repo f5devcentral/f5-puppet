@@ -150,7 +150,7 @@ Puppet::Type.type(:f5_pool).provide(:rest, parent: Puppet::Provider::F5) do
           member['session'] = 'user-enabled'
         when 'disabled'
           member['state'] = 'user-down'
-          member['session'] = 'user-disabled'
+          member['session'] = 'user-enabled'
         when 'forced_offline'
           member['state'] = 'user-down'
           member['session'] = 'user-disabled'
