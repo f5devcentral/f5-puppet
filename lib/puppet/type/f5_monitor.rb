@@ -17,7 +17,11 @@ Puppet::Type.newtype(:f5_monitor) do
   end
 
   newproperty(:up_interval) do
-    newvalues(:disabled, :enabled, :true, :false)
+    validate do |value|
+      unless value =~ /^\d+$/ or [:disabled, :enabled, :true, :false].include?(valid)
+        fail ArgumentError, "Valid options: #{options}"
+      end
+    end
   end
 
   newproperty(:time_until_up) do
@@ -33,7 +37,7 @@ Puppet::Type.newtype(:f5_monitor) do
   end
 
   newproperty(:manual_resume) do
-    newvalues(:yes, :no, :true, :false)
+    newvalues(:yes, :no, :true, :false, :enabled, :disabled)
   end
 
   newproperty(:send_string) do
@@ -69,7 +73,7 @@ Puppet::Type.newtype(:f5_monitor) do
   end
 
   newproperty(:transparent) do
-    newvalues(:yes, :no, :true, :false)
+    newvalues(:yes, :no, :true, :false, :enabled, :disabled)
   end
 
   newproperty(:alias_address) do
@@ -160,6 +164,11 @@ Puppet::Type.newtype(:f5_monitor) do
   end
 
   newproperty(:sip_request) do
+  end
+
+  # TODO: Figure out how to validate.
+  # 10.0.0.1:ssh
+  newproperty(:destination) do
   end
 
 end
