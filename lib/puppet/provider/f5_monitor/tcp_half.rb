@@ -3,6 +3,11 @@ require 'json'
 
 Puppet::Type.type(:f5_monitor).provide(:tcp_half, parent: Puppet::Provider::F5) do
 
+  def initialize(value={})
+    super(value)
+    @create_elements = false
+  end
+
   def self.instances
     instances = []
     monitors = Puppet::Provider::F5.call('/mgmt/tm/ltm/monitor/tcp-half-open')
@@ -56,6 +61,10 @@ Puppet::Type.type(:f5_monitor).provide(:tcp_half, parent: Puppet::Provider::F5) 
     message = create_message(basename, partition, message)
     message = string_to_integer(message)
     message = monitor_conversion(message)
+    unless @create_elements
+      elements_to_strip = [:'alias-address', :'alias-service-port']
+      message = strip_elements(message, elements_to_strip)
+    end
 
     message.to_json
   end
@@ -74,6 +83,7 @@ Puppet::Type.type(:f5_monitor).provide(:tcp_half, parent: Puppet::Provider::F5) 
   end
 
   def create
+    @create_elements = true
     result = Puppet::Provider::F5.post("/mgmt/tm/ltm/monitor/tcp-half-open", message(resource))
     # We clear the hash here to stop flush from triggering.
     @property_hash.clear

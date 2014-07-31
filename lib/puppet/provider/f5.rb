@@ -92,5 +92,12 @@ class Puppet::Provider::F5 < Puppet::Provider
     end
   end
 
+  def strip_elements(hash, elements_to_strip)
+    message = hash.reject { |k, _| elements_to_strip.include?(k) }
+
+    return message
+  end
+
+
 
 end

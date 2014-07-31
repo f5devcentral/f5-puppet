@@ -1,0 +1,50 @@
+--- 
+http_interactions: 
+- request: 
+    method: post
+    uri: https://bigip/mgmt/tm/ltm/monitor/tcp-half-open
+    body: 
+      encoding: UTF-8
+      string: "{\"name\":\"tcphalf\",\"description\":\"tcphalftest\",\"interval\":5,\"up-interval\":5,\"time-until-up\":5,\"timeout\":16,\"manual-resume\":\"disabled\",\"transparent\":\"disabled\",\"destination\":\"10.0.0.1:23\",\"partition\":\"/Common\"}"
+    headers: 
+      Authorization: 
+      - Basic YWRtaW46YWRtaW4=
+      User-Agent: 
+      - Faraday v0.8.9
+      Content-Type: 
+      - application/json
+  response: 
+    status: 
+      code: 200
+      message: 
+    headers: 
+      date: 
+      - 31 Jul 2014 21:42:16 UTC
+      server: 
+      - com.f5.rest.common.RestRequestSender
+      set-cookie: 
+      - BIGIPAuthCookie=017EA784717D2DC416AFD90FB58842083DE1BD23; path=/; Secure; HttpOnly, BIGIPAuthUsernameCookie=admin; path=/; Secure; HttpOnly
+      x-frame-options: 
+      - SAMEORIGIN
+      cache-control: 
+      - no-cache
+      content-length: 
+      - "435"
+      content-type: 
+      - application/json
+      x-content-type-options: 
+      - nosniff
+      x-xss-protection: 
+      - 1; mode=block
+      content-security-policy: 
+      - default-src 'self'  'unsafe-inline' 'unsafe-eval'
+      strict-transport-security: 
+      - max-age=16070400; includeSubDomains
+      connection: 
+      - close
+    body: 
+      encoding: US-ASCII
+      string: "{\"kind\":\"tm:ltm:monitor:tcp-half-open:tcp-half-openstate\",\"name\":\"tcphalf\",\"partition\":\"Common\",\"fullPath\":\"/Common/tcphalf\",\"generation\":0,\"selfLink\":\"https://localhost/mgmt/tm/ltm/monitor/tcp-half-open/~Common~tcphalf?ver=11.5.0\",\"defaultsFrom\":\"/Common/tcp_half_open\",\"description\":\"tcphalftest\",\"destination\":\"10.0.0.1:23\",\"interval\":5,\"manualResume\":\"disabled\",\"timeUntilUp\":5,\"timeout\":16,\"transparent\":\"disabled\",\"upInterval\":5}"
+    http_version: 
+  recorded_at: Thu, 31 Jul 2014 21:42:16 GMT
+recorded_with: VCR 2.9.2
