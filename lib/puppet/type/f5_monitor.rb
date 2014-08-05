@@ -17,8 +17,12 @@ Puppet::Type.newtype(:f5_monitor) do
   end
 
   newproperty(:up_interval) do
+    options = '<Integer|disabled>'
+    desc "How often to check the health of a resource
+    Valid options: #{options}"
+
     validate do |value|
-      unless value =~ /^\d+$/ or [:disabled, :enabled, :true, :false].include?(valid)
+      unless value =~ /^\d+$/ or [:disabled, :false].include?(value.to_sym)
         fail ArgumentError, "Valid options: #{options}"
       end
     end
@@ -69,7 +73,7 @@ Puppet::Type.newtype(:f5_monitor) do
   end
 
   newproperty(:reverse) do
-    newvalues(:yes, :no, :true, :false)
+    newvalues(:enabled, :disabled, :yes, :no, :true, :false)
   end
 
   newproperty(:transparent) do

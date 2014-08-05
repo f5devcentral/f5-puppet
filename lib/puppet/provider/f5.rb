@@ -98,6 +98,10 @@ class Puppet::Provider::F5 < Puppet::Provider
     return message
   end
 
-
+  # For some reason the object we pass in has undefined parameters in the
+  # object with nil values.  Not at all helpful for us.
+  def strip_nil_values(hash)
+    hash.reject { |k, v| v.nil? }
+  end
 
 end

@@ -1,0 +1,95 @@
+--- 
+http_interactions: 
+- request: 
+    method: get
+    uri: https://bigip/mgmt/tm/ltm/monitor/http/?expandSubcollections=true
+    body: 
+      encoding: US-ASCII
+      string: ""
+    headers: 
+      Authorization: 
+      - Basic YWRtaW46YWRtaW4=
+      User-Agent: 
+      - Faraday v0.8.9
+  response: 
+    status: 
+      code: 200
+      message: 
+    headers: 
+      date: 
+      - 05 Aug 2014 19:07:19 UTC
+      server: 
+      - com.f5.rest.common.RestRequestSender
+      set-cookie: 
+      - BIGIPAuthCookie=017EA784717D2DC416AFD90FB58842083DE1BD23; path=/; Secure; HttpOnly, BIGIPAuthUsernameCookie=admin; path=/; Secure; HttpOnly
+      x-frame-options: 
+      - SAMEORIGIN
+      cache-control: 
+      - no-cache
+      content-length: 
+      - "1496"
+      content-type: 
+      - application/json
+      x-content-type-options: 
+      - nosniff
+      x-xss-protection: 
+      - 1; mode=block
+      content-security-policy: 
+      - default-src 'self'  'unsafe-inline' 'unsafe-eval'
+      strict-transport-security: 
+      - max-age=16070400; includeSubDomains
+      connection: 
+      - close
+    body: 
+      encoding: US-ASCII
+      string: "{\"kind\":\"tm:ltm:monitor:http:httpcollectionstate\",\"selfLink\":\"https://localhost/mgmt/tm/ltm/monitor/http?expandSubcollections=true&ver=11.5.0\",\"items\":[{\"kind\":\"tm:ltm:monitor:http:httpstate\",\"name\":\"http\",\"partition\":\"Common\",\"fullPath\":\"/Common/http\",\"generation\":0,\"selfLink\":\"https://localhost/mgmt/tm/ltm/monitor/http/~Common~http?ver=11.5.0\",\"destination\":\"*:*\",\"interval\":5,\"ipDscp\":0,\"manualResume\":\"disabled\",\"reverse\":\"disabled\",\"send\":\"GET /\\\\r\\\\n\",\"timeUntilUp\":0,\"timeout\":16,\"transparent\":\"disabled\",\"upInterval\":0},{\"kind\":\"tm:ltm:monitor:http:httpstate\",\"name\":\"http_head_f5\",\"partition\":\"Common\",\"fullPath\":\"/Common/http_head_f5\",\"generation\":0,\"selfLink\":\"https://localhost/mgmt/tm/ltm/monitor/http/~Common~http_head_f5?ver=11.5.0\",\"defaultsFrom\":\"/Common/http\",\"destination\":\"*:*\",\"interval\":5,\"ipDscp\":0,\"manualResume\":\"disabled\",\"recv\":\"Server\\\\:\",\"reverse\":\"disabled\",\"send\":\"HEAD / HTTP/1.0\\\\r\\\\n\\\\r\\\\n\",\"timeUntilUp\":0,\"timeout\":16,\"transparent\":\"disabled\",\"upInterval\":0},{\"kind\":\"tm:ltm:monitor:http:httpstate\",\"name\":\"test\",\"partition\":\"Common\",\"fullPath\":\"/Common/test\",\"generation\":0,\"selfLink\":\"https://localhost/mgmt/tm/ltm/monitor/http/~Common~test?ver=11.5.0\",\"defaultsFrom\":\"/Common/http\",\"description\":\"test2\",\"destination\":\"10.0.0.1:22\",\"interval\":6,\"ipDscp\":0,\"manualResume\":\"enabled\",\"password\":\"$M$hK$IuZVT2tIDmKHWU6++tW1cQ==\",\"recv\":\"nou\",\"reverse\":\"disabled\",\"send\":\"GET Beep/\\\\r\\\\n\",\"timeUntilUp\":5,\"timeout\":17,\"transparent\":\"disabled\",\"upInterval\":0}]}"
+    http_version: 
+  recorded_at: Tue, 05 Aug 2014 19:07:19 GMT
+- request: 
+    method: put
+    uri: https://bigip/mgmt/tm/ltm/monitor/http/test
+    body: 
+      encoding: UTF-8
+      string: "{\"transparent\":\"enabled\",\"name\":\"test\",\"partition\":\"/Common\"}"
+    headers: 
+      Authorization: 
+      - Basic YWRtaW46YWRtaW4=
+      User-Agent: 
+      - Faraday v0.8.9
+      Content-Type: 
+      - application/json
+  response: 
+    status: 
+      code: 200
+      message: 
+    headers: 
+      date: 
+      - 05 Aug 2014 19:07:24 UTC
+      server: 
+      - com.f5.rest.common.RestRequestSender
+      set-cookie: 
+      - BIGIPAuthCookie=017EA784717D2DC416AFD90FB58842083DE1BD23; path=/; Secure; HttpOnly, BIGIPAuthUsernameCookie=admin; path=/; Secure; HttpOnly
+      x-frame-options: 
+      - SAMEORIGIN
+      cache-control: 
+      - no-cache
+      content-length: 
+      - "459"
+      content-type: 
+      - application/json
+      x-content-type-options: 
+      - nosniff
+      x-xss-protection: 
+      - 1; mode=block
+      content-security-policy: 
+      - default-src 'self'  'unsafe-inline' 'unsafe-eval'
+      strict-transport-security: 
+      - max-age=16070400; includeSubDomains
+      connection: 
+      - close
+    body: 
+      encoding: US-ASCII
+      string: "{\"kind\":\"tm:ltm:monitor:http:httpstate\",\"name\":\"test\",\"fullPath\":\"test\",\"generation\":0,\"selfLink\":\"https://localhost/mgmt/tm/ltm/monitor/http/test?ver=11.5.0\",\"defaultsFrom\":\"/Common/http\",\"description\":\"test2\",\"destination\":\"10.0.0.1:22\",\"interval\":6,\"ipDscp\":0,\"manualResume\":\"enabled\",\"password\":\"$M$hK$IuZVT2tIDmKHWU6++tW1cQ==\",\"recv\":\"nou\",\"reverse\":\"disabled\",\"send\":\"GET Beep/\\\\r\\\\n\",\"timeUntilUp\":5,\"timeout\":17,\"transparent\":\"enabled\",\"upInterval\":0}"
+    http_version: 
+  recorded_at: Tue, 05 Aug 2014 19:07:24 GMT
+recorded_with: VCR 2.9.2
