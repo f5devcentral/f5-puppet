@@ -12,21 +12,21 @@ Puppet::Type.type(:f5_monitor).provide(:https, parent: Puppet::Provider::F5) do
     instances = []
     monitors = Puppet::Provider::F5.call('/mgmt/tm/ltm/monitor/https')
     monitors.each do |monitor|
+      aliasAddress, aliasServicePort = monitor['destination'].split(':')
       instances << new(
         ensure:                :present,
-        alias_address:          monitor['aliasAddress'],
-        alias_service_port:     monitor['aliasServicePort'],
-        cipher_list:            monitor['cipherList'],
+        alias_address:          aliasAddress,
+        alias_service_port:     aliasServicePort,
+        cipher_list:            monitor['cipherlist'],
+        client_certificate:     monitor['cert'],
+        client_key:             monitor['key'],
         compatibility:          monitor['compatibility'],
-        client_certificate:     monitor['clientCertificate'],
-        client_key:             monitor['clientKey'],
         description:            monitor['description'],
-        destination:            monitor['destination'],
         interval:               monitor['interval'],
         manual_resume:          monitor['manualResume'],
         name:                   monitor['fullPath'],
         password:               monitor['password'],
-        receive_disable_string: monitor['recv_disable'], # Seems to be missing.
+        receive_disable_string: monitor['recvDisable'],
         receive_string:         monitor['recv'],
         reverse:                monitor['reverse'],
         send_string:            monitor['send'],
@@ -34,7 +34,7 @@ Puppet::Type.type(:f5_monitor).provide(:https, parent: Puppet::Provider::F5) do
         timeout:                monitor['timeout'],
         transparent:            monitor['transparent'],
         up_interval:            monitor['upInterval'],
-        user:                   monitor['user'],
+        username:               monitor['username'],
       )
     end
 
@@ -64,8 +64,14 @@ Puppet::Type.type(:f5_monitor).provide(:https, parent: Puppet::Provider::F5) do
     message = object.to_hash
 
     # Map for conversion in the message.
-    map = { :'send-string'    => :send,
-            :'receive-string' => :recv }
+    map = {
+      :'send-string'            => :send,
+      :'receive-string'         => :recv,
+      :'receive-disable-string' => :recvDisable,
+      :'cipher-list'            => :cipherlist,
+      :'client-certificate'     => :cert,
+      :'client-key'             => :key,
+    }
 
     message = strip_nil_values(message)
     message = convert_underscores(message)
@@ -73,19 +79,16 @@ Puppet::Type.type(:f5_monitor).provide(:https, parent: Puppet::Provider::F5) do
     message = create_message(basename, partition, message)
     message = string_to_integer(message)
     message = monitor_conversion(message)
-    unless @create_elements
-      elements_to_strip = [:'alias-address', :'alias-service-port', :'receive-disable-string']
-      message = strip_elements(message, elements_to_strip)
-    end
+    message = destination_conversion(message)
+    elements_to_strip = [:'alias-address', :'alias-service-port']
+    message = strip_elements(message, elements_to_strip)
 
     message.to_json
   end
 
   def flush
     if @property_hash != {}
-      # You can only pass address to create, not modifications.
-      flush_message = @property_hash.reject { |k, _| k == :address }
-      result = Puppet::Provider::F5.put("/mgmt/tm/ltm/monitor/https/#{basename}", message(flush_message))
+      result = Puppet::Provider::F5.put("/mgmt/tm/ltm/monitor/https/#{basename}", message(@property_hash))
     end
     return result
   end

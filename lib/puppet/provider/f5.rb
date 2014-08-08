@@ -80,6 +80,18 @@ class Puppet::Provider::F5 < Puppet::Provider
     return message
   end
 
+  def destination_conversion(message)
+    if message[:'alias-address'] and message[:'alias-service-port']
+      message[:destination] = "#{message[:'alias-address']}:#{message[:'alias-service-port']}"
+    elsif message[:'alias-address']
+      message[:destination] = message[:'alias-address']
+    end
+    message.delete(:'alias-address')
+    message.delete(:'alias-service-port')
+
+    return message
+  end
+
   def convert_underscores(hash)
     # Here lies some evil magic.  We want to replace all _'s with -'s in the
     # key names of the hash we create from the object we've passed into message.

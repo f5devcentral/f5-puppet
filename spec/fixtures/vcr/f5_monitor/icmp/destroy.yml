@@ -2,7 +2,7 @@
   http_interactions: 
     - request: 
         method: delete
-        uri: "https://bigip/mgmt/tm/ltm/monitor/tcp-half-open/tcp_half_closed"
+        uri: "https://bigip/mgmt/tm/ltm/monitor/icmp/icmp_test"
         body: 
           encoding: US-ASCII
           string: ""

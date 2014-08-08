@@ -1,5 +1,6 @@
 require 'puppet/parameter/name'
 require 'puppet/property/description'
+require 'puppet/property/truthy'
 
 Puppet::Type.newtype(:f5_monitor) do
   @doc = 'Manage monitor objects'
@@ -14,6 +15,9 @@ Puppet::Type.newtype(:f5_monitor) do
     validate do |value|
       fail ArgumentError, "Valid options: #{options}" unless value =~ /^\d+$/
     end
+    munge do |value|
+      Integer(value)
+    end
   end
 
   newproperty(:up_interval) do
@@ -22,9 +26,13 @@ Puppet::Type.newtype(:f5_monitor) do
     Valid options: #{options}"
 
     validate do |value|
-      unless value =~ /^\d+$/ or [:disabled, :false].include?(value.to_sym)
+      unless value =~ /^\d+$/ or [:disabled, :false, :no].include?(value.to_s.to_sym)
         fail ArgumentError, "Valid options: #{options}"
       end
+    end
+    munge do |value|
+      value = 0 if [:disabled, :false, :no].include?(value.to_s.to_sym)
+      Integer(value)
     end
   end
 
@@ -32,16 +40,22 @@ Puppet::Type.newtype(:f5_monitor) do
     validate do |value|
       fail ArgumentError, "Valid options: #{options}" unless value =~ /^\d+$/
     end
+    munge do |value|
+      Integer(value)
+    end
   end
 
   newproperty(:timeout) do
     validate do |value|
       fail ArgumentError, "Valid options: #{options}" unless value =~ /^\d+$/
     end
+    munge do |value|
+      Integer(value)
+    end
   end
 
-  newproperty(:manual_resume) do
-    newvalues(:yes, :no, :true, :false, :enabled, :disabled)
+  newproperty(:manual_resume, :parent => Puppet::Property::F5truthy) do
+    truthy_property('Enabling the manual resume of a monitor and then associate the monitor with a resource, and the resource subsequently becomes unavailable, the resource remains offline until you manually re-enable it.', :enabled, :disabled)
   end
 
   newproperty(:send_string) do
@@ -56,14 +70,14 @@ Puppet::Type.newtype(:f5_monitor) do
   newproperty(:cipher_list) do
   end
 
-  newproperty(:user) do
+  newproperty(:username) do
   end
 
   newproperty(:password) do
   end
 
-  newproperty(:compatibility) do
-    newvalues(:disabled, :enabled, :true, :false)
+  newproperty(:compatibility, :parent => Puppet::Property::F5truthy) do
+    truthy_property('Enabling the Compatibility setting sets the SSL options to ALL.')
   end
 
   newproperty(:client_certificate) do
@@ -72,12 +86,12 @@ Puppet::Type.newtype(:f5_monitor) do
   newproperty(:client_key) do
   end
 
-  newproperty(:reverse) do
-    newvalues(:enabled, :disabled, :yes, :no, :true, :false)
+  newproperty(:reverse, :parent => Puppet::Property::F5truthy) do
+    truthy_property('Marks the pool, pool member, or node down when the test is successful. For example, if the content on your web site home page is dynamic and changes frequently, you may want to set up a reverse ECV service check that looks for the string "Error". A match for this string means that the web server was down.')
   end
 
-  newproperty(:transparent) do
-    newvalues(:yes, :no, :true, :false, :enabled, :disabled)
+  newproperty(:transparent, :parent => Puppet::Property::F5truthy) do
+    truthy_property('Forces the monitor to ping through the pool, pool member, or node with which it is associated (usually a firewall) to the pool, pool member, or node. (That is, if there are two firewalls in a load balancing pool, the destination pool, pool member, or node is always pinged through the pool, pool member, or node specified; not through the pool, pool member, or node selected by the load balancing method.) In this way, the transparent pool, pool member, or node is tested: if there is no response, the transparent pool, pool member, or node is marked as down.')
   end
 
   newproperty(:alias_address) do
@@ -105,11 +119,17 @@ Puppet::Type.newtype(:f5_monitor) do
   newproperty(:ip_dscp) do
     validate do |value|
       fail ArgumentError, "Valid options: #{options}" unless value =~ /^\d+$/
+      if value =~ /\d+$/
+        fail ArgumentError, "ip_dscp:  Must be between 0-63" unless value.to_i.between?(0,63)
+      end
+    end
+    munge do |value|
+      Integer(value)
     end
   end
 
-  newproperty(:debug) do
-    newvalues(:yes, :no, :true, :false)
+  newproperty(:debug, :parent => Puppet::Property::F5truthy) do
+    truthy_property(nil, :yes, :no)
   end
 
   newproperty(:base) do
@@ -122,12 +142,12 @@ Puppet::Type.newtype(:f5_monitor) do
     newvalues(:none, :ssl, :tls)
   end
 
-  newproperty(:mandatory_attributes) do
-    newvalues(:yes, :no, :true, :false)
+  newproperty(:mandatory_attributes, :parent => Puppet::Property::F5truthy) do
+    truthy_property(nil, :yes, :no)
   end
 
-  newproperty(:chase_referrals) do
-    newvalues(:yes, :no, :true, :false)
+  newproperty(:chase_referrals, :parent => Puppet::Property::F5truthy) do
+    truthy_property(nil, :yes, :no)
   end
 
   newproperty(:external_program) do
@@ -169,10 +189,4 @@ Puppet::Type.newtype(:f5_monitor) do
 
   newproperty(:sip_request) do
   end
-
-  # TODO: Figure out how to validate.
-  # 10.0.0.1:ssh
-  newproperty(:destination) do
-  end
-
 end

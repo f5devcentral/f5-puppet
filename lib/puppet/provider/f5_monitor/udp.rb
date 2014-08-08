@@ -1,7 +1,7 @@
 require 'puppet/provider/f5'
 require 'json'
 
-Puppet::Type.type(:f5_monitor).provide(:http, parent: Puppet::Provider::F5) do
+Puppet::Type.type(:f5_monitor).provide(:udp, parent: Puppet::Provider::F5) do
 
   def initialize(value={})
     super(value)
@@ -10,18 +10,18 @@ Puppet::Type.type(:f5_monitor).provide(:http, parent: Puppet::Provider::F5) do
 
   def self.instances
     instances = []
-    monitors = Puppet::Provider::F5.call('/mgmt/tm/ltm/monitor/http')
+    monitors = Puppet::Provider::F5.call('/mgmt/tm/ltm/monitor/udp')
     monitors.each do |monitor|
       aliasAddress, aliasServicePort = monitor['destination'].split(':')
       instances << new(
-        ensure:                :present,
+        ensure:                 :present,
         alias_address:          aliasAddress,
         alias_service_port:     aliasServicePort,
+        debug:                  monitor['debug'],
         description:            monitor['description'],
         interval:               monitor['interval'],
         manual_resume:          monitor['manualResume'],
         name:                   monitor['fullPath'],
-        password:               monitor['password'],
         receive_disable_string: monitor['recvDisable'],
         receive_string:         monitor['recv'],
         reverse:                monitor['reverse'],
@@ -30,7 +30,6 @@ Puppet::Type.type(:f5_monitor).provide(:http, parent: Puppet::Provider::F5) do
         timeout:                monitor['timeout'],
         transparent:            monitor['transparent'],
         up_interval:            monitor['upInterval'],
-        username:               monitor['username'],
       )
     end
 
@@ -66,7 +65,6 @@ Puppet::Type.type(:f5_monitor).provide(:http, parent: Puppet::Provider::F5) do
       :'receive-disable-string' => :recvDisable,
     }
 
-    message = strip_nil_values(message)
     message = convert_underscores(message)
     message = rename_keys(map, message)
     message = create_message(basename, partition, message)
@@ -81,7 +79,7 @@ Puppet::Type.type(:f5_monitor).provide(:http, parent: Puppet::Provider::F5) do
 
   def flush
     if @property_hash != {}
-      result = Puppet::Provider::F5.put("/mgmt/tm/ltm/monitor/http/#{basename}", message(@property_hash))
+      result = Puppet::Provider::F5.put("/mgmt/tm/ltm/monitor/udp/#{basename}", message(@property_hash))
     end
     return result
   end
@@ -92,7 +90,7 @@ Puppet::Type.type(:f5_monitor).provide(:http, parent: Puppet::Provider::F5) do
 
   def create
     @create_elements = true
-    result = Puppet::Provider::F5.post("/mgmt/tm/ltm/monitor/http", message(resource))
+    result = Puppet::Provider::F5.post("/mgmt/tm/ltm/monitor/udp", message(resource))
     # We clear the hash here to stop flush from triggering.
     @property_hash.clear
 
@@ -100,7 +98,7 @@ Puppet::Type.type(:f5_monitor).provide(:http, parent: Puppet::Provider::F5) do
   end
 
   def destroy
-    result = Puppet::Provider::F5.delete("/mgmt/tm/ltm/monitor/http/#{basename}")
+    result = Puppet::Provider::F5.delete("/mgmt/tm/ltm/monitor/udp/#{basename}")
     @property_hash.clear
 
     return result
