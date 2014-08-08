@@ -1,13 +1,13 @@
 require 'spec_helper'
 
-describe Puppet::Type.type(:f5_monitor).provider(:tcp_half) do
+describe Puppet::Type.type(:f5_monitor).provider(:tcp) do
   let(:resource) do
     Puppet::Type.type(:f5_monitor).new(
-      name:               '/Common/tcp_half_closed',
+      name:               '/Common/tcp_test',
       ensure:             :present,
+      description:        'tcptest',
       alias_address:      '10.0.0.1',
       alias_service_port: '23',
-      description:        'tcphalftest',
       interval:           '5',
       manual_resume:      'disabled',
       time_until_up:      '5',
@@ -27,7 +27,7 @@ describe Puppet::Type.type(:f5_monitor).provider(:tcp_half) do
   describe 'instances' do
     it 'gets a response from the api' do
       result = nil
-      VCR.use_cassette('f5_monitor/tcp_half/instances') do
+      VCR.use_cassette('f5_monitor/tcp/instances') do
         result = provider.class.instances
       end
       expect(result.count).to eq(1)
@@ -37,7 +37,7 @@ describe Puppet::Type.type(:f5_monitor).provider(:tcp_half) do
   describe 'create' do
     it 'gets a response from the api' do
       result = nil
-      VCR.use_cassette('f5_monitor/tcp_half/create') do
+      VCR.use_cassette('f5_monitor/tcp/create') do
         result = provider.create
         provider.flush
       end
@@ -48,8 +48,8 @@ describe Puppet::Type.type(:f5_monitor).provider(:tcp_half) do
   describe 'flush' do
     it 'gets a response from the api' do
       result = nil
-      VCR.use_cassette('f5_monitor/tcp_half/flush') do
-        provider.class.prefetch({ '/Common/tcphalf' => resource})
+      VCR.use_cassette('f5_monitor/tcp/flush') do
+        provider.class.prefetch({ '/Common/tcp' => resource})
         provider.transparent= 'enabled'
         result = provider.flush
       end
@@ -60,7 +60,7 @@ describe Puppet::Type.type(:f5_monitor).provider(:tcp_half) do
   describe 'destroy' do
     it 'gets a response from the api' do
       result = nil
-      VCR.use_cassette('f5_monitor/tcp_half/destroy') do
+      VCR.use_cassette('f5_monitor/tcp/destroy') do
         result = provider.destroy
         provider.flush
       end

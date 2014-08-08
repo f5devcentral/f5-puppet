@@ -1,50 +1,50 @@
 --- 
-http_interactions: 
-- request: 
-    method: post
-    uri: https://bigip/mgmt/tm/ltm/monitor/http
-    body: 
-      encoding: UTF-8
-      string: "{\"name\":\"test\",\"description\":\"test2\",\"interval\":6,\"up-interval\":0,\"time-until-up\":5,\"timeout\":17,\"manual-resume\":\"enabled\",\"password\":\"$M$d4$5H0MvmBC4iyrohIzS0eBqg==\",\"reverse\":\"disabled\",\"transparent\":\"disabled\",\"destination\":\"10.0.0.1:22\",\"send\":\"GET Beep/\\\\r\\\\n\",\"recv\":\"nou\",\"partition\":\"/Common\"}"
-    headers: 
-      Authorization: 
-      - Basic YWRtaW46YWRtaW4=
-      User-Agent: 
-      - Faraday v0.8.9
-      Content-Type: 
-      - application/json
-  response: 
-    status: 
-      code: 200
-      message: 
-    headers: 
-      date: 
-      - 05 Aug 2014 19:07:14 UTC
-      server: 
-      - com.f5.rest.common.RestRequestSender
-      set-cookie: 
-      - BIGIPAuthCookie=017EA784717D2DC416AFD90FB58842083DE1BD23; path=/; Secure; HttpOnly, BIGIPAuthUsernameCookie=admin; path=/; Secure; HttpOnly
-      x-frame-options: 
-      - SAMEORIGIN
-      cache-control: 
-      - no-cache
-      content-length: 
-      - "497"
-      content-type: 
-      - application/json
-      x-content-type-options: 
-      - nosniff
-      x-xss-protection: 
-      - 1; mode=block
-      content-security-policy: 
-      - default-src 'self'  'unsafe-inline' 'unsafe-eval'
-      strict-transport-security: 
-      - max-age=16070400; includeSubDomains
-      connection: 
-      - close
-    body: 
-      encoding: US-ASCII
-      string: "{\"kind\":\"tm:ltm:monitor:http:httpstate\",\"name\":\"test\",\"partition\":\"Common\",\"fullPath\":\"/Common/test\",\"generation\":0,\"selfLink\":\"https://localhost/mgmt/tm/ltm/monitor/http/~Common~test?ver=11.5.0\",\"defaultsFrom\":\"/Common/http\",\"description\":\"test2\",\"destination\":\"10.0.0.1:22\",\"interval\":6,\"ipDscp\":0,\"manualResume\":\"enabled\",\"password\":\"$M$hK$IuZVT2tIDmKHWU6++tW1cQ==\",\"recv\":\"nou\",\"reverse\":\"disabled\",\"send\":\"GET Beep/\\\\r\\\\n\",\"timeUntilUp\":5,\"timeout\":17,\"transparent\":\"disabled\",\"upInterval\":0}"
-    http_version: 
-  recorded_at: Tue, 05 Aug 2014 19:07:14 GMT
-recorded_with: VCR 2.9.2
+  http_interactions: 
+    - request: 
+        method: post
+        uri: "https://bigip/mgmt/tm/ltm/monitor/http"
+        body: 
+          encoding: UTF-8
+          string: "{\x22name\x22:\x22http_test\x22,\x22description\x22:\x22test2\x22,\x22interval\x22:6,\x22up-interval\x22:0,\x22time-until-up\x22:5,\x22timeout\x22:17,\x22manual-resume\x22:\x22enabled\x22,\x22password\x22:\x22$M$5s$WZKZE9brlPflaNMkj9tfHw==\x22,\x22reverse\x22:\x22disabled\x22,\x22transparent\x22:\x22disabled\x22,\x22send\x22:\x22GET Beep/\x5c\x5cr\x5c\x5cn\x22,\x22recv\x22:\x22nou\x22,\x22partition\x22:\x22/Common\x22,\x22destination\x22:\x2210.0.0.1:22\x22}"
+        headers: 
+          Authorization: 
+            - "Basic YWRtaW46YWRtaW4="
+          User-Agent: 
+            - "Faraday v0.8.9"
+          Content-Type: 
+            - application/json
+      response: 
+        status: 
+          code: 200
+          message: 
+        headers: 
+          date: 
+            - "08 Aug 2014 01:17:41 UTC"
+          server: 
+            - com.f5.rest.common.RestRequestSender
+          set-cookie: 
+            - "BIGIPAuthCookie=017EA784717D2DC416AFD90FB58842083DE1BD23; path=/; Secure; HttpOnly, BIGIPAuthUsernameCookie=admin; path=/; Secure; HttpOnly"
+          x-frame-options: 
+            - SAMEORIGIN
+          cache-control: 
+            - no-cache
+          content-length: 
+            - "512"
+          content-type: 
+            - application/json
+          x-content-type-options: 
+            - nosniff
+          x-xss-protection: 
+            - "1; mode=block"
+          content-security-policy: 
+            - "default-src 'self'  'unsafe-inline' 'unsafe-eval'"
+          strict-transport-security: 
+            - "max-age=16070400; includeSubDomains"
+          connection: 
+            - close
+        body: 
+          encoding: UTF-8
+          string: "{\x22kind\x22:\x22tm:ltm:monitor:http:httpstate\x22,\x22name\x22:\x22http_test\x22,\x22partition\x22:\x22Common\x22,\x22fullPath\x22:\x22/Common/http_test\x22,\x22generation\x22:0,\x22selfLink\x22:\x22https://localhost/mgmt/tm/ltm/monitor/http/~Common~http_test?ver=11.5.1\x22,\x22defaultsFrom\x22:\x22/Common/http\x22,\x22description\x22:\x22test2\x22,\x22destination\x22:\x2210.0.0.1:22\x22,\x22interval\x22:6,\x22ipDscp\x22:0,\x22manualResume\x22:\x22enabled\x22,\x22password\x22:\x22$M$dU$fLR3uVoXfKkxh33bnKiTGw==\x22,\x22recv\x22:\x22nou\x22,\x22reverse\x22:\x22disabled\x22,\x22send\x22:\x22GET Beep/\x5c\x5cr\x5c\x5cn\x22,\x22timeUntilUp\x22:5,\x22timeout\x22:17,\x22transparent\x22:\x22disabled\x22,\x22upInterval\x22:0}"
+        http_version: 
+      recorded_at: "Fri, 08 Aug 2014 01:17:41 GMT"
+  recorded_with: "VCR 2.9.2"

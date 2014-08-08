@@ -12,19 +12,19 @@ Puppet::Type.type(:f5_monitor).provide(:tcp_half, parent: Puppet::Provider::F5) 
     instances = []
     monitors = Puppet::Provider::F5.call('/mgmt/tm/ltm/monitor/tcp-half-open')
     monitors.each do |monitor|
+      aliasAddress, aliasServicePort = monitor['destination'].split(':')
       instances << new(
         ensure:                :present,
-        name:                  monitor['fullPath'],
+        alias_address:         aliasAddress,
+        alias_service_port:    aliasServicePort,
         description:           monitor['description'],
-        destination:           monitor['destination'],
         interval:              monitor['interval'],
-        up_interval:           monitor['upInterval'],
+        manual_resume:         monitor['manualResume'],
+        name:                  monitor['fullPath'],
         time_until_up:         monitor['timeUntilUp'],
         timeout:               monitor['timeout'],
-        manual_resume:         monitor['manualResume'],
         transparent:           monitor['transparent'],
-        alias_address:         monitor['aliasAddress'],
-        alias_service_port:    monitor['aliasServicePort'],
+        up_interval:           monitor['upInterval'],
       )
     end
 
@@ -61,19 +61,16 @@ Puppet::Type.type(:f5_monitor).provide(:tcp_half, parent: Puppet::Provider::F5) 
     message = create_message(basename, partition, message)
     message = string_to_integer(message)
     message = monitor_conversion(message)
-    unless @create_elements
-      elements_to_strip = [:'alias-address', :'alias-service-port']
-      message = strip_elements(message, elements_to_strip)
-    end
+    message = destination_conversion(message)
+    elements_to_strip = [:'alias-address', :'alias-service-port']
+    message = strip_elements(message, elements_to_strip)
 
     message.to_json
   end
 
   def flush
     if @property_hash != {}
-      # You can only pass address to create, not modifications.
-      flush_message = @property_hash.reject { |k, _| k == :address }
-      result = Puppet::Provider::F5.put("/mgmt/tm/ltm/monitor/tcp-half-open/#{basename}", message(flush_message))
+      result = Puppet::Provider::F5.put("/mgmt/tm/ltm/monitor/tcp-half-open/#{basename}", message(@property_hash))
     end
     return result
   end

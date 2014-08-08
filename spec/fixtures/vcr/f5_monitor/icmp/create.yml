@@ -1,16 +1,18 @@
 --- 
   http_interactions: 
     - request: 
-        method: delete
-        uri: "https://bigip/mgmt/tm/ltm/monitor/tcp-half-open/tcp_half_closed"
+        method: post
+        uri: "https://bigip/mgmt/tm/ltm/monitor/icmp"
         body: 
-          encoding: US-ASCII
-          string: ""
+          encoding: UTF-8
+          string: "{\x22name\x22:\x22icmp_test\x22,\x22description\x22:\x22icmptest\x22,\x22interval\x22:5,\x22up-interval\x22:5,\x22time-until-up\x22:5,\x22timeout\x22:16,\x22manual-resume\x22:\x22disabled\x22,\x22transparent\x22:\x22disabled\x22,\x22partition\x22:\x22/Common\x22,\x22destination\x22:\x2210.0.0.1\x22}"
         headers: 
           Authorization: 
             - "Basic YWRtaW46YWRtaW4="
           User-Agent: 
             - "Faraday v0.8.9"
+          Content-Type: 
+            - application/json
       response: 
         status: 
           code: 200
@@ -27,7 +29,7 @@
           cache-control: 
             - no-cache
           content-length: 
-            - "0"
+            - "399"
           content-type: 
             - application/json
           x-content-type-options: 
@@ -42,7 +44,7 @@
             - close
         body: 
           encoding: UTF-8
-          string: ""
+          string: "{\x22kind\x22:\x22tm:ltm:monitor:icmp:icmpstate\x22,\x22name\x22:\x22icmp_test\x22,\x22partition\x22:\x22Common\x22,\x22fullPath\x22:\x22/Common/icmp_test\x22,\x22generation\x22:0,\x22selfLink\x22:\x22https://localhost/mgmt/tm/ltm/monitor/icmp/~Common~icmp_test?ver=11.5.1\x22,\x22defaultsFrom\x22:\x22/Common/icmp\x22,\x22description\x22:\x22icmptest\x22,\x22destination\x22:\x2210.0.0.1\x22,\x22interval\x22:5,\x22manualResume\x22:\x22disabled\x22,\x22timeUntilUp\x22:5,\x22timeout\x22:16,\x22transparent\x22:\x22disabled\x22,\x22upInterval\x22:5}"
         http_version: 
       recorded_at: "Fri, 08 Aug 2014 01:17:41 GMT"
   recorded_with: "VCR 2.9.2"

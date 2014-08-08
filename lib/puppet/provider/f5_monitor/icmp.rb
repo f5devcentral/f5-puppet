@@ -1,7 +1,7 @@
 require 'puppet/provider/f5'
 require 'json'
 
-Puppet::Type.type(:f5_monitor).provide(:http, parent: Puppet::Provider::F5) do
+Puppet::Type.type(:f5_monitor).provide(:icmp, parent: Puppet::Provider::F5) do
 
   def initialize(value={})
     super(value)
@@ -10,27 +10,19 @@ Puppet::Type.type(:f5_monitor).provide(:http, parent: Puppet::Provider::F5) do
 
   def self.instances
     instances = []
-    monitors = Puppet::Provider::F5.call('/mgmt/tm/ltm/monitor/http')
+    monitors = Puppet::Provider::F5.call('/mgmt/tm/ltm/monitor/icmp')
     monitors.each do |monitor|
-      aliasAddress, aliasServicePort = monitor['destination'].split(':')
       instances << new(
-        ensure:                :present,
-        alias_address:          aliasAddress,
-        alias_service_port:     aliasServicePort,
+        ensure:                 :present,
+        alias_address:          monitor['destination'],
         description:            monitor['description'],
         interval:               monitor['interval'],
         manual_resume:          monitor['manualResume'],
         name:                   monitor['fullPath'],
-        password:               monitor['password'],
-        receive_disable_string: monitor['recvDisable'],
-        receive_string:         monitor['recv'],
-        reverse:                monitor['reverse'],
-        send_string:            monitor['send'],
         time_until_up:          monitor['timeUntilUp'],
         timeout:                monitor['timeout'],
         transparent:            monitor['transparent'],
         up_interval:            monitor['upInterval'],
-        username:               monitor['username'],
       )
     end
 
@@ -60,20 +52,15 @@ Puppet::Type.type(:f5_monitor).provide(:http, parent: Puppet::Provider::F5) do
     message = object.to_hash
 
     # Map for conversion in the message.
-    map = {
-      :'send-string'            => :send,
-      :'receive-string'         => :recv,
-      :'receive-disable-string' => :recvDisable,
-    }
+    map = {}
 
-    message = strip_nil_values(message)
     message = convert_underscores(message)
     message = rename_keys(map, message)
     message = create_message(basename, partition, message)
     message = string_to_integer(message)
     message = monitor_conversion(message)
     message = destination_conversion(message)
-    elements_to_strip = [:'alias-address', :'alias-service-port']
+    elements_to_strip = [:'alias-address']
     message = strip_elements(message, elements_to_strip)
 
     message.to_json
@@ -81,7 +68,7 @@ Puppet::Type.type(:f5_monitor).provide(:http, parent: Puppet::Provider::F5) do
 
   def flush
     if @property_hash != {}
-      result = Puppet::Provider::F5.put("/mgmt/tm/ltm/monitor/http/#{basename}", message(@property_hash))
+      result = Puppet::Provider::F5.put("/mgmt/tm/ltm/monitor/icmp/#{basename}", message(@property_hash))
     end
     return result
   end
@@ -92,7 +79,7 @@ Puppet::Type.type(:f5_monitor).provide(:http, parent: Puppet::Provider::F5) do
 
   def create
     @create_elements = true
-    result = Puppet::Provider::F5.post("/mgmt/tm/ltm/monitor/http", message(resource))
+    result = Puppet::Provider::F5.post("/mgmt/tm/ltm/monitor/icmp", message(resource))
     # We clear the hash here to stop flush from triggering.
     @property_hash.clear
 
@@ -100,7 +87,7 @@ Puppet::Type.type(:f5_monitor).provide(:http, parent: Puppet::Provider::F5) do
   end
 
   def destroy
-    result = Puppet::Provider::F5.delete("/mgmt/tm/ltm/monitor/http/#{basename}")
+    result = Puppet::Provider::F5.delete("/mgmt/tm/ltm/monitor/icmp/#{basename}")
     @property_hash.clear
 
     return result

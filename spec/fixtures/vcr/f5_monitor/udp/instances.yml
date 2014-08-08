@@ -1,8 +1,8 @@
 --- 
   http_interactions: 
     - request: 
-        method: delete
-        uri: "https://bigip/mgmt/tm/ltm/monitor/tcp-half-open/tcp_half_closed"
+        method: get
+        uri: "https://bigip/mgmt/tm/ltm/monitor/udp/?expandSubcollections=true"
         body: 
           encoding: US-ASCII
           string: ""
@@ -17,7 +17,7 @@
           message: 
         headers: 
           date: 
-            - "08 Aug 2014 01:17:41 UTC"
+            - "08 Aug 2014 01:17:42 UTC"
           server: 
             - com.f5.rest.common.RestRequestSender
           set-cookie: 
@@ -27,7 +27,7 @@
           cache-control: 
             - no-cache
           content-length: 
-            - "0"
+            - "532"
           content-type: 
             - application/json
           x-content-type-options: 
@@ -42,7 +42,7 @@
             - close
         body: 
           encoding: UTF-8
-          string: ""
+          string: "{\x22kind\x22:\x22tm:ltm:monitor:udp:udpcollectionstate\x22,\x22selfLink\x22:\x22https://localhost/mgmt/tm/ltm/monitor/udp?expandSubcollections=true&ver=11.5.1\x22,\x22items\x22:[{\x22kind\x22:\x22tm:ltm:monitor:udp:udpstate\x22,\x22name\x22:\x22udp\x22,\x22partition\x22:\x22Common\x22,\x22fullPath\x22:\x22/Common/udp\x22,\x22generation\x22:0,\x22selfLink\x22:\x22https://localhost/mgmt/tm/ltm/monitor/udp/~Common~udp?ver=11.5.1\x22,\x22debug\x22:\x22no\x22,\x22destination\x22:\x22*:*\x22,\x22interval\x22:5,\x22manualResume\x22:\x22disabled\x22,\x22reverse\x22:\x22disabled\x22,\x22send\x22:\x22default send string\x22,\x22timeUntilUp\x22:0,\x22timeout\x22:16,\x22transparent\x22:\x22disabled\x22,\x22upInterval\x22:0}]}"
         http_version: 
-      recorded_at: "Fri, 08 Aug 2014 01:17:41 GMT"
+      recorded_at: "Fri, 08 Aug 2014 01:17:42 GMT"
   recorded_with: "VCR 2.9.2"

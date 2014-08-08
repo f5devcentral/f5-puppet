@@ -2,7 +2,7 @@
   http_interactions: 
     - request: 
         method: delete
-        uri: "https://bigip/mgmt/tm/ltm/monitor/tcp-half-open/tcp_half_closed"
+        uri: "https://bigip/mgmt/tm/ltm/monitor/tcp/tcp_test"
         body: 
           encoding: US-ASCII
           string: ""
@@ -17,7 +17,7 @@
           message: 
         headers: 
           date: 
-            - "08 Aug 2014 01:17:41 UTC"
+            - "08 Aug 2014 01:17:42 UTC"
           server: 
             - com.f5.rest.common.RestRequestSender
           set-cookie: 
@@ -44,5 +44,5 @@
           encoding: UTF-8
           string: ""
         http_version: 
-      recorded_at: "Fri, 08 Aug 2014 01:17:41 GMT"
+      recorded_at: "Fri, 08 Aug 2014 01:17:42 GMT"
   recorded_with: "VCR 2.9.2"

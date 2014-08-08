@@ -2,7 +2,7 @@
   http_interactions: 
     - request: 
         method: get
-        uri: "https://bigip/mgmt/tm/ltm/monitor/tcp-half-open/?expandSubcollections=true"
+        uri: "https://bigip/mgmt/tm/ltm/monitor/tcp/?expandSubcollections=true"
         body: 
           encoding: US-ASCII
           string: ""
@@ -17,7 +17,7 @@
           message: 
         headers: 
           date: 
-            - "08 Aug 2014 01:17:41 UTC"
+            - "08 Aug 2014 01:17:42 UTC"
           server: 
             - com.f5.rest.common.RestRequestSender
           set-cookie: 
@@ -27,7 +27,7 @@
           cache-control: 
             - no-cache
           content-length: 
-            - "1019"
+            - "928"
           content-type: 
             - application/json
           x-content-type-options: 
@@ -42,15 +42,15 @@
             - close
         body: 
           encoding: UTF-8
-          string: "{\x22kind\x22:\x22tm:ltm:monitor:tcp-half-open:tcp-half-opencollectionstate\x22,\x22selfLink\x22:\x22https://localhost/mgmt/tm/ltm/monitor/tcp-half-open?expandSubcollections=true&ver=11.5.1\x22,\x22items\x22:[{\x22kind\x22:\x22tm:ltm:monitor:tcp-half-open:tcp-half-openstate\x22,\x22name\x22:\x22tcp_half_closed\x22,\x22partition\x22:\x22Common\x22,\x22fullPath\x22:\x22/Common/tcp_half_closed\x22,\x22generation\x22:0,\x22selfLink\x22:\x22https://localhost/mgmt/tm/ltm/monitor/tcp-half-open/~Common~tcp_half_closed?ver=11.5.1\x22,\x22defaultsFrom\x22:\x22/Common/tcp_half_open\x22,\x22description\x22:\x22tcphalftest\x22,\x22destination\x22:\x2210.0.0.1:23\x22,\x22interval\x22:5,\x22manualResume\x22:\x22disabled\x22,\x22timeUntilUp\x22:5,\x22timeout\x22:16,\x22transparent\x22:\x22disabled\x22,\x22upInterval\x22:5},{\x22kind\x22:\x22tm:ltm:monitor:tcp-half-open:tcp-half-openstate\x22,\x22name\x22:\x22tcp_half_open\x22,\x22partition\x22:\x22Common\x22,\x22fullPath\x22:\x22/Common/tcp_half_open\x22,\x22generation\x22:0,\x22selfLink\x22:\x22https://localhost/mgmt/tm/ltm/monitor/tcp-half-open/~Common~tcp_half_open?ver=11.5.1\x22,\x22destination\x22:\x22*:*\x22,\x22interval\x22:5,\x22manualResume\x22:\x22disabled\x22,\x22timeUntilUp\x22:0,\x22timeout\x22:16,\x22transparent\x22:\x22disabled\x22,\x22upInterval\x22:0}]}"
+          string: "{\x22kind\x22:\x22tm:ltm:monitor:tcp:tcpcollectionstate\x22,\x22selfLink\x22:\x22https://localhost/mgmt/tm/ltm/monitor/tcp?expandSubcollections=true&ver=11.5.1\x22,\x22items\x22:[{\x22kind\x22:\x22tm:ltm:monitor:tcp:tcpstate\x22,\x22name\x22:\x22tcp\x22,\x22partition\x22:\x22Common\x22,\x22fullPath\x22:\x22/Common/tcp\x22,\x22generation\x22:0,\x22selfLink\x22:\x22https://localhost/mgmt/tm/ltm/monitor/tcp/~Common~tcp?ver=11.5.1\x22,\x22destination\x22:\x22*:*\x22,\x22interval\x22:5,\x22ipDscp\x22:0,\x22manualResume\x22:\x22disabled\x22,\x22reverse\x22:\x22disabled\x22,\x22timeUntilUp\x22:0,\x22timeout\x22:16,\x22transparent\x22:\x22disabled\x22,\x22upInterval\x22:0},{\x22kind\x22:\x22tm:ltm:monitor:tcp:tcpstate\x22,\x22name\x22:\x22tcp_test\x22,\x22partition\x22:\x22Common\x22,\x22fullPath\x22:\x22/Common/tcp_test\x22,\x22generation\x22:0,\x22selfLink\x22:\x22https://localhost/mgmt/tm/ltm/monitor/tcp/~Common~tcp_test?ver=11.5.1\x22,\x22defaultsFrom\x22:\x22/Common/tcp\x22,\x22description\x22:\x22tcptest\x22,\x22destination\x22:\x2210.0.0.1:23\x22,\x22interval\x22:5,\x22ipDscp\x22:0,\x22manualResume\x22:\x22disabled\x22,\x22reverse\x22:\x22disabled\x22,\x22timeUntilUp\x22:5,\x22timeout\x22:16,\x22transparent\x22:\x22disabled\x22,\x22upInterval\x22:5}]}"
         http_version: 
-      recorded_at: "Fri, 08 Aug 2014 01:17:41 GMT"
+      recorded_at: "Fri, 08 Aug 2014 01:17:42 GMT"
     - request: 
         method: put
-        uri: "https://bigip/mgmt/tm/ltm/monitor/tcp-half-open/tcp_half_closed"
+        uri: "https://bigip/mgmt/tm/ltm/monitor/tcp/tcp_test"
         body: 
           encoding: UTF-8
-          string: "{\x22transparent\x22:\x22enabled\x22,\x22name\x22:\x22tcp_half_closed\x22,\x22partition\x22:\x22/Common\x22}"
+          string: "{\x22transparent\x22:\x22enabled\x22,\x22name\x22:\x22tcp_test\x22,\x22partition\x22:\x22/Common\x22}"
         headers: 
           Authorization: 
             - "Basic YWRtaW46YWRtaW4="
@@ -64,7 +64,7 @@
           message: 
         headers: 
           date: 
-            - "08 Aug 2014 01:17:41 UTC"
+            - "08 Aug 2014 01:17:42 UTC"
           server: 
             - com.f5.rest.common.RestRequestSender
           set-cookie: 
@@ -74,7 +74,7 @@
           cache-control: 
             - no-cache
           content-length: 
-            - "421"
+            - "388"
           content-type: 
             - application/json
           x-content-type-options: 
@@ -89,7 +89,7 @@
             - close
         body: 
           encoding: UTF-8
-          string: "{\x22kind\x22:\x22tm:ltm:monitor:tcp-half-open:tcp-half-openstate\x22,\x22name\x22:\x22tcp_half_closed\x22,\x22fullPath\x22:\x22tcp_half_closed\x22,\x22generation\x22:0,\x22selfLink\x22:\x22https://localhost/mgmt/tm/ltm/monitor/tcp-half-open/tcp_half_closed?ver=11.5.1\x22,\x22defaultsFrom\x22:\x22/Common/tcp_half_open\x22,\x22description\x22:\x22tcphalftest\x22,\x22destination\x22:\x2210.0.0.1:23\x22,\x22interval\x22:5,\x22manualResume\x22:\x22disabled\x22,\x22timeUntilUp\x22:5,\x22timeout\x22:16,\x22transparent\x22:\x22enabled\x22,\x22upInterval\x22:5}"
+          string: "{\x22kind\x22:\x22tm:ltm:monitor:tcp:tcpstate\x22,\x22name\x22:\x22tcp_test\x22,\x22fullPath\x22:\x22tcp_test\x22,\x22generation\x22:0,\x22selfLink\x22:\x22https://localhost/mgmt/tm/ltm/monitor/tcp/tcp_test?ver=11.5.1\x22,\x22defaultsFrom\x22:\x22/Common/tcp\x22,\x22description\x22:\x22tcptest\x22,\x22destination\x22:\x2210.0.0.1:23\x22,\x22interval\x22:5,\x22ipDscp\x22:0,\x22manualResume\x22:\x22disabled\x22,\x22reverse\x22:\x22disabled\x22,\x22timeUntilUp\x22:5,\x22timeout\x22:16,\x22transparent\x22:\x22enabled\x22,\x22upInterval\x22:5}"
         http_version: 
-      recorded_at: "Fri, 08 Aug 2014 01:17:41 GMT"
+      recorded_at: "Fri, 08 Aug 2014 01:17:42 GMT"
   recorded_with: "VCR 2.9.2"
