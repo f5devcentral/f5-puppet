@@ -92,6 +92,27 @@ class Puppet::Provider::F5 < Puppet::Provider
     return message
   end
 
+  # We need to convert our puppet array into a \n seperated string.
+  def headers_conversion(message)
+    if message[:headers]
+      message[:headers] = message[:headers].join("\n")
+    end
+
+    return message
+  end
+
+  # We need to convert our puppet array into a space seperated string.
+  def filters_conversion(message)
+    if message[:filter]
+      message[:filter] = message[:filter].join(' ')
+    end
+    if message[:filterNeg]
+      message[:filterNeg] = message[:filterNeg].join(' ')
+    end
+
+    return message
+  end
+
   def convert_underscores(hash)
     # Here lies some evil magic.  We want to replace all _'s with -'s in the
     # key names of the hash we create from the object we've passed into message.

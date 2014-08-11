@@ -7,8 +7,8 @@ describe Puppet::Type.type(:f5_monitor) do
   end
 
   {
-    'additional_accepted_status_codes' => { pass: %w(any none 20 300 400 5000), fail: %w(true false enabled word ) },
-    'additional_rejected_status_codes' => { pass: %w(any none 20 300 400 5000), fail: %w(true false enabled word ) },
+    'additional_accepted_status_codes' => { pass: %w(* any none 100 300 400 999 ), fail: %w(99 1000 true false enabled word ) },
+    'additional_rejected_status_codes' => { pass: %w(* any none 100 300 400 999 ), fail: %w(99 1000 true false enabled word ) },
     'alias_address'                    => { pass: %w(10.1.1.1 192.168.1.1 4.2.2.2 2001:cdba:0000:0000:0000:0000:3257:9652), fail: %w(-1 256 true false enabled word 0.15) },
     'alias_service_port'               => { pass: %w(* 1 10 20 65535), fail: %w(-1 65536 mimic true false enabled word 0.15) },
     'chase_referrals'                  => { pass: %w(enabled disabled yes no true false), fail: %w(please magic present superenabled) },

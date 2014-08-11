@@ -168,16 +168,18 @@ Puppet::Type.newtype(:f5_monitor) do
   end
 
   newproperty(:additional_accepted_status_codes, :array_matching => :all) do
+    options = '<*|any|100-999>'
     validate do |value|
-      unless ['any', 'none'].include?(value) or value =~ /\d+/
+      unless ['*', 'any', 'none'].include?(value) or value.to_i.between?(100,999)
         fail ArgumentError, "Valid options: #{options}"
       end
     end
   end
 
   newproperty(:additional_rejected_status_codes, :array_matching => :all) do
+    options = '<*|any|100-999>'
     validate do |value|
-      unless ['any', 'none'].include?(value) or value =~ /\d+/
+      unless ['*', 'any', 'none'].include?(value) or value.to_i.between?(100,999)
         fail ArgumentError, "Valid options: #{options}"
       end
     end
