@@ -1,0 +1,50 @@
+--- 
+http_interactions: 
+- request: 
+    method: post
+    uri: https://bigip/mgmt/tm/ltm/monitor/ldap
+    body: 
+      encoding: UTF-8
+      string: "{\"name\":\"ldap_test\",\"description\":\"test\",\"interval\":10,\"up-interval\":0,\"time-until-up\":0,\"timeout\":31,\"manual-resume\":\"disabled\",\"username\":\"apenney\",\"password\":\"$M$LT$/seJfDdtCIUdOHcIBdKfIA==\",\"debug\":\"no\",\"base\":\"ou=Base\",\"filter\":\"ou=Filter\",\"security\":\"ssl\",\"mandatory-attributes\":\"yes\",\"chase-referrals\":\"yes\",\"partition\":\"/Common\",\"destination\":\"*:*\"}"
+    headers: 
+      Authorization: 
+      - Basic YWRtaW46YWRtaW4=
+      User-Agent: 
+      - Faraday v0.8.9
+      Content-Type: 
+      - application/json
+  response: 
+    status: 
+      code: 200
+      message: 
+    headers: 
+      date: 
+      - 11 Aug 2014 21:34:09 UTC
+      server: 
+      - com.f5.rest.common.RestRequestSender
+      set-cookie: 
+      - BIGIPAuthCookie=017EA784717D2DC416AFD90FB58842083DE1BD23; path=/; Secure; HttpOnly, BIGIPAuthUsernameCookie=admin; path=/; Secure; HttpOnly
+      x-frame-options: 
+      - SAMEORIGIN
+      cache-control: 
+      - no-cache
+      content-length: 
+      - "550"
+      content-type: 
+      - application/json
+      x-content-type-options: 
+      - nosniff
+      x-xss-protection: 
+      - 1; mode=block
+      content-security-policy: 
+      - default-src 'self'  'unsafe-inline' 'unsafe-eval'
+      strict-transport-security: 
+      - max-age=16070400; includeSubDomains
+      connection: 
+      - close
+    body: 
+      encoding: US-ASCII
+      string: "{\"kind\":\"tm:ltm:monitor:ldap:ldapstate\",\"name\":\"ldap_test\",\"partition\":\"Common\",\"fullPath\":\"/Common/ldap_test\",\"generation\":0,\"selfLink\":\"https://localhost/mgmt/tm/ltm/monitor/ldap/~Common~ldap_test?ver=11.5.0\",\"base\":\"ou=Base\",\"chaseReferrals\":\"yes\",\"debug\":\"no\",\"defaultsFrom\":\"/Common/ldap\",\"description\":\"test\",\"destination\":\"*:*\",\"filter\":\"ou=Filter\",\"interval\":10,\"mandatoryAttributes\":\"yes\",\"manualResume\":\"disabled\",\"password\":\"$M$4T$wrBZiPjvvKNStDm0iNXjHw==\",\"security\":\"ssl\",\"timeUntilUp\":0,\"timeout\":31,\"upInterval\":0,\"username\":\"apenney\"}"
+    http_version: 
+  recorded_at: Mon, 11 Aug 2014 21:34:09 GMT
+recorded_with: VCR 2.9.2
