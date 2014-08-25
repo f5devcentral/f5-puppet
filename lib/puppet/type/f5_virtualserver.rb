@@ -370,6 +370,26 @@ Puppet::Type.newtype(:f5_node) do
     if [self[:http_profile], self[:ftp_profile], self[:rtsp_profile], self[:socks_profile], self[:xml_profile]].select{|x| !!x}.length != 1
       fail ArgumentError, 'ERROR:  One of the `http`, `ftp`, `rtsp`, `socks`, or `xml` profiles must be set'
     end
+
+    if [:per_virtual_server, :per_destination_address].include?(self[:connection_rate_limit_mode])
+      fail ArgumentError, 'ERROR:  Connection_rate_limit_source_mask required.' unless self[:connection_rate_limit_source_mask]
+    end
+    if self[:connection_rate_limit_source_mask]
+      if self[:connection_rate_limit_mode] != /^(per_virtual_server|per_destination_address)$/
+        fail ArgumentError, 'ERROR:  Connection_rate_limit_source_mask may only be set if connection_rate_limit_mode is set to either `per_virtual_server` or `per_destination_address`'
+      end
+    end
+
+   # newvalues(:per_virtual_server, :per_virtual_server_and_source_address, :per_virtual_server_and_destination_address, :per_virtual_server_destination_and_source_address, :per_source_address, :per_destination_address, :per_source_and_destination_address)
+
+    if [:per_virtual_server_and_destination_address, :per_virtual_server_destination_and_source_address, :per_destination_address, :per_source_and_destination_address].include?(self[:connection_rate_limit_mode])
+      fail ArgumentError, 'ERROR:  Connection_rate_limit_destination_mask required.' unless self[:connection_rate_limit_destination_mask]
+    end
+    if self[:connection_rate_limit_destination_mask]
+      if self[:connection_rate_limit_mode] != /^(per_virtual_server_and_destination_address|per_virtual_server_destination_and_source_address|per_destination_address|per_source_and_destination_address)$/
+        fail ArgumentError, 'ERROR:  Connection_rate_limit_destination_mask may only be set if connection_rate_limit_mode is set to any of `per_virtual_server_and_destination_address`, `per_virtual_server_destination_and_source_address`, `per_destination_address`, `per_source_and_destination_address`'
+      end
+    end
   end
 
 end
