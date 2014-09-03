@@ -4,7 +4,7 @@ require 'puppet/property/connection_rate_limit'
 require 'puppet/property/description'
 require 'puppet/property/state'
 
-Puppet::Type.newtype(:f5_node) do
+Puppet::Type.newtype(:f5_virtualserver) do
   @doc = 'Manage node objects'
 
   apply_to_device
@@ -17,13 +17,14 @@ Puppet::Type.newtype(:f5_node) do
   newproperty(:state, :parent => Puppet::Property::F5State)
 
   newproperty(:source) do
+    # TODO: Should we validate this to an IP?
   end
 
   newproperty(:destination) do
     options = "{ 'host': '<string'>, 'network': '<string>' }"
 
     validate do |value|
-      unless value.is.a?(Hash) && value['host'] && value['network']
+      unless value.is_a?(Hash) && value['host'] && value['network']
         fail ArgumentError, "Destination: Valid options: #{options}"
       end
     end
@@ -54,7 +55,7 @@ Puppet::Type.newtype(:f5_node) do
 
     validate do |value|
       fail ArgumentError, "Protocol_profile_server: must match the pattern /Partition/name" unless value =~ /^\/\w+\/(\w|\d|\.)+$/
-      fail ArgumentError, "Protocol_profile_server: Valid options: #{options}" unless options.include?(value)
+      fail ArgumentError, "Protocol_profile_server: Valid options: #{options}" unless options.include?(File.basename(value))
     end
   end
 
@@ -161,11 +162,16 @@ Puppet::Type.newtype(:f5_node) do
     validate do |value|
       # Make sure we either have all or a hash.
       fail ArgumentError, "Vlan_and_tunnel_traffic: Valid options: #{options}" unless value =~ /^all$/ || value.is_a?(Hash)
-      # Make sure the hash contains either enabled or disabled.
-      fail ArgumentError, "Vlan_and_tunnel_traffic: Valid options: #{options}" unless value[:enabled] || value[:disabled]
-      # Count after validation matches the count before so all validated OK.
-      fail ArgumentError, "Vlan_and_tunnel_traffic: Valid options: #{options}" unless value[:enabled].select {|obj| obj =~  /^\/\w+\/(\w|\d|\.)+$/}.count == value[:enabled].count
-      fail ArgumentError, "Vlan_and_tunnel_traffic: Valid options: #{options}" unless value[:disabled].select {|obj| obj  =~ /^\/\w+\/(\w|\d|\.)+$/}.count == value[:disabled].count
+      if value.is_a?(Hash)
+        # Make sure the hash contains either enabled or disabled.
+        fail ArgumentError, "Vlan_and_tunnel_traffic: Valid options: #{options}" unless value['enabled'] || value['disabled']
+        # Count after validation matches the count before so all validated OK.
+        if value['enabled']
+          fail ArgumentError, "Vlan_and_tunnel_traffic: Valid options: #{options}" unless value['enabled'].select {|obj| obj =~  /^\/\w+\/(\w|\d|\.)+$/}.count == value['enabled'].count
+        elsif value['disabled']
+          fail ArgumentError, "Vlan_and_tunnel_traffic: Valid options: #{options}" unless value['disabled'].select {|obj| obj  =~ /^\/\w+\/(\w|\d|\.)+$/}.count == value['disabled'].count
+        end
+      end
     end
   end
 
