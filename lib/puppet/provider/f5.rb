@@ -137,4 +137,31 @@ class Puppet::Provider::F5 < Puppet::Provider
     hash.reject { |k, v| v.nil? }
   end
 
+  # Find the type of a given profile in the profile cache, or if it is not found
+  # try reloading the cache and looking again.
+  def self.find_profile_type(profile)
+    profiles = @@profile_cache ||= sort_profiles
+    if profiles[profile]
+      profiles[profile]
+    else
+      @@profile_cache = sort_profiles
+      @@profile_cache[profile]
+    end
+  end
+
+  # Find all profiles on the F5 and associate them as
+  # <profile name> => <profile type>
+  # (profile names are unique for all profile types)
+  def self.sort_profiles
+    profile_types = Puppet::Provider::F5.call("/mgmt/tm/ltm/profile").collect do |hash|
+      hash["reference"]["link"].match(%r{([^/]+)\?})[1]
+    end
+    profile_types.inject({}) do |memo,profile_type|
+      profile_array = Puppet::Provider::F5.call("/mgmt/tm/ltm/profile/#{profile_type}") || []
+      profile_hash = profile_array.inject({}) do |m,profile|
+        m.merge!(profile["fullPath"] => profile_type)
+      end
+      memo.merge! profile_hash
+    end
+  end
 end

@@ -203,12 +203,7 @@ Puppet::Type.type(:f5_pool).provide(:rest, parent: Puppet::Provider::F5) do
     }
 
     # We need to rename some properties back to the API.
-    map.each do |k, v|
-      next unless hash[k]
-      value = hash[k]
-      message.delete(k)
-      message[v] = value
-    end
+    message = rename_keys(map, message)
 
     # Apply transformations
     message.each do |k, v|

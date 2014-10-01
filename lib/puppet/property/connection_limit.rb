@@ -9,4 +9,7 @@ class Puppet::Property::F5ConnectionLimit < Puppet::Property
       raise ArgumentError, "#{name} must be an Integer"
     end
   end
+  munge do |value|
+    Integer(value)
+  end
 end
