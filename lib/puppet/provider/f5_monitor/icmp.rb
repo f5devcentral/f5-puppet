@@ -11,6 +11,8 @@ Puppet::Type.type(:f5_monitor).provide(:icmp, parent: Puppet::Provider::F5) do
   def self.instances
     instances = []
     monitors = Puppet::Provider::F5.call('/mgmt/tm/ltm/monitor/icmp')
+    return [] if monitors.nil?
+
     monitors.each do |monitor|
       instances << new(
         ensure:                 :present,

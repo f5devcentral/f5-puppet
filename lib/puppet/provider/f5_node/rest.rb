@@ -6,6 +6,8 @@ Puppet::Type.type(:f5_node).provide(:rest, parent: Puppet::Provider::F5) do
   def self.instances
     instances = []
     nodes = Puppet::Provider::F5.call('/mgmt/tm/ltm/node')
+    return [] if nodes.nil?
+
     nodes.each do |node|
       instances << new(
         ensure:                :present,

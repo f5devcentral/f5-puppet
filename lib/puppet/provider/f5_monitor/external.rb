@@ -11,6 +11,8 @@ Puppet::Type.type(:f5_monitor).provide(:external, parent: Puppet::Provider::F5) 
   def self.instances
     instances = []
     monitors = Puppet::Provider::F5.call('/mgmt/tm/ltm/monitor/external')
+    return [] if monitors.nil?
+
     monitors.each do |monitor|
       aliasAddress, aliasServicePort = monitor['destination'].split(':')
       instances << new(

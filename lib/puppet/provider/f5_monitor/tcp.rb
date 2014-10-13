@@ -11,6 +11,8 @@ Puppet::Type.type(:f5_monitor).provide(:tcp, parent: Puppet::Provider::F5) do
   def self.instances
     instances = []
     monitors = Puppet::Provider::F5.call('/mgmt/tm/ltm/monitor/tcp')
+    return [] if monitors.nil?
+
     monitors.each do |monitor|
       aliasAddress, aliasServicePort = monitor['destination'].split(':')
       instances << new(
@@ -25,9 +27,9 @@ Puppet::Type.type(:f5_monitor).provide(:tcp, parent: Puppet::Provider::F5) do
         timeout:                monitor['timeout'],
         transparent:            monitor['transparent'],
         up_interval:            monitor['upInterval'],
-        send_string:            monitor['send'],
-        receive_disable_string: monitor['recvDisable'],
-        receive_string:         monitor['recv'],
+        send_string:            monitor['send'] || "",
+        receive_disable_string: monitor['recvDisable'] || "",
+        receive_string:         monitor['recv'] || "",
         reverse:                monitor['reverse'],
         ip_dscp:                monitor['ipDscp'],
       )
