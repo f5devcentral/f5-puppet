@@ -1,13 +1,13 @@
 require 'puppet/provider/f5'
 
-Puppet::Type.type(:f5_virtualserver).provide(:forwarding_layer_2, parent: Puppet::Provider::F5) do
+Puppet::Type.type(:f5_virtualserver).provide(:forwarding_ip, parent: Puppet::Provider::F5) do
 
   def self.instances
     instances = []
     virtualservers = Puppet::Provider::F5.call('/mgmt/tm/ltm/virtual')
     return [] if virtualservers.nil?
     virtualservers = virtualservers.select do |vs|
-      vs['l2Forward'] == true
+      vs['ipForward'] == true
     end
 
     virtualservers.each do |vserver|
@@ -104,8 +104,7 @@ Puppet::Type.type(:f5_virtualserver).provide(:forwarding_layer_2, parent: Puppet
         bandwidth_controller:                   vserver["bwcPolicy"],
         traffic_class:                          vserver["trafficClasses"],
         rate_class:                             vserver["rateClass"],
-        default_pool:                           vserver["pool"],
-        l2_forward:                             true,
+        ip_forward:                             true,
       )
     end
 
@@ -133,7 +132,7 @@ Puppet::Type.type(:f5_virtualserver).provide(:forwarding_layer_2, parent: Puppet
     # Allows us to pass in resources and get all the attributes out
     # in the form of a hash.
     message = object.to_hash
-    message[:l2_forward] = true
+    message[:ip_forward] = true
 
     # Map for conversion in the message.
     map = {
@@ -151,7 +150,6 @@ Puppet::Type.type(:f5_virtualserver).provide(:forwarding_layer_2, parent: Puppet
       :'destination-mask'                       => :mask,
       :'port-translation'                       => :'translate-port',
       :'traffic-class'                          => :'traffic-classes',
-      :'default-pool'                           => :pool,
     }
 
     message[:destination] = "#{partition}/#{message[:destination_address]}:#{message[:service_port]}"
