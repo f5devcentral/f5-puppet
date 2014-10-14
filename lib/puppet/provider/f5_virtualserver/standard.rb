@@ -109,7 +109,7 @@ Puppet::Type.type(:f5_virtualserver).provide(:standard, parent: Puppet::Provider
         vs_score:                               vserver["gtmScore"],
         protocol:                               vserver["ipProtocol"],
         last_hop_pool:                          vserver["lastHopPool"],
-        #vserver["mirror"]
+        connection_mirroring:                   vserver["mirror"],
         #vserver["mobileAppTunnel"]
         nat64:                                  vserver["nat64"],
         connection_rate_limit:                  vserver["rateLimit"],
@@ -193,6 +193,7 @@ Puppet::Type.type(:f5_virtualserver).provide(:standard, parent: Puppet::Provider
       :'authentication-profiles'                => :auth,
       :'vs-score'                               => :'gtm-score',
       :protocol                                 => :'ip-protocol',
+      :'connection-mirroring'                   => :mirror,
       :'connection-rate-limit'                  => :'rate-limit',
       :'connection-rate-limit-mode'             => :'rate-limit-mode',
       :'connection-rate-limit-destination-mask' => :'rate-limit-dst-mask',

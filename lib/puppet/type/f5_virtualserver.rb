@@ -63,6 +63,10 @@ Puppet::Type.newtype(:f5_virtualserver) do
     newvalues(:all, :tcp, :udp, :sctp)
   end
 
+  newproperty(:connection_mirroring, :parent => Puppet::Property::F5truthy) do
+    truthy_property("Mirror connection and persistence information to another device, to prevent interruption in service during failover")
+  end
+
   newproperty(:address_status, :parent => Puppet::Property::F5truthy) do
     truthy_property("Notify Status to Virtual Address in the gui", :yes, :no)
   end

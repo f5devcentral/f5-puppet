@@ -80,7 +80,7 @@ Puppet::Type.type(:f5_virtualserver).provide(:forwarding_layer_2, parent: Puppet
         vs_score:                               vserver["gtmScore"],
         protocol:                               vserver["ipProtocol"],
         last_hop_pool:                          vserver["lastHopPool"],
-        #vserver["mirror"]
+        connection_mirroring:                   vserver["mirror"],
         #vserver["mobileAppTunnel"]
         nat64:                                  vserver["nat64"],
         connection_rate_limit:                  vserver["rateLimit"],
@@ -139,6 +139,7 @@ Puppet::Type.type(:f5_virtualserver).provide(:forwarding_layer_2, parent: Puppet
     map = {
       :'vs-score'                               => :'gtm-score',
       :protocol                                 => :'ip-protocol',
+      :'connection-mirroring'                   => :mirror,
       :'connection-rate-limit'                  => :'rate-limit',
       :'connection-rate-limit-mode'             => :'rate-limit-mode',
       :'connection-rate-limit-destination-mask' => :'rate-limit-dst-mask',
