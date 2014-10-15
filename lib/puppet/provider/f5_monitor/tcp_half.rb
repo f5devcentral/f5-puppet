@@ -11,6 +11,8 @@ Puppet::Type.type(:f5_monitor).provide(:tcp_half, parent: Puppet::Provider::F5) 
   def self.instances
     instances = []
     monitors = Puppet::Provider::F5.call('/mgmt/tm/ltm/monitor/tcp-half-open')
+    return [] if monitors.nil?
+
     monitors.each do |monitor|
       aliasAddress, aliasServicePort = monitor['destination'].split(':')
       instances << new(

@@ -11,6 +11,8 @@ Puppet::Type.type(:f5_irule).provide(:rest, parent: Puppet::Provider::F5) do
   def self.instances
     instances = []
     irules = Puppet::Provider::F5.call('/mgmt/tm/ltm/rule')
+    return [] if irules.nil?
+
     irules.each do |irule|
       if irule['apiRawValues'] and irule['apiRawValues']['verificationStatus'] == 'signature-verified'
         verify = :true

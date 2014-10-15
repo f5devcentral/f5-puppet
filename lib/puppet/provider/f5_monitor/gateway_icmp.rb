@@ -11,6 +11,8 @@ Puppet::Type.type(:f5_monitor).provide(:gateway_icmp, parent: Puppet::Provider::
   def self.instances
     instances = []
     monitors = Puppet::Provider::F5.call('/mgmt/tm/ltm/monitor/gateway-icmp')
+    return [] if monitors.nil?
+
     monitors.each do |monitor|
       aliasAddress, aliasServicePort = monitor['destination'].split(':')
       instances << new(

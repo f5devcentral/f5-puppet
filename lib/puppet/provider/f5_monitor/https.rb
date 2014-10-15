@@ -11,6 +11,8 @@ Puppet::Type.type(:f5_monitor).provide(:https, parent: Puppet::Provider::F5) do
   def self.instances
     instances = []
     monitors = Puppet::Provider::F5.call('/mgmt/tm/ltm/monitor/https')
+    return [] if monitors.nil?
+
     monitors.each do |monitor|
       aliasAddress, aliasServicePort = monitor['destination'].split(':')
       instances << new(
@@ -26,10 +28,10 @@ Puppet::Type.type(:f5_monitor).provide(:https, parent: Puppet::Provider::F5) do
         manual_resume:          monitor['manualResume'],
         name:                   monitor['fullPath'],
         password:               monitor['password'],
-        receive_disable_string: monitor['recvDisable'],
-        receive_string:         monitor['recv'],
+        receive_disable_string: monitor['recvDisable'] || "",
+        receive_string:         monitor['recv'] || "",
         reverse:                monitor['reverse'],
-        send_string:            monitor['send'],
+        send_string:            monitor['send'] || "",
         time_until_up:          monitor['timeUntilUp'],
         timeout:                monitor['timeout'],
         transparent:            monitor['transparent'],
