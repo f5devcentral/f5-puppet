@@ -47,7 +47,7 @@ Puppet::Type.newtype(:f5_virtualserver) do
       fail ArgumentError, "Service_port: Valid options: #{options}" unless value =~ /^(\*|\d+)$/
       # Only check in the case of a number.
       if value =~ /\d+$/
-        fail ArgumentError, "Service_port:  Must be between 1-65535" unless value.to_i.between?(1,65535)
+        fail ArgumentError, "Service_port:  Must be between 1-65535" unless value.to_i.between?(0,65535)
       end
     end
     munge do |value|
@@ -189,7 +189,7 @@ Puppet::Type.newtype(:f5_virtualserver) do
   newproperty(:connection_rate_limit_source_mask) do
     options = "<0-32>"
     validate do |value|
-      fail ArgumentError, "Connection_rate_limit_source_mask: Valid options: #{options}" unless value.to_i.between?(0,32)
+      #fail ArgumentError, "Connection_rate_limit_source_mask: Valid options: #{options}" unless value.to_i.between?(0,32)
     end
     munge do |value|
       Integer(value)
@@ -200,7 +200,7 @@ Puppet::Type.newtype(:f5_virtualserver) do
   newproperty(:connection_rate_limit_destination_mask) do
     options = "<0-32>"
     validate do |value|
-      fail ArgumentError, "Connection_rate_limit_destination_mask: Valid options: #{options}" unless value.to_i.between?(0,32)
+      #fail ArgumentError, "Connection_rate_limit_destination_mask: Valid options: #{options}" unless value.to_i.between?(0,32)
     end
     munge do |value|
       Integer(value)
@@ -308,18 +308,18 @@ Puppet::Type.newtype(:f5_virtualserver) do
       fail ArgumentError, 'ERROR:  One of the `http_profile`, `ftp_profile`, `rtsp_profile`, `socks_profile`, or `xml_profile` attributes must be set for standard virtualservers'
     end
 
-    if [:per_virtual_server_and_source_address, :per_virtual_server_destination_and_source_address, :per_source_address, :per_source_and_destination_address].include?(self[:connection_rate_limit_mode]) and ! self[:connection_rate_limit_source_mask]
-      fail ArgumentError, 'ERROR:  Connection_rate_limit_source_mask required.'
-    end
-    if ! [:per_virtual_server_and_source_address, :per_virtual_server_destination_and_source_address, :per_source_address, :per_source_and_destination_address].include?(self[:connection_rate_limit_mode]) and self[:connection_rate_limit_source_mask]
-      fail ArgumentError, 'ERROR:  Connection_rate_limit_source_mask may only be set if connection_rate_limit_mode is set to one of `per_virtual_server_and_source_address`, `per_virtual_server_destination_and_source_address`, `per_source_address`, or `per_source_and_destination_address`'
-    end
+    #if [:per_virtual_server_and_source_address, :per_virtual_server_destination_and_source_address, :per_source_address, :per_source_and_destination_address].include?(self[:connection_rate_limit_mode]) and ! self[:connection_rate_limit_source_mask]
+    #  fail ArgumentError, 'ERROR:  Connection_rate_limit_source_mask required.'
+    #end
+    #if ! [:per_virtual_server_and_source_address, :per_virtual_server_destination_and_source_address, :per_source_address, :per_source_and_destination_address].include?(self[:connection_rate_limit_mode]) and self[:connection_rate_limit_source_mask]
+    #  fail ArgumentError, 'ERROR:  Connection_rate_limit_source_mask may only be set if connection_rate_limit_mode is set to one of `per_virtual_server_and_source_address`, `per_virtual_server_destination_and_source_address`, `per_source_address`, or `per_source_and_destination_address`'
+    #end
 
-    if [:per_virtual_server_and_destination_address, :per_virtual_server_destination_and_source_address, :per_destination_address, :per_source_and_destination_address].include?(self[:connection_rate_limit_mode]) and ! self[:connection_rate_limit_destination_mask]
-      fail ArgumentError, 'ERROR:  Connection_rate_limit_destination_mask required.'
-    end
-    if ! [:per_virtual_server_and_destination_address, :per_virtual_server_destination_and_source_address, :per_destination_address, :per_source_and_destination_address].include?(self[:connection_rate_limit_mode]) and self[:connection_rate_limit_destination_mask]
-      fail ArgumentError, 'ERROR:  Connection_rate_limit_destination_mask may only be set if connection_rate_limit_mode is set to one of `per_virtual_server_and_destination_address`, `per_virtual_server_destination_and_source_address`, `per_destination_address`, or `per_source_and_destination_address`'
-    end
+    #if [:per_virtual_server_and_destination_address, :per_virtual_server_destination_and_source_address, :per_destination_address, :per_source_and_destination_address].include?(self[:connection_rate_limit_mode]) and ! self[:connection_rate_limit_destination_mask]
+    #  fail ArgumentError, 'ERROR:  Connection_rate_limit_destination_mask required.'
+    #end
+    #if ! [:per_virtual_server_and_destination_address, :per_virtual_server_destination_and_source_address, :per_destination_address, :per_source_and_destination_address].include?(self[:connection_rate_limit_mode]) and self[:connection_rate_limit_destination_mask]
+    #  fail ArgumentError, 'ERROR:  Connection_rate_limit_destination_mask may only be set if connection_rate_limit_mode is set to one of `per_virtual_server_and_destination_address`, `per_virtual_server_destination_and_source_address`, `per_destination_address`, or `per_source_and_destination_address`'
+    #end
   end
 end
