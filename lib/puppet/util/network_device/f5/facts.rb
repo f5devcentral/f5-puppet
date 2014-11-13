@@ -28,8 +28,9 @@ class Puppet::Util::NetworkDevice::F5::Facts
     end
 
     # Map F5 names to expected standard names.
-    @facts[:fqdn]       = @facts[:hostname]
-    @facts[:macaddress] = @facts[:baseMac]
+    @facts[:fqdn]            = @facts[:hostname]
+    @facts[:macaddress]      = @facts[:baseMac]
+    @facts[:operatingsystem] = :F5
 
     return @facts
   end

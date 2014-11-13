@@ -55,18 +55,13 @@ Puppet::Type.type(:f5_node).provide(:rest, parent: Puppet::Provider::F5) do
       connection_rate_limit: :rateLimit
     }
 
+    # We need to rename some properties back to the API.
+    message = rename_keys(map, message)
+
     # Create the message by stripping :present.
     message             = hash.reject { |k, _| [:ensure, :loglevel, :provider].include?(k) }
     message[:name]      = basename
     message[:partition] = partition
-
-    # We need to rename some properties back to the API.
-    map.each do |k, v|
-      next unless hash[k]
-      value = hash[k]
-      message.delete(k)
-      message[v] = value
-    end
 
     # Apply transformations
     message.each do |k, v|
