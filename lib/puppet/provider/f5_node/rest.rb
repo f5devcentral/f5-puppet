@@ -47,32 +47,19 @@ Puppet::Type.type(:f5_node).provide(:rest, parent: Puppet::Provider::F5) do
   def message(object)
     # Allows us to pass in resources and get all the attributes out
     # in the form of a hash.
-    hash = object.to_hash
+    message = object.to_hash
 
     # Map for conversion in the message.
     map = {
-      connection_limit: :connectionLimit,
-      connection_rate_limit: :rateLimit
+      :'connection-rate-limit' => :rateLimit
     }
 
-    # We need to rename some properties back to the API.
+    message = strip_nil_values(message)
+    message = convert_underscores(message)
     message = rename_keys(map, message)
-
-    # Create the message by stripping :present.
-    message             = hash.reject { |k, _| [:ensure, :loglevel, :provider].include?(k) }
-    message[:name]      = basename
-    message[:partition] = partition
-
-    # Apply transformations
-    message.each do |k, v|
-      message[k] = Integer(v) if Puppet::Provider::F5.integer?(v)
-    end
-
-    # If monitor is an array then we need to rebuild the message.
-    if message[:monitor].is_a?(Array)
-      message.reject! { |k, _| [:monitor, :availability].include?(k) }
-      message[:monitor] = "min #{hash[:availability]} of #{hash[:monitor].join(' ')}"
-    end
+    message = create_message(basename, partition, message)
+    message = string_to_integer(message)
+    message = monitor_conversion(message)
 
     message.to_json
   end

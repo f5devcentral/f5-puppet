@@ -1,10 +1,20 @@
 require 'puppet/util/network_device/f5'
-require 'puppet/util/network_device/f5/transport'
+require 'puppet/util/network_device/transport/f5'
 require 'json'
 
 class Puppet::Provider::F5 < Puppet::Provider
+  def self.device(url)
+    Puppet::Util::NetworkDevice::F5::Device.new(url)
+  end
+
   def self.transport
-    @transport ||= Puppet::Util::NetworkDevice::F5::Transport.new(Facter.value(:url))
+    if Puppet::Util::NetworkDevice.current
+      #we are in `puppet device`
+      Puppet::Util::NetworkDevice.current.transport
+    else
+      #we are in `puppet resource`
+      Puppet::Util::NetworkDevice::Transport::F5.new(Facter.value(:url))
+    end
   end
 
   def self.connection
@@ -72,7 +82,7 @@ class Puppet::Provider::F5 < Puppet::Provider
   def monitor_conversion(hash)
     message = hash
     # If monitor is an array then we need to rebuild the message.
-    if hash[:monitor].is_a?(Array)
+    if hash[:availability] and hash[:monitor].is_a?(Array) and ! hash[:monitor].empty?
       message = hash.reject { |k, _| [:monitor, :availability].include?(k) }
       message[:monitor] = "min #{hash[:availability]} of #{hash[:monitor].join(' ')}"
     end

@@ -131,12 +131,26 @@ Puppet::Type.type(:f5_pool).provide(:rest, parent: Puppet::Provider::F5) do
   end
 
   def message(object)
-    hash = convert_underscores(object.to_hash)
+    # Allows us to pass in resources and get all the attributes out
+    # in the form of a hash.
+    message = object.to_hash
 
-    # Create the message by stripping :present.
-    message             = hash.reject { |k, _| [:ensure, :loglevel, :provider].include?(k) }
-    message[:name]      = basename
-    message[:partition] = partition
+    map = {
+      :'service-down'              => :'service-down-action',
+      :'request-queuing'           => :'queue-on-connection-limit',
+      :'request-queue-depth'       => :'queue-depth-limit',
+      :'request-queue-timeout'     => :'queue-time-limit',
+      :'ip-encapsulation'          => :'profiles',
+      :'load-balancing-method'     => :'load-balancing-mode',
+      :'priority-group-activation' => :'min-active-members',
+    }
+
+    # We need to rename some properties back to the API.
+    message = rename_keys(map, message)
+    message = convert_underscores(message)
+    message = create_message(basename, partition, message)
+    message = string_to_integer(message)
+    message = monitor_conversion(message)
 
     if message[:members]
       # Members is a whole world of pain.
@@ -166,57 +180,34 @@ Puppet::Type.type(:f5_pool).provide(:rest, parent: Puppet::Provider::F5) do
     # Do a bunch of renaming back to what the API expects.  This is awful.
     # We have to wrap each of the tests that use .to_sym in a check if they
     # even exist, otherwise we try to nil.to_sym.
-    message[:'priority-group-activation'] = 0 if hash[:'priority-group-activation'] == 'disabled'
+    message[:'priority-group-activation'] = 0 if message[:'priority-group-activation'] == 'disabled'
 
-    if hash[:'allow-nat']
-      message[:'allow-nat']  = 'yes' if hash[:'allow-nat'].to_sym == :true
-      message[:'allow-nat']  = 'no'  if hash[:'allow-nat'].to_sym == :false
+    if message[:'allow-nat']
+      message[:'allow-nat']  = 'yes' if message[:'allow-nat'].to_sym == :true
+      message[:'allow-nat']  = 'no'  if message[:'allow-nat'].to_sym == :false
     end
 
-    if hash[:'allow-snat']
-      message[:'allow-snat'] = 'yes' if hash[:'allow-snat'].to_sym == :true
-      message[:'allow-snat'] = 'no'  if hash[:'allow-snat'].to_sym == :false
+    if message[:'allow-snat']
+      message[:'allow-snat'] = 'yes' if message[:'allow-snat'].to_sym == :true
+      message[:'allow-snat'] = 'no'  if message[:'allow-snat'].to_sym == :false
     end
 
-    if hash[:'ignore-persisted-weight']
-      message[:'ignore-persisted-weight'] = 'enabled' if hash[:'ignore-persisted-weight'].to_sym == :true
-      message[:'ignore-persisted-weight'] = 'disabled' if hash[:'ignore-persisted-weight'].to_sym == :false
+    if message[:'ignore-persisted-weight']
+      message[:'ignore-persisted-weight'] = 'enabled' if message[:'ignore-persisted-weight'].to_sym == :true
+      message[:'ignore-persisted-weight'] = 'disabled' if message[:'ignore-persisted-weight'].to_sym == :false
     end
 
     # Set this in the hash so map picks it up.
-    if hash[:'service-down']
-      hash[:'service-down'] = 'reset' if hash[:'service-down'].to_sym == :reject
+    if message[:'service-down']
+      message[:'service-down'] = 'reset' if message[:'service-down'].to_sym == :reject
     end
-    if hash[:'request-queuing']
-      hash[:'request-queuing'] = 'disabled' if hash[:'request-queuing'].to_sym == :false
-      hash[:'request-queuing'] = 'enabled' if hash[:'request-queuing'].to_sym == :true
+    if message[:'request-queuing']
+      message[:'request-queuing'] = 'disabled' if message[:'request-queuing'].to_sym == :false
+      message[:'request-queuing'] = 'enabled' if message[:'request-queuing'].to_sym == :true
     end
 
-    map = {
-      :'service-down'              => :'service-down-action',
-      :'request-queuing'           => :'queue-on-connection-limit',
-      :'request-queue-depth'       => :'queue-depth-limit',
-      :'request-queue-timeout'     => :'queue-time-limit',
-      :'ip-encapsulation'          => :'profiles',
-      :'load-balancing-method'     => :'load-balancing-mode',
-      :'priority-group-activation' => :'min-active-members',
-    }
-
-    # We need to rename some properties back to the API.
-    message = rename_keys(map, message)
-
-    # Apply transformations
-    message.each do |k, v|
-      message[k] = Integer(v) if Puppet::Provider::F5.integer?(v)
-    end
     # Despite only allowing a single entry, profiles must be an array.
     message[:profiles] = Array(message[:profiles])
-
-    # If monitor is an array then we need to rebuild the message.
-    if message[:monitor].is_a?(Array)
-      message.reject! { |k, _| [:monitor, :availability].include?(k) }
-      message[:monitor] = "min #{hash[:availability]} of #{hash[:monitor].join(' ')}"
-    end
 
     message.to_json
   end
