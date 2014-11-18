@@ -4,10 +4,15 @@ class Puppet::Util::NetworkDevice::F5::Facts
 
   def initialize(transport)
     @transport = transport
-    @facts = {}
   end
 
   def retrieve
+    facts = {}
+    facts.merge(parse_device_facts)
+  end
+
+  def parse_device_facts
+    facts = {}
     result = @transport.call('/mgmt/tm/cm/device').first
 
       #'group_id',
@@ -24,16 +29,14 @@ class Puppet::Util::NetworkDevice::F5::Facts
       :timeZone,
       :version
     ].each do |fact|
-      @facts[fact] = result[fact.to_s]
+      facts[fact] = result[fact.to_s]
     end
 
     # Map F5 names to expected standard names.
-    @facts[:fqdn]            = @facts[:hostname]
-    @facts[:macaddress]      = @facts[:baseMac]
-    @facts[:operatingsystem] = :F5
+    facts[:fqdn]            = facts[:hostname]
+    facts[:macaddress]      = facts[:baseMac]
+    facts[:operatingsystem] = :F5
 
-    return @facts
+    return facts
   end
-
-
 end

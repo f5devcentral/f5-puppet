@@ -1,7 +1,9 @@
+require 'puppet/util/network_device'
+require 'puppet/util/network_device/transport'
+require 'puppet/util/network_device/transport/base'
 require 'faraday'
-require 'puppet/util/network_device/f5'
 
-class Puppet::Util::NetworkDevice::F5::Transport
+class Puppet::Util::NetworkDevice::Transport::F5 < Puppet::Util::NetworkDevice::Transport::Base
   attr_reader :connection
 
   def initialize(url, _options = {})
