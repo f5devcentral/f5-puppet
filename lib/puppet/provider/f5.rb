@@ -1,5 +1,5 @@
 require 'puppet/util/network_device/f5'
-require 'puppet/util/network_device/f5/transport'
+require 'puppet/util/network_device/transport/f5'
 require 'json'
 
 class Puppet::Provider::F5 < Puppet::Provider
@@ -8,7 +8,13 @@ class Puppet::Provider::F5 < Puppet::Provider
   end
 
   def self.transport
-    Puppet::Util::NetworkDevice.current.transport || Puppet::Util::NetworkDevice::Transport::F5.new(Facter.value(:url))
+    if Puppet::Util::NetworkDevice.current
+      #we are in `puppet device`
+      Puppet::Util::NetworkDevice.current.transport
+    else
+      #we are in `puppet resource`
+      Puppet::Util::NetworkDevice::Transport::F5.new(Facter.value(:url))
+    end
   end
 
   def self.connection
