@@ -221,20 +221,25 @@ Puppet::Type.newtype(:f5_pool) do
   end
 
   validate do
-    if ! self[:health_monitors] && self[:availability_requirement]
+    if ! self[:health_monitors] and self[:availability_requirement]
       fail ArgumentError, 'ERROR:  Availability cannot be set when no monitor is assigned.'
     end
 
-    # You can't have a minimum of more than the total number of monitors.
-    if self[:availability_requirement] =~ /\d+/
-      if Array(self[:health_monitors]).count < self[:availability_requirement].to_i
-        fail ArgumentError, 'ERROR:  Availability count cannot be more than the total number of monitors.'
+    if self[:health_monitors].is_a?(Array)
+      if self[:health_monitors] == ["default"] or self[:health_monitors] == ["/Common/none"]
+        if self[:availability_requirement]
+          fail ArgumentError, 'ERROR:  Availability cannot be managed when monitor is default or none'
+        end
+      elsif ! self[:availability_requirement]
+        fail ArgumentError, 'ERROR:  Availability must be set when monitors are assigned.'
       end
     end
 
-    if self[:health_monitors].is_a?(Array) && ! self[:availability_requirement]
-      fail ArgumentError, 'ERROR:  Availability must be set when monitors are assigned.'
+    # You can't have a minimum of more than the total number of monitors.
+    if String(self[:availability_requirement]).match(/\d+/)
+      if Array(self[:health_monitors]).count < Integer(self[:availability_requirement])
+        fail ArgumentError, 'ERROR:  Availability count cannot be more than the total number of monitors.'
+      end
     end
   end
-
 end

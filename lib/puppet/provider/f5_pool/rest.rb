@@ -16,12 +16,6 @@ Puppet::Type.type(:f5_pool).provide(:rest, parent: Puppet::Provider::F5) do
       # Map 0 pools to disabled.
       pool['minActiveMembers'] = 'disabled' if pool['minActiveMembers'] == 0
 
-      # We have to munge availability out of the monitor information.
-      if pool['monitor']
-        availability = find_availability(pool['monitor'])
-        monitor = find_monitors(pool['monitor'])
-      end
-
       # Instead of true/false the F5 returns yes/no
       pool.each { |_,v| v.gsub!(/^yes$/, 'true') if v.is_a?(String) }
       pool.each { |_,v| v.gsub!(/^no$/, 'false') if v.is_a?(String) }
@@ -49,28 +43,28 @@ Puppet::Type.type(:f5_pool).provide(:rest, parent: Puppet::Provider::F5) do
       # strings back from the type, meaning it churns properties for no reason.
       create = {
         ensure:                    :present,
-        name:                      pool['fullPath'].to_s,
-        description:               pool['description'].to_s,
-        allow_snat:                pool['allowSnat'].to_s,
-        allow_nat:                 pool['allowNat'].to_s,
-        service_down:              pool['serviceDownAction'].to_s,
-        slow_ramp_time:            pool['slowRampTime'].to_s,
-        ip_tos_to_client:          pool['ipTosToClient'].to_s,
-        ip_tos_to_server:          pool['ipTosToServer'].to_s,
-        link_qos_to_client:        pool['linkQosToClient'].to_s,
-        link_qos_to_server:        pool['linkQosToServer'].to_s,
-        reselect_tries:            pool['reselectTries'].to_s,
-        request_queuing:           pool['queueOnConnectionLimit'].to_s,
+        name:                      pool['fullPath'],
+        allow_nat:                 pool['allowNat'],
+        allow_snat:                pool['allowSnat'],
+        availability_requirement:  find_availability(pool['monitor']),
+        description:               pool['description'],
+        health_monitors:           find_monitors(pool['monitor']),
+        ignore_persisted_weight:   pool['ignorePersistedWeight'],
+        ip_encapsulation:          pool['profiles'],
+        ip_tos_to_client:          pool['ipTosToClient'],
+        ip_tos_to_server:          pool['ipTosToServer'],
+        link_qos_to_client:        pool['linkQosToClient'],
+        link_qos_to_server:        pool['linkQosToServer'],
+        load_balancing_method:     pool['loadBalancingMode'],
+        priority_group_activation: pool['minActiveMembers'],
         request_queue_depth:       pool['queueDepthLimit'].to_s,
         request_queue_timeout:     pool['queueTimeLimit'].to_s,
-        ip_encapsulation:          pool['profiles'].to_s,
-        load_balancing_method:     pool['loadBalancingMode'].to_s,
-        priority_group_activation: pool['minActiveMembers'].to_s,
-        ignore_persisted_weight:   pool['ignorePersistedWeight'].to_s,
+        request_queuing:           pool['queueOnConnectionLimit'],
+        reselect_tries:            pool['reselectTries'].to_s,
+        service_down:              pool['serviceDownAction'] || "none",
+        slow_ramp_time:            pool['slowRampTime'].to_s,
       }
-      # Only create this entry if availability was found.
-      create[:availability_requirement] = availability if availability
-      create[:monitor] = monitor if monitor
+      # Only create this entry if members were found.
       create[:members] = members if members
 
       instances << new(create)
@@ -144,11 +138,13 @@ Puppet::Type.type(:f5_pool).provide(:rest, parent: Puppet::Provider::F5) do
       :'load-balancing-method'     => :'load-balancing-mode',
       :'priority-group-activation' => :'min-active-members',
       :'availability-requirement'  => :availability,
+      :'health-monitors'           => :monitor,
     }
 
     # We need to rename some properties back to the API.
-    message = rename_keys(map, message)
+    message = strip_nil_values(message)
     message = convert_underscores(message)
+    message = rename_keys(map, message)
     message = create_message(basename, partition, message)
     message = string_to_integer(message)
     message = monitor_conversion(message)
@@ -181,7 +177,7 @@ Puppet::Type.type(:f5_pool).provide(:rest, parent: Puppet::Provider::F5) do
     # Do a bunch of renaming back to what the API expects.  This is awful.
     # We have to wrap each of the tests that use .to_sym in a check if they
     # even exist, otherwise we try to nil.to_sym.
-    message[:'priority-group-activation'] = 0 if message[:'priority-group-activation'] == 'disabled'
+    message[:'min-active-members'] = 0 if message[:'min-active-members'] == 'disabled'
 
     if message[:'allow-nat']
       message[:'allow-nat']  = 'yes' if message[:'allow-nat'].to_sym == :true
@@ -199,12 +195,12 @@ Puppet::Type.type(:f5_pool).provide(:rest, parent: Puppet::Provider::F5) do
     end
 
     # Set this in the hash so map picks it up.
-    if message[:'service-down']
-      message[:'service-down'] = 'reset' if message[:'service-down'].to_sym == :reject
+    if message[:'service-down-action']
+      message[:'service-down-action'] = 'reset' if message[:'service-down-action'].to_sym == :reject
     end
-    if message[:'request-queuing']
-      message[:'request-queuing'] = 'disabled' if message[:'request-queuing'].to_sym == :false
-      message[:'request-queuing'] = 'enabled' if message[:'request-queuing'].to_sym == :true
+    if message[:'queue-on-connection-limit']
+      message[:'queue-on-connection-limit'] = 'disabled' if message[:'queue-on-connection-limit'].to_sym == :false
+      message[:'queue-on-connection-limit'] = 'enabled' if message[:'queue-on-connection-limit'].to_sym == :true
     end
 
     # Despite only allowing a single entry, profiles must be an array.
