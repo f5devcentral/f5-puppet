@@ -147,10 +147,11 @@ Puppet::Type.newtype(:f5_pool) do
 
   newproperty(:load_balancing_method) do
     methods = %w(round-robin ratio-member least-connections-member
-    observed-member predictive-member ratio-node least-connection-node
-    fastest-node observed-node predictive-node dynamic-ratio-member
-    weighted-least-connection-member weighted-least-connection-node
-    ratio-session ratio-least-connections-member ratio-least-connection-node)
+    observed-member predictive-member ratio-node least-connections-node
+    fastest-node observed-node predictive-node dynamic-ratio-node
+    fastest-app-response least-sessions dynamic-ratio-member
+    weighted-least-connections-member weighted-least-connections-node
+    ratio-session ratio-least-connections-member ratio-least-connections-node)
 
     desc "The request queue timeout.
     Valid options: <#{methods.join('|')}>"
