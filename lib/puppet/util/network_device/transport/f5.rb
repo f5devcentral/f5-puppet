@@ -69,6 +69,7 @@ class Puppet::Util::NetworkDevice::Transport::F5 < Puppet::Util::NetworkDevice::
   # Given a string containing objects matching /Partition/Object, return an
   # array of all found objects.
   def find_monitors(string)
+    return nil if string.nil?
     if string == "default"
       ["default"]
     elsif string == "/Common/none"
@@ -80,6 +81,7 @@ class Puppet::Util::NetworkDevice::Transport::F5 < Puppet::Util::NetworkDevice::
 
   # Monitoring:  Parse out the availability integer.
   def find_availability(string)
+    return nil if string.nil?
     if string == "default" or string == "none"
       return nil
     end
