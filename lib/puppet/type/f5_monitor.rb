@@ -59,15 +59,12 @@ Puppet::Type.newtype(:f5_monitor) do
   end
 
   newproperty(:send_string) do
-    defaultto("")
   end
 
   newproperty(:receive_string) do
-    defaultto("")
   end
 
   newproperty(:receive_disable_string) do
-    defaultto("")
   end
 
   newproperty(:cipher_list) do
