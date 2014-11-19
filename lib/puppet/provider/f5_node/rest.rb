@@ -9,18 +9,28 @@ Puppet::Type.type(:f5_node).provide(:rest, parent: Puppet::Provider::F5) do
     return [] if nodes.nil?
 
     nodes.each do |node|
+      state = nil
+      #https://devcentral.f5.com/articles/icontrol-rest-working-with-pool-members
+      if node['session'] == "monitor-enabled" or node['session'] == "user-enabled"
+        state = "enabled"
+      elsif node['state'] == "user-down"
+        state = "forced_offline"
+      else
+        state = "disabled"
+      end
+
       instances << new(
-        ensure:                :present,
-        name:                  node['fullPath'],
-        address:               node['address'],
-        availability:          find_availability(node['monitor']),
-        connection_limit:      node['connectionLimit'].to_s,
-        connection_rate_limit: node['rateLimit'],
-        description:           node['description'],
-        logging:               node['logging'],
-        monitor:               find_objects(node['monitor']),
-        ratio:                 node['ratio'].to_s,
-        state:                 node['state']
+        ensure:                   :present,
+        name:                     node['fullPath'],
+        address:                  node['address'],
+        availability_requirement: find_availability(node['monitor']),
+        connection_limit:         node['connectionLimit'].to_s,
+        connection_rate_limit:    node['rateLimit'],
+        description:              node['description'],
+        logging:                  node['logging'],
+        health_monitors:          find_monitors(node['monitor']),
+        ratio:                    node['ratio'].to_s,
+        state:                    state,
       )
     end
 
@@ -51,8 +61,23 @@ Puppet::Type.type(:f5_node).provide(:rest, parent: Puppet::Provider::F5) do
 
     # Map for conversion in the message.
     map = {
-      :'connection-rate-limit' => :rateLimit
+      :'connection-rate-limit'    => :rateLimit,
+      :'health-monitors'          => :monitor,
+      :'availability-requirement' => :availability,
     }
+
+    #https://devcentral.f5.com/questions/how-do-i-enable-and-disable-pool-members-using-icontrolrest
+    case message[:state]
+    when 'enabled'
+      message[:state] = 'user-up'
+      message[:session] = 'user-enabled'
+    when 'disabled'
+      message[:state] = 'user-up'
+      message[:session] = 'user-disabled'
+    when 'forced_offline'
+      message[:state] = 'user-down'
+      message[:session] = 'user-disabled'
+    end
 
     message = strip_nil_values(message)
     message = convert_underscores(message)

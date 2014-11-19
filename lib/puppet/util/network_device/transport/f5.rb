@@ -68,14 +68,27 @@ class Puppet::Util::NetworkDevice::Transport::F5 < Puppet::Util::NetworkDevice::
 
   # Given a string containing objects matching /Partition/Object, return an
   # array of all found objects.
-  def find_objects(string)
-    string.scan(/(\/\S+)/).flatten
+  def find_monitors(string)
+    if string == "default"
+      ["default"]
+    elsif string == "/Common/none"
+      ["none"]
+    else
+      string.scan(/(\/\S+)/).flatten
+    end
   end
 
   # Monitoring:  Parse out the availability integer.
   def find_availability(string)
+    if string == "default" or string == "none"
+      return nil
+    end
     # Look for integers within the string.
     matches = string.match(/min\s(\d+)/)
-    matches[1] if matches
+    if matches
+      matches[1]
+    else
+      "all"
+    end
   end
 end

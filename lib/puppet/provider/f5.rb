@@ -41,8 +41,8 @@ class Puppet::Provider::F5 < Puppet::Provider
     transport.find_availability(string)
   end
 
-  def self.find_objects(string)
-    transport.find_objects(string)
+  def self.find_monitors(string)
+    transport.find_monitors(string)
   end
 
   def self.integer?(str)
@@ -82,12 +82,17 @@ class Puppet::Provider::F5 < Puppet::Provider
   def monitor_conversion(hash)
     message = hash
     # If monitor is an array then we need to rebuild the message.
-    if hash[:availability] and hash[:monitor].is_a?(Array) and ! hash[:monitor].empty?
-      message = hash.reject { |k, _| [:monitor, :availability].include?(k) }
-      message[:monitor] = "min #{hash[:availability]} of #{hash[:monitor].join(' ')}"
+    if hash[:availability]
+      if hash[:availability] == "all"
+        message[:monitor] = Array(hash[:monitor]).join(' and ')
+      elsif hash[:availability] > 0
+        message[:monitor] = "min #{hash[:availability]} of #{Array(hash[:monitor]).join(' ')}"
+      end
+      hash.delete(:availability)
+    else
+      message[:monitor] = Array(hash[:monitor]).join(' and ')
     end
-
-    return message
+    message.merge(hash)
   end
 
   def destination_conversion(message)

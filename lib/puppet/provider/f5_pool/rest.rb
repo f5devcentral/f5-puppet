@@ -19,7 +19,7 @@ Puppet::Type.type(:f5_pool).provide(:rest, parent: Puppet::Provider::F5) do
       # We have to munge availability out of the monitor information.
       if pool['monitor']
         availability = find_availability(pool['monitor'])
-        monitor = find_objects(pool['monitor'])
+        monitor = find_monitors(pool['monitor'])
       end
 
       # Instead of true/false the F5 returns yes/no
@@ -69,7 +69,7 @@ Puppet::Type.type(:f5_pool).provide(:rest, parent: Puppet::Provider::F5) do
         ignore_persisted_weight:   pool['ignorePersistedWeight'].to_s,
       }
       # Only create this entry if availability was found.
-      create[:availability] = availability if availability
+      create[:availability_requirement] = availability if availability
       create[:monitor] = monitor if monitor
       create[:members] = members if members
 
@@ -143,6 +143,7 @@ Puppet::Type.type(:f5_pool).provide(:rest, parent: Puppet::Provider::F5) do
       :'ip-encapsulation'          => :'profiles',
       :'load-balancing-method'     => :'load-balancing-mode',
       :'priority-group-activation' => :'min-active-members',
+      :'availability-requirement'  => :availability,
     }
 
     # We need to rename some properties back to the API.
