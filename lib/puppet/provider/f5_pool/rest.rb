@@ -61,7 +61,7 @@ Puppet::Type.type(:f5_pool).provide(:rest, parent: Puppet::Provider::F5) do
         request_queue_timeout:     pool['queueTimeLimit'].to_s,
         request_queuing:           pool['queueOnConnectionLimit'],
         reselect_tries:            pool['reselectTries'].to_s,
-        service_down:              pool['serviceDownAction'],
+        service_down:              pool['serviceDownAction'] || "none",
         slow_ramp_time:            pool['slowRampTime'].to_s,
       }
       # Only create this entry if members were found.
