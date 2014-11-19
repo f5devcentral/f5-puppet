@@ -76,7 +76,6 @@ Puppet::Type.type(:f5_monitor).provide(:sip, parent: Puppet::Provider::F5) do
     message = rename_keys(map, message)
     message = create_message(basename, partition, message)
     message = string_to_integer(message)
-    message = monitor_conversion(message)
     message = destination_conversion(message)
     # Split the headers back into \n seperated string.
     message = headers_conversion(message)

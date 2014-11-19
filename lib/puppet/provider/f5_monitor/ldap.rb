@@ -70,7 +70,6 @@ Puppet::Type.type(:f5_monitor).provide(:ldap, parent: Puppet::Provider::F5) do
     message = rename_keys(map, message)
     message = create_message(basename, partition, message)
     message = string_to_integer(message)
-    message = monitor_conversion(message)
     message = destination_conversion(message)
     elements_to_strip = [:'alias-address', :'alias-service-port']
     message = strip_elements(message, elements_to_strip)
