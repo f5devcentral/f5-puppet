@@ -1,7 +1,7 @@
 require 'puppet/parameter/name'
-require 'puppet/property/availability'
+require 'puppet/property/f5_availability_requirement'
 require 'puppet/property/description'
-require 'puppet/property/monitor'
+require 'puppet/property/f5_health_monitors'
 
 Puppet::Type.newtype(:f5_pool) do
   @doc = 'Manage pool objects'
@@ -11,8 +11,8 @@ Puppet::Type.newtype(:f5_pool) do
 
   newparam(:name, :parent => Puppet::Parameter::F5Name, :namevar => true)
   newproperty(:description, :parent => Puppet::Property::F5Description)
-  newproperty(:availability, :parent => Puppet::Property::F5Availability)
-  newproperty(:monitor, :array_matching => :all, :parent => Puppet::Property::F5Monitor)
+  newproperty(:availability_requirement, :parent => Puppet::Property::F5AvailabilityRequirement)
+  newproperty(:health_monitors, :array_matching => :all, :parent => Puppet::Property::F5HealthMonitors)
 
   newproperty(:allow_snat) do
     desc "Allow SNAT?
@@ -221,18 +221,18 @@ Puppet::Type.newtype(:f5_pool) do
   end
 
   validate do
-    if ! self[:monitor] && self[:availability]
+    if ! self[:health_monitors] && self[:availability_requirement]
       fail ArgumentError, 'ERROR:  Availability cannot be set when no monitor is assigned.'
     end
 
     # You can't have a minimum of more than the total number of monitors.
-    if self[:availability] =~ /\d+/
-      if Array(self[:monitor]).count < self[:availability].to_i
+    if self[:availability_requirement] =~ /\d+/
+      if Array(self[:health_monitors]).count < self[:availability_requirement].to_i
         fail ArgumentError, 'ERROR:  Availability count cannot be more than the total number of monitors.'
       end
     end
 
-    if self[:monitor].is_a?(Array) && ! self[:availability]
+    if self[:health_monitors].is_a?(Array) && ! self[:availability_requirement]
       fail ArgumentError, 'ERROR:  Availability must be set when monitors are assigned.'
     end
   end
