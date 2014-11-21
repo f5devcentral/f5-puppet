@@ -2,6 +2,7 @@ require 'puppet/provider/f5'
 require 'json'
 
 Puppet::Type.type(:f5_monitor).provide(:external, parent: Puppet::Provider::F5) do
+  has_feature :external
 
   def initialize(value={})
     super(value)

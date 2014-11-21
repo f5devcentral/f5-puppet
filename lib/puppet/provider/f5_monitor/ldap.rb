@@ -3,6 +3,10 @@ require 'json'
 
 Puppet::Type.type(:f5_monitor).provide(:ldap, parent: Puppet::Provider::F5) do
 
+  has_feature :auth
+  has_feature :ldap
+  has_feature :debug
+
   def initialize(value={})
     super(value)
     @create_elements = false

@@ -3,6 +3,11 @@ require 'json'
 
 Puppet::Type.type(:f5_monitor).provide(:tcp, parent: Puppet::Provider::F5) do
 
+  has_feature :strings
+  has_feature :reverse
+  has_feature :transparent
+  has_feature :dscp
+
   def initialize(value={})
     super(value)
     @create_elements = false

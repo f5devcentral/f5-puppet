@@ -3,6 +3,9 @@ require 'json'
 
 Puppet::Type.type(:f5_monitor).provide(:sip, parent: Puppet::Provider::F5) do
 
+  has_features :sip
+  has_features :debug
+
   def initialize(value={})
     super(value)
     @create_elements = false
