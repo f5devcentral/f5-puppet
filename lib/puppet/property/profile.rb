@@ -1,8 +1,10 @@
 require 'puppet/property'
 
 class Puppet::Property::F5Profile < Puppet::Property
-  desc "A profile that may be added to the virtualserver.
-  Valid options: none or /Partition/name"
+  def self.postinit
+    @doc ||= "A profile that may be added to the virtualserver.
+    Valid options: none or /Partition/name"
+  end
 
   validate do |value|
     unless value == 'none' || value.match(%r{^/\w+/[\w\.-]+$})

@@ -2,13 +2,14 @@ require 'puppet/property'
 require 'resolv'
 
 class Puppet::Property::F5HealthMonitors < Puppet::Property
-  options = '<["/Partition/Objects"]|default|none>'
-  desc "The health monitor(s) for the node object.
-  Valid options: #{options}"
+  def self.postinit
+    @doc ||= 'The health monitor(s) for the node object.
+    Valid options: <["/Partition/Objects"]|default|none>'
+  end
 
   validate do |value|
     unless value =~ /^(default|none|\/\S+)$/
-      fail ArgumentError, "Valid options: #{options}"
+      fail ArgumentError, 'Valid options: <["/Partition/Objects"]|default|none>'
     end
   end
   munge do |value|

@@ -1,8 +1,10 @@
 require 'puppet/property'
 
 class Puppet::Property::F5Ratio < Puppet::Property
-  desc 'The ratio of the object.
-  Valid options: <integer>'
+  def self.postinit
+    @doc ||= 'The ratio of the object.
+    Valid options: <integer>'
+  end
 
   validate do |value|
     unless value =~ /^\d+$/
