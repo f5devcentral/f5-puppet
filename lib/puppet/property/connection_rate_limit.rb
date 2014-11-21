@@ -2,7 +2,7 @@ require 'puppet/property'
 
 class Puppet::Property::F5ConnectionRateLimit < Puppet::Property
   desc 'The connection rate limit of the object.
-  Valid options: <integer>|<disabled>'
+  Valid options: <Integer|disabled>'
 
   validate do |value|
     if ! value.match(/^(\d+|disabled)$/)
