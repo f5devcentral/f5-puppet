@@ -76,10 +76,8 @@ class Puppet::Provider::F5Virtualserver < Puppet::Provider::F5
     message.delete(:destination_address)
     message.delete(:service_port)
 
-    message[:source_address_translation] = {
-      "type" => message[:source_address_translation].first[0],
-      "pool" => message[:source_address_translation].first[1],
-    }
+    message[:source_address_translation]["type"] = message[:source_address_translation].first[0] if message[:source_address_translation]
+    message[:source_address_translation]["pool"] = message[:source_address_translation].first[1] if message[:source_address_translation]
 
     if message[:vlan_and_tunnel_traffic]
       if message[:vlan_and_tunnel_traffic] == 'all'
@@ -184,6 +182,7 @@ class Puppet::Provider::F5Virtualserver < Puppet::Provider::F5
     message[:connection_rate_limit_mode] = rate_limit_mode[message[:connection_rate_limit_mode]] || message[:connection_rate_limit_mode]
 
     # We need to rename some properties back to the API.
+    message = strip_nil_values(message)
     message = convert_underscores(message)
     message = rename_keys(map, message)
     message = string_to_integer(message)
