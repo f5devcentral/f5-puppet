@@ -2,14 +2,15 @@ require 'puppet/property'
 require 'resolv'
 
 class Puppet::Property::F5AvailabilityRequirement < Puppet::Property
-  options = '<all|Integer>'
-  desc "The availability requirement (number of health monitors) that must
-  be available.
-  Valid options: #{options}"
+  def self.postinit
+    @doc ||= "The availability requirement (number of health monitors) that must
+    be available.
+    Valid options: <all|Integer>"
+  end
 
   validate do |value|
     unless value =~ /^(all|\d+)$/
-      fail ArgumentError, "Valid options: #{options}"
+      fail ArgumentError, "Valid options: <all|Integer>"
     end
   end
   munge do |value|

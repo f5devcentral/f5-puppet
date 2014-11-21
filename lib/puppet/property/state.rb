@@ -1,9 +1,10 @@
 require 'puppet/property'
 
 class Puppet::Property::F5State < Puppet::Property
-  options = "<enabled|disabled|forced_offline>"
-  desc "The state of the object.
-  Valid options: #{options}"
+  def self.postinit
+    @doc ||= "The state of the object
+    Valid options: <enabled|disabled|forced_offline>"
+  end
 
   validate do |value|
     unless value.is_a?(String) && value =~ /^(enabled|disabled|forced_offline)/

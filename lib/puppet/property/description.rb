@@ -1,8 +1,10 @@
 require 'puppet/property'
 
 class Puppet::Property::F5Description < Puppet::Property
-  desc 'The description of the node object.
-  Valid options: <string>'
+  def self.postinit
+    @doc ||= 'The description of the node object.
+    Valid options: <string>'
+  end
 
   validate do |value|
     unless value.is_a?(String)

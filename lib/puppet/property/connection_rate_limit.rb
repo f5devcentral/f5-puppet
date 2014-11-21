@@ -1,8 +1,10 @@
 require 'puppet/property'
 
 class Puppet::Property::F5ConnectionRateLimit < Puppet::Property
-  desc 'The connection rate limit of the object.
-  Valid options: <Integer|disabled>'
+  def self.postinit
+    @doc ||= 'The connection rate limit of the object.
+    Valid options: <Integer|disabled>'
+  end
 
   validate do |value|
     if ! value.match(/^(\d+|disabled)$/)
