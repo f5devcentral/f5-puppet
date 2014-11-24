@@ -3,6 +3,8 @@ require 'json'
 
 Puppet::Type.type(:f5_monitor).provide(:gateway_icmp, parent: Puppet::Provider::F5) do
 
+  has_feature :transparent
+
   def initialize(value={})
     super(value)
     @create_elements = false

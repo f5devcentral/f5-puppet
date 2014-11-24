@@ -3,6 +3,13 @@ require 'json'
 
 Puppet::Type.type(:f5_monitor).provide(:https, parent: Puppet::Provider::F5) do
 
+  has_feature :strings
+  has_feature :ssl
+  has_feature :reverse
+  has_feature :dscp
+  has_feature :auth
+  has_feature :transparent
+
   def initialize(value={})
     super(value)
     @create_elements = false
