@@ -1,0 +1,28 @@
+# Requires that ~/.fog have aws_access_key_id and aws_secret_access_key
+HOSTS:
+  "puppet":
+    roles:
+      - "master"
+      - "default"
+    platform: "debian-7-amd64"
+    hypervisor: "vcloud"
+    template: "debian-7-x86_64"
+  "f5-good":
+    roles:
+      - "f5"
+    vmname: "f5-11.6.0-25mbps-good"
+    hypervisor: "f5"
+    platform: "el-f5-11.6.0-25mbps-good"
+    snapshot: "default"
+    amisize: "m3.large"
+    user: "admin"
+CONFIG:
+  type: "foss"
+  ec2_yaml: "spec/acceptance/nodesets/ec2.yaml"
+  log_level: "debug"
+  ssh:
+    keys: "~/.ssh/id_rsa-acceptance"
+  datastore: "instance0"
+  folder: "Delivery/Quality Assurance/Enterprise/Dynamic"
+  resourcepool: "delivery/Quality Assurance/Enterprise/Dynamic"
+  pooling_api: "http://vcloud.delivery.puppetlabs.net/"
