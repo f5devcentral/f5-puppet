@@ -2,6 +2,24 @@ require 'puppet/provider/f5_virtualserver'
 
 Puppet::Type.type(:f5_virtualserver).provide(:standard, parent: Puppet::Provider::F5Virtualserver) do
 
+  has_feature :irules
+  has_feature :default_pool
+  has_feature :connection_limit
+  has_feature :fallback_persistence
+  has_feature :persistence
+  has_feature :connection_mirroring
+  has_feature :protocol_client
+  has_feature :protocol_server
+  has_feature :standard_profiles
+  has_feature :source_translation
+  has_feature :address_translation
+  has_feature :bandwidth_control
+  has_feature :traffic_class
+  has_feature :source_port
+  has_feature :clone_pool
+  has_feature :port_translation
+  has_feature :policies
+
   def self.instances
     instances = []
     virtualservers = Puppet::Provider::F5.call('/mgmt/tm/ltm/virtual')

@@ -5,6 +5,17 @@ Puppet::Type.type(:f5_virtualserver).provide(:performance_http, parent: Puppet::
   # https://support.f5.com/kb/en-us/solutions/public/4000/700/sol4707.html
   # https://support.f5.com/kb/en-us/solutions/public/0000/sol8024.html
 
+  has_feature :irules
+  has_feature :default_pool
+  has_feature :protocol_client
+  has_feature :source_translation
+  has_feature :bandwidth_control
+  has_feature :traffic_class
+  has_feature :source_port
+  has_feature :clone_pool
+  has_feature :last_hop_pool
+  has_feature :persistence
+
   def self.instances
     instances = []
     virtualservers = Puppet::Provider::F5.call('/mgmt/tm/ltm/virtual')

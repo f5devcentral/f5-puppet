@@ -16,8 +16,27 @@ Puppet::Type.newtype(:f5_virtualserver) do
   apply_to_device
   ensurable
 
+  feature :irules, "Supports setting iRules"
+  feature :default_pool, "Supports setting a default pool"
+  feature :persistence, "Supports setting a persistence profile"
+  feature :fallback_persistence, "Supports setting a fallback persistence profile"
+  feature :connection_limit, "Supports limiting connections"
+  feature :connection_mirroring, "Supports mirroring connections"
+  feature :protocol_client, "Supports client protocol profiles"
+  feature :protocol_server, "Supports server protocol profiles"
+  feature :standard_profiles, "Supports the standard set of profiles"
+  feature :source_translation, "Supports source address translation"
+  feature :address_translation, "Supports address translation"
+  feature :port_translation, "Supports port translation"
+  feature :bandwidth_control, "Supports bandwidth control"
+  feature :traffic_class, "Supports traffic class objects"
+  feature :source_port, "Supports source port setting"
+  feature :clone_pool, "Supports clone pools"
+  feature :last_hop_pool, "Supports a last hop pool"
+  feature :policies, "Supports policies"
+
   newparam(:name, :parent => Puppet::Parameter::F5Name, :namevar => true)
-  newproperty(:connection_limit, :parent => Puppet::Property::F5ConnectionLimit)
+  newproperty(:connection_limit, :required_features => :connection_limit, :parent => Puppet::Property::F5ConnectionLimit)
   newproperty(:connection_rate_limit, :parent => Puppet::Property::F5ConnectionRateLimit)
   newproperty(:description, :parent => Puppet::Property::F5Description)
   newproperty(:state, :parent => Puppet::Property::F5State)
@@ -43,7 +62,7 @@ Puppet::Type.newtype(:f5_virtualserver) do
     desc "The netmask for a network virtual server. This property applies to a network virtual server only, and is required. The netmask clarifies whether the host bit is an actual zero or a wildcard representation."
   end
 
-  newproperty(:service_port) do
+  newproperty(:service_port, :required_features => :service_port) do
     #used by destination
     options = "<*|Integer>"
     desc "A service name or port number for which you want to direct traffic. This property is required.
@@ -71,7 +90,7 @@ Puppet::Type.newtype(:f5_virtualserver) do
     newvalues(:all, :tcp, :udp, :sctp)
   end
 
-  newproperty(:connection_mirroring, :parent => Puppet::Property::F5truthy) do
+  newproperty(:connection_mirroring, :required_features => :connection_mirroring, :parent => Puppet::Property::F5truthy) do
     truthy_property("Mirror connection and persistence information to another device, to prevent interruption in service during failover")
   end
 
@@ -79,57 +98,57 @@ Puppet::Type.newtype(:f5_virtualserver) do
     truthy_property("Notify Status to Virtual Address in the gui", :yes, :no)
   end
 
-  newproperty(:protocol_profile_client, :parent => Puppet::Property::F5Profile) do
+  newproperty(:protocol_profile_client, :required_features => :protocol_client, :parent => Puppet::Property::F5Profile) do
   end
 
-  newproperty(:protocol_profile_server, :parent => Puppet::Property::F5Profile) do
+  newproperty(:protocol_profile_server, :required_features => :protocol_server, :parent => Puppet::Property::F5Profile) do
   end
 
   # Only one of the next five properties can be set.
-  newproperty(:http_profile, :parent => Puppet::Property::F5Profile) do
+  newproperty(:http_profile, :required_features => :standard_profiles, :parent => Puppet::Property::F5Profile) do
   end
 
-  newproperty(:ftp_profile, :parent => Puppet::Property::F5Profile) do
+  newproperty(:ftp_profile, :required_features => :standard_profiles, :parent => Puppet::Property::F5Profile) do
   end
 
-  newproperty(:rtsp_profile, :parent => Puppet::Property::F5Profile) do
+  newproperty(:rtsp_profile, :required_features => :standard_profiles, :parent => Puppet::Property::F5Profile) do
   end
 
-  newproperty(:socks_profile, :parent => Puppet::Property::F5Profile) do
+  newproperty(:socks_profile, :required_features => :standard_profiles, :parent => Puppet::Property::F5Profile) do
   end
 
-  newproperty(:xml_profile, :parent => Puppet::Property::F5Profile) do
+  newproperty(:xml_profile, :required_features => :standard_profiles, :parent => Puppet::Property::F5Profile) do
   end
 
 
-  newproperty(:stream_profile, :parent => Puppet::Property::F5Profile) do
+  newproperty(:stream_profile, :required_features => :standard_profiles, :parent => Puppet::Property::F5Profile) do
   end
 
-  newproperty(:ssl_profile_client, :array_matching => :all, :parent => Puppet::Property::F5Profile) do
+  newproperty(:ssl_profile_client, :required_features => :standard_profiles, :array_matching => :all, :parent => Puppet::Property::F5Profile) do
   end
 
-  newproperty(:ssl_profile_server, :array_matching => :all, :parent => Puppet::Property::F5Profile) do
+  newproperty(:ssl_profile_server, :required_features => :standard_profiles, :array_matching => :all, :parent => Puppet::Property::F5Profile) do
   end
 
-  newproperty(:authentication_profiles, :array_matching => :all, :parent => Puppet::Property::F5Profile) do
+  newproperty(:authentication_profiles, :required_features => :standard_profiles, :array_matching => :all, :parent => Puppet::Property::F5Profile) do
   end
 
-  newproperty(:dns_profile, :parent => Puppet::Property::F5Profile) do
+  newproperty(:dns_profile, :required_features => :standard_profiles, :parent => Puppet::Property::F5Profile) do
   end
 
-  newproperty(:diameter_profile, :parent => Puppet::Property::F5Profile) do
+  newproperty(:diameter_profile, :required_features => :standard_profiles, :parent => Puppet::Property::F5Profile) do
   end
 
-  newproperty(:fix_profile, :parent => Puppet::Property::F5Profile) do
+  newproperty(:fix_profile, :required_features => :standard_profiles, :parent => Puppet::Property::F5Profile) do
   end
 
-  newproperty(:request_adapt_profile, :parent => Puppet::Property::F5Profile) do
+  newproperty(:request_adapt_profile, :required_features => :standard_profiles, :parent => Puppet::Property::F5Profile) do
   end
 
-  newproperty(:response_adapt_profile, :parent => Puppet::Property::F5Profile) do
+  newproperty(:response_adapt_profile, :required_features => :standard_profiles, :parent => Puppet::Property::F5Profile) do
   end
 
-  newproperty(:sip_profile, :parent => Puppet::Property::F5Profile) do
+  newproperty(:sip_profile, :required_features => :standard_profiles, :parent => Puppet::Property::F5Profile) do
   end
 
   newproperty(:statistics_profile, :parent => Puppet::Property::F5Profile) do
@@ -155,7 +174,7 @@ Puppet::Type.newtype(:f5_virtualserver) do
     end
   end
 
-  newproperty(:source_address_translation) do
+  newproperty(:source_address_translation, :required_features => :source_translation) do
     #XXX need other options like LSN and none
     options = "<automap|{ 'snat' => '/Partition/pool_name'}|{ 'lsn' => '/Partition/pool_name'}>"
     desc "Assigns an existing SNAT or LSN pool to the virtual server, or enables the Automap feature. When you use this setting, the BIG-IP system automatically maps all original source IP addresses passing through the virtual server to an address in the SNAT or LSN pool.
@@ -186,7 +205,7 @@ Puppet::Type.newtype(:f5_virtualserver) do
     end
   end
 
-  newproperty(:connection_rate_limit_mode) do
+  newproperty(:connection_rate_limit_mode, :required_features => :connection_rate) do
     desc "The connection rate limit mode.
     Valid options: per_virtual_server, per_virtual_server_and_source_address, per_virtual_server_and_destination_address, per_virtual_server_destination_and_source_address, per_source_address, per_destination_address, per_source_and_destination_address"
     newvalues(
@@ -201,7 +220,7 @@ Puppet::Type.newtype(:f5_virtualserver) do
   end
 
   # Only required for per_virtual_server and per_destination_address
-  newproperty(:connection_rate_limit_source_mask) do
+  newproperty(:connection_rate_limit_source_mask, :required_features => :connection_rate) do
     options = "<0-32>"
     desc "The CIDR mask of connection sources with rate limiting.
     Valid options: #{options}"
@@ -214,7 +233,7 @@ Puppet::Type.newtype(:f5_virtualserver) do
   end
 
   # Any property with a destination.
-  newproperty(:connection_rate_limit_destination_mask) do
+  newproperty(:connection_rate_limit_destination_mask, :required_features => :connection_rate) do
     options = "<0-32>"
     desc "The CIDR mask of connection destinations with rate limiting.
     Valid options: #{options}"
@@ -226,23 +245,23 @@ Puppet::Type.newtype(:f5_virtualserver) do
     end
   end
 
-  newproperty(:address_translation, :parent => Puppet::Property::F5truthy) do
+  newproperty(:address_translation, :required_features => :address_translation, :parent => Puppet::Property::F5truthy) do
     truthy_property("Configures address translation")
   end
 
-  newproperty(:port_translation, :parent => Puppet::Property::F5truthy) do
+  newproperty(:port_translation, :required_features => :port_translation, :parent => Puppet::Property::F5truthy) do
     truthy_property("Configures port translation")
   end
 
-  newproperty(:source_port) do
+  newproperty(:source_port, :required_features => :source_port) do
     desc "Specifies whether the system preserves the source port of the connection. Valid options: preserve, preserve_strict, change"
     newvalues(:preserve, :preserve_strict, :change)
   end
 
-  newproperty(:clone_pool_client, :parent => Puppet::Property::F5Profile) do
+  newproperty(:clone_pool_client, :required_feature => :clone_pool, :parent => Puppet::Property::F5Profile) do
   end
 
-  newproperty(:clone_pool_server, :parent => Puppet::Property::F5Profile) do
+  newproperty(:clone_pool_server, :required_feature => :clone_pool, :parent => Puppet::Property::F5Profile) do
   end
 
   newproperty(:auto_last_hop) do
@@ -251,7 +270,7 @@ Puppet::Type.newtype(:f5_virtualserver) do
     newvalues(:default, :enabled, :disabled)
   end
 
-  newproperty(:last_hop_pool, :parent => Puppet::Property::F5Profile) do
+  newproperty(:last_hop_pool, :required_feature => :last_hop_pool, :parent => Puppet::Property::F5Profile) do
     desc "Directs reply traffic to the last hop router using a last hop pool. This overrides the auto_lasthop setting."
   end
 
@@ -262,7 +281,7 @@ Puppet::Type.newtype(:f5_virtualserver) do
     truthy_property("Maps IPv6 subscriber private addresses to IPv4 Internet public addresses")
   end
 
-  newproperty(:request_logging_profile, :parent => Puppet::Property::F5Profile) do
+  newproperty(:request_logging_profile, :required_features => :standard_profiles, :parent => Puppet::Property::F5Profile) do
   end
 
   newproperty(:vs_score) do
@@ -277,51 +296,51 @@ Puppet::Type.newtype(:f5_virtualserver) do
     end
   end
 
-  newproperty(:rewrite_profile, :parent => Puppet::Property::F5Profile) do
+  newproperty(:rewrite_profile, :required_features => :standard_profiles, :parent => Puppet::Property::F5Profile) do
   end
 
-  newproperty(:html_profile, :parent => Puppet::Property::F5Profile) do
+  newproperty(:html_profile, :required_features => :standard_profiles, :parent => Puppet::Property::F5Profile) do
   end
 
-  newproperty(:rate_class, :parent => Puppet::Property::F5Profile) do
+  newproperty(:rate_class, :requried_features => :bandwidth_control, :parent => Puppet::Property::F5Profile) do
   end
 
-  newproperty(:oneconnect_profile, :parent => Puppet::Property::F5Profile) do
+  newproperty(:oneconnect_profile, :required_features => :standard_profiles, :parent => Puppet::Property::F5Profile) do
   end
 
-  newproperty(:ntlm_conn_pool, :parent => Puppet::Property::F5Profile) do
+  newproperty(:ntlm_conn_pool, :required_features => :standard_profiles, :parent => Puppet::Property::F5Profile) do
   end
 
-  newproperty(:http_compression_profile, :parent => Puppet::Property::F5Profile) do
+  newproperty(:http_compression_profile, :required_features => :standard_profiles, :parent => Puppet::Property::F5Profile) do
   end
 
-  newproperty(:web_acceleration_profile, :parent => Puppet::Property::F5Profile) do
+  newproperty(:web_acceleration_profile, :required_features => :standard_profiles, :parent => Puppet::Property::F5Profile) do
   end
 
-  newproperty(:spdy_profile, :parent => Puppet::Property::F5Profile) do
+  newproperty(:spdy_profile, :required_features => :standard_profiles, :parent => Puppet::Property::F5Profile) do
   end
 
-  newproperty(:irules, :array_matching => :all) do
+  newproperty(:irules, :required_features => :irules, :array_matching => :all) do
     options = "</Partition/Object>"
     validate do |value|
       fail ArgumentError, "Irules: Valid options: #{options}" unless value.match(%r{^/\w+/[\w\.-]+$})
     end
   end
 
-  newproperty(:policies, :array_matching => :all) do
+  newproperty(:policies, :required_features => :policies, :array_matching => :all) do
     options = "</Partition/Object>"
     validate do |value|
       fail ArgumentError, "Policies: Valid options: #{options}" unless value.match(%r{^/\w+/[\w\.-]+$})
     end
   end
 
-  newproperty(:default_pool, :parent => Puppet::Property::F5Profile) do
+  newproperty(:default_pool, :required_features => :default_pool,  :parent => Puppet::Property::F5Profile) do
   end
 
-  newproperty(:default_persistence_profile, :parent => Puppet::Property::F5Profile) do
+  newproperty(:default_persistence_profile, :required_features => :persistence, :parent => Puppet::Property::F5Profile) do
   end
 
-  newproperty(:fallback_persistence_profile, :parent => Puppet::Property::F5Profile) do
+  newproperty(:fallback_persistence_profile, :required_features => :fallback_persistence, :parent => Puppet::Property::F5Profile) do
   end
 
   validate do
