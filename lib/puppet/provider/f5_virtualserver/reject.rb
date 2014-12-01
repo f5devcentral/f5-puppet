@@ -2,6 +2,10 @@ require 'puppet/provider/f5_virtualserver'
 
 Puppet::Type.type(:f5_virtualserver).provide(:reject, parent: Puppet::Provider::F5Virtualserver) do
 
+  has_feature :irules
+  has_feature :traffic_class
+  has_feature :source_port
+
   def self.instances
     instances = []
     virtualservers = Puppet::Provider::F5.call('/mgmt/tm/ltm/virtual')
