@@ -79,6 +79,7 @@ Puppet::Type.type(:f5_virtualserver).provide(:reject, parent: Puppet::Provider::
         irules:                                 vserver["rules"] || "none",
         traffic_class:                          vserver["trafficClasses"],
         #analytics_profile:                      aoeu,
+        state:                                  vserver["disabled"] == true ? "disabled" : "enabled",
         reject:                                 true,
       )
     end

@@ -124,6 +124,7 @@ Puppet::Type.type(:f5_virtualserver).provide(:performance_http, parent: Puppet::
         traffic_class:                          vserver["trafficClasses"],
         rate_class:                             vserver["rateClass"],
         default_pool:                           vserver["pool"],
+        state:                                  vserver["disabled"] == true ? "disabled" : "enabled",
       )
     end
 
