@@ -62,7 +62,7 @@ Puppet::Type.type(:f5_virtualserver).provide(:reject, parent: Puppet::Provider::
         #vserver["enabled"]
         vs_score:                               vserver["gtmScore"],
         protocol:                               vserver["ipProtocol"],
-        last_hop_pool:                          vserver["lastHopPool"],
+        last_hop_pool:                          vserver["lastHopPool"] || "none",
         #vserver["mobileAppTunnel"]
         nat64:                                  vserver["nat64"],
         connection_rate_limit:                  vserver["rateLimit"],
@@ -75,8 +75,8 @@ Puppet::Type.type(:f5_virtualserver).provide(:reject, parent: Puppet::Provider::
         #address_translation:                    vserver["translateAddress"],
         vlan_and_tunnel_traffic:                vlan_and_tunnel_traffic,
         #definition:                             vserver["apiAnonymous"],
-        statistics_profile:                     ((applied_profiles["statistics"]||[]).first || {})["fullPath"],
-        irules:                                 ((applied_profiles["rules"           ]||[]).first || {})["fullPath"],
+        statistics_profile:                     ((applied_profiles["statistics"]||[]).first || {})["fullPath"] || "none",
+        irules:                                 vserver["rules"] || "none",
         traffic_class:                          vserver["trafficClasses"],
         #analytics_profile:                      aoeu,
         reject:                                 true,

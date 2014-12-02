@@ -69,6 +69,7 @@ class Puppet::Provider::F5Virtualserver < Puppet::Provider::F5
       :'traffic-class'                          => :'traffic-classes',
       :'vs-score'                               => :'gtm-score',
       :definition                               => :'api-anonymous',
+      :irules                                   => :rules,
       :protocol                                 => :'ip-protocol',
     }
 
@@ -79,7 +80,9 @@ class Puppet::Provider::F5Virtualserver < Puppet::Provider::F5
     message.delete(:service_port)
     message[:default_persistence_profile] = [] if message[:default_persistence_profile] == "none"
     message[:fallback_persistence_profile] = "" if message[:fallback_persistence_profile] == "none"
-    message.delete(:authentication_profiles) if message[:authentication_profiles] == "none"
+    message.delete(:authentication_profiles) if message[:authentication_profiles] == ["none"]
+    message[:irules] = [] if message[:irules] == ["none"]
+    # We want last_hop_pool, default_pool, and perhaps others to stay "none", so don't delete them from message
 
     message[:source_address_translation]["type"] = message[:source_address_translation].first[0] if message[:source_address_translation]
     message[:source_address_translation]["pool"] = message[:source_address_translation].first[1] if message[:source_address_translation]
@@ -127,8 +130,8 @@ class Puppet::Provider::F5Virtualserver < Puppet::Provider::F5
         message.delete(:protocol_profile_client)
       end
     end
-    message[:profiles] += message[:ssl_profile_client].collect { |p| { :name => p } } if message[:ssl_profile_client]
-    message[:profiles] += message[:ssl_profile_server].collect { |p| { :name => p } } if message[:ssl_profile_server]
+    message[:profiles] += message[:ssl_profile_client].collect { |p| { :name => p } } if message[:ssl_profile_client] and message[:ssl_profile_client] != ["none"]
+    message[:profiles] += message[:ssl_profile_server].collect { |p| { :name => p } } if message[:ssl_profile_server] and message[:ssl_profile_server] != ["none"]
     message[:profiles] << { :name => message[:diameter_profile]         } if message[:diameter_profile]         and message[:diameter_profile]         != "none"
     message[:profiles] << { :name => message[:dns_profile]              } if message[:dns_profile]              and message[:dns_profile]              != "none"
     message[:profiles] << { :name => message[:fix_profile]              } if message[:fix_profile]              and message[:fix_profile]              != "none"
@@ -150,7 +153,6 @@ class Puppet::Provider::F5Virtualserver < Puppet::Provider::F5
     message[:profiles] << { :name => message[:stream_profile]           } if message[:stream_profile]           and message[:stream_profile]           != "none"
     message[:profiles] << { :name => message[:web_acceleration_profile] } if message[:web_acceleration_profile] and message[:web_acceleration_profile] != "none"
     message[:profiles] << { :name => message[:xml_profile]              } if message[:xml_profile]              and message[:xml_profile]              != "none"
-    message[:profiles] << { :name => message[:irules]                   } if message[:irules]                   and message[:irules]                   != "none"
     message[:profiles] << { :name => message[:ntlm_conn_pool]           } if message[:ntlm_conn_pool]           and message[:ntlm_conn_pool]           != "none"
     message.delete(:ssl_profile_client)
     message.delete(:ssl_profile_server)
@@ -162,7 +164,6 @@ class Puppet::Provider::F5Virtualserver < Puppet::Provider::F5
     message.delete(:http_compression_profile)
     message.delete(:http_profile)
     message.delete(:ipother_profile)
-    message.delete(:irules)
     message.delete(:ntlm_conn_pool)
     message.delete(:oneconnect_profile)
     message.delete(:request_adapt_profile)
