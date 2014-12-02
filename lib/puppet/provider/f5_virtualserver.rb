@@ -75,6 +75,13 @@ class Puppet::Provider::F5Virtualserver < Puppet::Provider::F5
 
     message = message.reject { |k,v| v.nil? }
 
+    if message[:provider] == :performance_http and self.class.find_profile_type(message[:protocol_profile_client]) != 'fasthttp'
+      fail ArgumentError, "Incorrect protocol_profile_client for performance_http provider: Must be a 'fasthttp' protocol profile, got '#{self.class.find_profile_type(message[:protocol_profile_client])}'"
+    end
+    if message[:provider] == :performance_l4 and self.class.find_profile_type(message[:protocol_profile_client]) != 'fastl4'
+      fail ArgumentError, "Incorrect protocol_profile_client for performance_l4 provider: Must be a 'fastl4' protocol profile, got '#{self.class.find_profile_type(message[:protocol_profile_client])}'"
+    end
+
     message[:destination] = "#{partition}/#{message[:destination_address]}:#{message[:service_port]}"
     message.delete(:destination_address)
     message.delete(:service_port)
