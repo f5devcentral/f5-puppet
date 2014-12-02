@@ -72,9 +72,14 @@ class Puppet::Provider::F5Virtualserver < Puppet::Provider::F5
       :protocol                                 => :'ip-protocol',
     }
 
+    message = message.reject { |k,v| v.nil? }
+
     message[:destination] = "#{partition}/#{message[:destination_address]}:#{message[:service_port]}"
     message.delete(:destination_address)
     message.delete(:service_port)
+    message.delete(:default_persistence_profile) if message[:default_persistence_profile] == "none"
+    message.delete(:fallback_persistence_profile) if message[:fallback_persistence_profile] == "none"
+    message.delete(:authentication_profiles) if message[:authentication_profiles] == "none"
 
     message[:source_address_translation]["type"] = message[:source_address_translation].first[0] if message[:source_address_translation]
     message[:source_address_translation]["pool"] = message[:source_address_translation].first[1] if message[:source_address_translation]
@@ -97,8 +102,13 @@ class Puppet::Provider::F5Virtualserver < Puppet::Provider::F5
     message[:clone_pools] << { :name => message[:clone_pool_server], :context => "serverside" } if message[:clone_pool_server]
     message.delete(:clone_pool_client)
     message.delete(:clone_pool_server)
+    message.delete(:clone_pools) if message[:clone_pools].empty?
+
+    message[:protocol] = :any if message[:protocol] == :all or message[:protocol] == "all"
 
     message[:profiles] = Array.new
+    message.delete(:protocol_profile_client) if message[:protocol_profile_client] == "none"
+    message.delete(:protocol_profile_server) if message[:protocol_profile_server] == "none"
     if message[:protocol_profile_client] and message[:protocol_profile_server] and (message[:protocol_profile_client] == message[:protocol_profile_server])
       message[:profiles] << { :name => message[:protocol_profile_client], :context => :all, }
       message.delete(:protocol_profile_client)
@@ -119,28 +129,29 @@ class Puppet::Provider::F5Virtualserver < Puppet::Provider::F5
     end
     message[:profiles] += message[:ssl_profile_client].collect { |p| { :name => p } } if message[:ssl_profile_client]
     message[:profiles] += message[:ssl_profile_server].collect { |p| { :name => p } } if message[:ssl_profile_server]
-    message[:profiles] << { :name => message[:diameter_profile]         } if message[:diameter_profile]
-    message[:profiles] << { :name => message[:dns_profile]              } if message[:dns_profile]
-    message[:profiles] << { :name => message[:fix_profile]              } if message[:fix_profile]
-    message[:profiles] << { :name => message[:ftp_profile]              } if message[:ftp_profile]
-    message[:profiles] << { :name => message[:html_profile]             } if message[:html_profile]
-    message[:profiles] << { :name => message[:http_compression_profile] } if message[:http_compression_profile]
-    message[:profiles] << { :name => message[:http_profile]             } if message[:http_profile]
-    message[:profiles] << { :name => message[:irules]                   } if message[:irules]
-    message[:profiles] << { :name => message[:ntlm_conn_pool]           } if message[:ntlm_conn_pool]
-    message[:profiles] << { :name => message[:oneconnect_profile]       } if message[:oneconnect_profile]
-    message[:profiles] << { :name => message[:request_adapt_profile]    } if message[:request_adapt_profile]
-    message[:profiles] << { :name => message[:request_logging_profile]  } if message[:request_logging_profile]
-    message[:profiles] << { :name => message[:response_adapt_profile]   } if message[:response_adapt_profile]
-    message[:profiles] << { :name => message[:rewrite_profile]          } if message[:rewrite_profile]
-    message[:profiles] << { :name => message[:rtsp_profile]             } if message[:rtsp_profile]
-    message[:profiles] << { :name => message[:sip_profile]              } if message[:sip_profile]
-    message[:profiles] << { :name => message[:socks_profile]            } if message[:socks_profile]
-    message[:profiles] << { :name => message[:spdy_profile]             } if message[:spdy_profile]
-    message[:profiles] << { :name => message[:statistics_profile]       } if message[:statistics_profile]
-    message[:profiles] << { :name => message[:stream_profile]           } if message[:stream_profile]
-    message[:profiles] << { :name => message[:web_acceleration_profile] } if message[:web_acceleration_profile]
-    message[:profiles] << { :name => message[:xml_profile]              } if message[:xml_profile]
+    message[:profiles] << { :name => message[:diameter_profile]         } if message[:diameter_profile]         and message[:diameter_profile]         != "none"
+    message[:profiles] << { :name => message[:dns_profile]              } if message[:dns_profile]              and message[:dns_profile]              != "none"
+    message[:profiles] << { :name => message[:fix_profile]              } if message[:fix_profile]              and message[:fix_profile]              != "none"
+    message[:profiles] << { :name => message[:ftp_profile]              } if message[:ftp_profile]              and message[:fix_profile]              != "none"
+    message[:profiles] << { :name => message[:html_profile]             } if message[:html_profile]             and message[:html_profile]             != "none"
+    message[:profiles] << { :name => message[:http_compression_profile] } if message[:http_compression_profile] and message[:http_compression_profile] != "none"
+    message[:profiles] << { :name => message[:http_profile]             } if message[:http_profile]             and message[:http_profile]             != "none"
+    message[:profiles] << { :name => message[:ipother_profile]          } if message[:ipother_profile]          and message[:ipother_profile]          != "none"
+    message[:profiles] << { :name => message[:oneconnect_profile]       } if message[:oneconnect_profile]       and message[:oneconnect_profile]       != "none"
+    message[:profiles] << { :name => message[:request_adapt_profile]    } if message[:request_adapt_profile]    and message[:request_adapt_profile]    != "none"
+    message[:profiles] << { :name => message[:request_logging_profile]  } if message[:request_logging_profile]  and message[:request_logging_profile]  != "none"
+    message[:profiles] << { :name => message[:response_adapt_profile]   } if message[:response_adapt_profile]   and message[:response_adapt_profile]   != "none"
+    message[:profiles] << { :name => message[:rewrite_profile]          } if message[:rewrite_profile]          and message[:rewrite_profile]          != "none"
+    message[:profiles] << { :name => message[:rtsp_profile]             } if message[:rtsp_profile]             and message[:rtsp_profile]             != "none"
+    message[:profiles] << { :name => message[:sip_profile]              } if message[:sip_profile]              and message[:sip_profile]              != "none"
+    message[:profiles] << { :name => message[:socks_profile]            } if message[:socks_profile]            and message[:socks_profile]            != "none"
+    message[:profiles] << { :name => message[:spdy_profile]             } if message[:spdy_profile]             and message[:spdy_profile]             != "none"
+    message[:profiles] << { :name => message[:statistics_profile]       } if message[:statistics_profile]       and message[:statistics_profile]       != "none"
+    message[:profiles] << { :name => message[:stream_profile]           } if message[:stream_profile]           and message[:stream_profile]           != "none"
+    message[:profiles] << { :name => message[:web_acceleration_profile] } if message[:web_acceleration_profile] and message[:web_acceleration_profile] != "none"
+    message[:profiles] << { :name => message[:xml_profile]              } if message[:xml_profile]              and message[:xml_profile]              != "none"
+    message[:profiles] << { :name => message[:irules]                   } if message[:irules]                   and message[:irules]                   != "none"
+    message[:profiles] << { :name => message[:ntlm_conn_pool]           } if message[:ntlm_conn_pool]           and message[:ntlm_conn_pool]           != "none"
     message.delete(:ssl_profile_client)
     message.delete(:ssl_profile_server)
     message.delete(:diameter_profile)
@@ -150,6 +161,7 @@ class Puppet::Provider::F5Virtualserver < Puppet::Provider::F5
     message.delete(:html_profile)
     message.delete(:http_compression_profile)
     message.delete(:http_profile)
+    message.delete(:ipother_profile)
     message.delete(:irules)
     message.delete(:ntlm_conn_pool)
     message.delete(:oneconnect_profile)
@@ -167,8 +179,6 @@ class Puppet::Provider::F5Virtualserver < Puppet::Provider::F5
     message.delete(:xml_profile)
 
     message[:source_port] = 'preserve-strict' if message[:source_port] == :preserve_strict
-
-    message = message.reject { |k,v| v.nil? }
 
     rate_limit_mode = {
       :per_virtual_server                                => 'object',

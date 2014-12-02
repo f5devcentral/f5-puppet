@@ -59,10 +59,10 @@ Puppet::Type.newtype(:f5_virtualserver) do
   end
 
   newproperty(:destination_mask) do
-    desc "The netmask for a network virtual server. This property applies to a network virtual server only, and is required. The netmask clarifies whether the host bit is an actual zero or a wildcard representation."
+    desc "The netmask for a network virtual server. This property applies to a network virtual server only, and is only required when the virtualserver destination_address value is not a specific host. The netmask clarifies whether the host bit is an actual zero or a wildcard representation."
   end
 
-  newproperty(:service_port, :required_features => :service_port) do
+  newproperty(:service_port) do
     #used by destination
     options = "<*|Integer>"
     desc "A service name or port number for which you want to direct traffic. This property is required.
@@ -85,7 +85,7 @@ Puppet::Type.newtype(:f5_virtualserver) do
   end
 
   newproperty(:protocol) do
-    desc "The network protocol name for which you want the virtual server to direct traffic.
+    desc "The network protocol name for which you want the virtual server to direct traffic. This parameter is required for all providers except performance_http
     Valid options: all, tcp, udp, sctp"
     newvalues(:all, :tcp, :udp, :sctp)
   end
@@ -102,6 +102,9 @@ Puppet::Type.newtype(:f5_virtualserver) do
   end
 
   newproperty(:protocol_profile_server, :required_features => :protocol_server, :parent => Puppet::Property::F5Profile) do
+  end
+
+  newproperty(:ipother_profile, :required_features => :standard_profiles, :parent => Puppet::Property::F5Profile) do
   end
 
   # Only one of the next five properties can be set.
@@ -321,14 +324,14 @@ Puppet::Type.newtype(:f5_virtualserver) do
   end
 
   newproperty(:irules, :required_features => :irules, :array_matching => :all) do
-    options = "</Partition/Object>"
+    options = "An array of </Partition/Object> irules"
     validate do |value|
       fail ArgumentError, "Irules: Valid options: #{options}" unless value.match(%r{^/\w+/[\w\.-]+$})
     end
   end
 
   newproperty(:policies, :required_features => :policies, :array_matching => :all) do
-    options = "</Partition/Object>"
+    options = "An array of </Partition/Object> policies"
     validate do |value|
       fail ArgumentError, "Policies: Valid options: #{options}" unless value.match(%r{^/\w+/[\w\.-]+$})
     end
@@ -344,9 +347,38 @@ Puppet::Type.newtype(:f5_virtualserver) do
   end
 
   validate do
-    if self[:provider] == :standard and self[:ensure] == :present and [self[:http_profile], self[:ftp_profile], self[:rtsp_profile], self[:socks_profile], self[:xml_profile]].select{|x| x}.length < 1
-      fail ArgumentError, 'ERROR:  One of the `http_profile`, `ftp_profile`, `rtsp_profile`, `socks_profile`, or `xml_profile` attributes must be set for standard virtualservers'
+    #if self[:provider] == :standard and self[:ensure] == :present and [self[:http_profile], self[:ftp_profile], self[:rtsp_profile], self[:socks_profile], self[:xml_profile]].select{|x| x}.length < 1
+    #  fail ArgumentError, 'ERROR:  One of the `http_profile`, `ftp_profile`, `rtsp_profile`, `socks_profile`, or `xml_profile` attributes must be set for standard virtualservers'
+    #end
+
+    if self[:provider] == :standard
+      case self[:protocol]
+      when :all,"all"
+        fail ArgumentError, "ERROR: `ipother_profile` is required when `protocol => all`" if self[:ipother_profile].nil?
+      when :tcp,"tcp"
+        self[:protocol_profile_client] = '/Common/tcp' if self[:protocol_profile_client].nil?
+        self[:protocol_profile_server] = '/Common/tcp' if self[:protocol_profile_server].nil?
+      when :udp,"udp"
+        self[:protocol_profile_client] = '/Common/udp' if self[:protocol_profile_client].nil?
+        self[:protocol_profile_server] = '/Common/udp' if self[:protocol_profile_server].nil?
+      when :sctp,"sctp"
+        self[:protocol_profile_client] = '/Common/sctp' if self[:protocol_profile_client].nil?
+        self[:protocol_profile_server] = '/Common/sctp' if self[:protocol_profile_server].nil?
+      else
+        fail ArgumentError, "ERROR: `protocol` must be specified and must be one of `all`, `tcp`, `udp`, or `sctp`"
+      end
     end
+
+    if ! self[:service_port]
+      fail ArgumentError, 'ERROR: `service_port` must be specified'
+    end
+    if ! self[:destination_address]
+      fail ArgumentError, 'ERROR: `destination_address` must be specified'
+    end
+    if ! self[:protocol] and self[:provider] != :performance_http
+      fail ArgumentError, 'ERROR: `service_port` must be specified'
+    end
+
 
     #if [:per_virtual_server_and_source_address, :per_virtual_server_destination_and_source_address, :per_source_address, :per_source_and_destination_address].include?(self[:connection_rate_limit_mode]) and ! self[:connection_rate_limit_source_mask]
     #  fail ArgumentError, 'ERROR:  Connection_rate_limit_source_mask required.'
