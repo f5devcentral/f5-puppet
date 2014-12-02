@@ -77,8 +77,8 @@ class Puppet::Provider::F5Virtualserver < Puppet::Provider::F5
     message[:destination] = "#{partition}/#{message[:destination_address]}:#{message[:service_port]}"
     message.delete(:destination_address)
     message.delete(:service_port)
-    message.delete(:default_persistence_profile) if message[:default_persistence_profile] == "none"
-    message.delete(:fallback_persistence_profile) if message[:fallback_persistence_profile] == "none"
+    message[:default_persistence_profile] = [] if message[:default_persistence_profile] == "none"
+    message[:fallback_persistence_profile] = "" if message[:fallback_persistence_profile] == "none"
     message.delete(:authentication_profiles) if message[:authentication_profiles] == "none"
 
     message[:source_address_translation]["type"] = message[:source_address_translation].first[0] if message[:source_address_translation]
