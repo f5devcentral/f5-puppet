@@ -65,7 +65,7 @@ class Puppet::Provider::F5 < Puppet::Provider
 
   def create_message(basename, partition, hash)
     # Create the message by stripping :present.
-    new_hash            = hash.reject { |k, _| [:ensure, :loglevel, :provider].include?(k) }
+    new_hash            = hash.reject { |k, _| [:ensure, :provider, Puppet::Type.metaparams].flatten.include?(k) }
     new_hash[:name]      = basename
     new_hash[:partition] = partition
 
