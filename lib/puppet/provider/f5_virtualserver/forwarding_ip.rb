@@ -116,6 +116,7 @@ Puppet::Type.type(:f5_virtualserver).provide(:forwarding_ip, parent: Puppet::Pro
         traffic_class:                          vserver["trafficClasses"],
         rate_class:                             vserver["rateClass"] || "none",
         ip_forward:                             true,
+        state:                                  vserver["disabled"] == true ? "disabled" : "enabled",
       )
     end
 

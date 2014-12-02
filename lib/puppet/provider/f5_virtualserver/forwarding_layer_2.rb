@@ -119,6 +119,7 @@ Puppet::Type.type(:f5_virtualserver).provide(:forwarding_layer_2, parent: Puppet
         traffic_class:                          vserver["trafficClasses"],
         rate_class:                             vserver["rateClass"] || "none",
         default_pool:                           vserver["pool"],
+        state:                                  vserver["disabled"] == true ? "disabled" : "enabled",
         l2_forward:                             true,
       )
     end

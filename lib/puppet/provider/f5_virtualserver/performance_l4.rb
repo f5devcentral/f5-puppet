@@ -123,6 +123,7 @@ Puppet::Type.type(:f5_virtualserver).provide(:performance_l4, parent: Puppet::Pr
         irules:                                 ((applied_profiles["rules"     ]||[]).first || {})["fullPath"],
         #analytics_profile:                      aoeu,
         bandwidth_controller:                   vserver["bwcPolicy"],
+        state:                                  vserver["disabled"] == true ? "disabled" : "enabled",
         traffic_class:                          vserver["trafficClasses"],
         rate_class:                             vserver["rateClass"],
         default_pool:                           vserver["pool"],

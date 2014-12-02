@@ -84,6 +84,14 @@ class Puppet::Provider::F5Virtualserver < Puppet::Provider::F5
     message[:source_address_translation]["type"] = message[:source_address_translation].first[0] if message[:source_address_translation]
     message[:source_address_translation]["pool"] = message[:source_address_translation].first[1] if message[:source_address_translation]
 
+    # Configure the state
+    if message[:state] == "forced_offline" or message[:state] == "disabled"
+      message[:disabled] = true
+    else
+      message[:enabled] = true
+    end
+    message.delete(:state)
+
     if message[:vlan_and_tunnel_traffic]
       if message[:vlan_and_tunnel_traffic] == 'all'
         message[:vlans_disabled] = true

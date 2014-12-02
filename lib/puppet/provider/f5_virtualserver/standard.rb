@@ -179,6 +179,7 @@ Puppet::Type.type(:f5_virtualserver).provide(:standard, parent: Puppet::Provider
         rate_class:                             vserver["rateClass"] || "none",
         policies:                               (vserver["policiesReference"]["items"]||[]).collect { |x| x["fullPath"] },
         default_pool:                           vserver["pool"] || "none",
+        state:                                  vserver["disabled"] == true ? "disabled" : "enabled",
       )
     end
 

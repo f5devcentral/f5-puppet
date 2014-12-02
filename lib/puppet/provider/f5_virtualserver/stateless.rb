@@ -90,6 +90,7 @@ Puppet::Type.type(:f5_virtualserver).provide(:stateless, parent: Puppet::Provide
         #address_translation:                    vserver["translateAddress"],
         port_translation:                       vserver["translatePort"],
         vlan_and_tunnel_traffic:                vlan_and_tunnel_traffic,
+        state:                                  vserver["disabled"] == true ? "disabled" : "enabled",
         #definition:                             vserver["apiAnonymous"],
         statistics_profile:                     ((applied_profiles["statistics"]||[]).first || {})["fullPath"],
         #analytics_profile:                      aoeu,
