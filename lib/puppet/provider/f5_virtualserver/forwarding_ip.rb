@@ -110,7 +110,7 @@ Puppet::Type.type(:f5_virtualserver).provide(:forwarding_ip, parent: Puppet::Pro
         #definition:                             vserver["apiAnonymous"],
         protocol_profile_client:                protocol_profile_client,
         statistics_profile:                     ((applied_profiles["statistics"]||[]).first || {})["fullPath"] || "none",
-        irules:                                 ((applied_profiles["rules"     ]||[]).first || {})["fullPath"] || "none",
+        irules:                                 vserver["rules"] || "none",
         #analytics_profile:                      aoeu,
         bandwidth_controller:                   vserver["bwcPolicy"],
         traffic_class:                          vserver["trafficClasses"],

@@ -324,9 +324,11 @@ Puppet::Type.newtype(:f5_virtualserver) do
   end
 
   newproperty(:irules, :required_features => :irules, :array_matching => :all) do
-    options = "An array of </Partition/Object> irules"
+    options = "An array of </Partition/Object> irules or 'none'"
     validate do |value|
-      fail ArgumentError, "Irules: Valid options: #{options}" unless value.match(%r{^/\w+/[\w\.-]+$})
+      if value != "none"
+        fail ArgumentError, "Irules: Valid options: #{options}" unless value.match(%r{^/\w+/[\w\.-]+$})
+      end
     end
   end
 

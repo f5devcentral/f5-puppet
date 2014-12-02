@@ -111,6 +111,8 @@ Puppet::Type.type(:f5_virtualserver).provide(:standard, parent: Puppet::Provider
       else
         source_port = vserver["sourcePort"]
       end
+      ssl_profile_client = (applied_profiles["client-ssl"]||[]).collect { |x| x["fullPath"] }
+      ssl_profile_server = (applied_profiles["server-ssl"]||[]).collect { |x| x["fullPath"] }
 
       instances << new(
         name:                                   vserver["fullPath"],
@@ -147,9 +149,9 @@ Puppet::Type.type(:f5_virtualserver).provide(:standard, parent: Puppet::Provider
         definition:                             vserver["apiAnonymous"],
         protocol_profile_client:                protocol_profile_client || "none",
         protocol_profile_server:                protocol_profile_server || "none",
-        authentication_profiles:                vserver["auth"] || "none",
-        ssl_profile_client:                     (applied_profiles["client-ssl"       ]||[]).collect { |x| x["fullPath"] } || "none",
-        ssl_profile_server:                     (applied_profiles["server-ssl"       ]||[]).collect { |x| x["fullPath"] } || "none",
+        authentication_profiles:                vserver["auth"] || ["none"],
+        ssl_profile_client:                     ssl_profile_client.empty? ? ["none"] : ssl_profile_client,
+        ssl_profile_server:                     ssl_profile_server.empty? ? ["none"] : ssl_profile_server,
         http_profile:                           ((applied_profiles["http"            ]||[]).first || {})["fullPath"] || "none",
         ftp_profile:                            ((applied_profiles["ftp "            ]||[]).first || {})["fullPath"] || "none",
         rtsp_profile:                           ((applied_profiles["rtsp"            ]||[]).first || {})["fullPath"] || "none",
@@ -172,7 +174,7 @@ Puppet::Type.type(:f5_virtualserver).provide(:standard, parent: Puppet::Provider
         spdy_profile:                           ((applied_profiles["spdy"            ]||[]).first || {})["fullPath"] || "none",
         ipother_profile:                        ((applied_profiles["ipother"         ]||[]).first || {})["fullPath"] || "none",
         ntlm_conn_pool:                         ((applied_profiles["ntlm"            ]||[]).first || {})["fullPath"] || "none",
-        irules:                                 ((applied_profiles["rules"           ]||[]).first || {})["fullPath"],
+        irules:                                 vserver["rules"] || ["none"],
         #analytics_profile:                      aoeu,
         bandwidth_controller:                   vserver["bwcPolicy"],
         traffic_class:                          vserver["trafficClasses"],

@@ -76,7 +76,7 @@ Puppet::Type.type(:f5_virtualserver).provide(:stateless, parent: Puppet::Provide
         #vserver["enabled"]
         vs_score:                               vserver["gtmScore"],
         protocol:                               vserver["ipProtocol"],
-        last_hop_pool:                          vserver["lastHopPool"],
+        last_hop_pool:                          vserver["lastHopPool"] || "none",
         #vserver["mobileAppTunnel"]
         nat64:                                  vserver["nat64"],
         connection_rate_limit:                  vserver["rateLimit"],
@@ -91,9 +91,9 @@ Puppet::Type.type(:f5_virtualserver).provide(:stateless, parent: Puppet::Provide
         port_translation:                       vserver["translatePort"],
         vlan_and_tunnel_traffic:                vlan_and_tunnel_traffic,
         #definition:                             vserver["apiAnonymous"],
-        statistics_profile:                     ((applied_profiles["statistics"]||[]).first || {})["fullPath"],
+        statistics_profile:                     ((applied_profiles["statistics"]||[]).first || {})["fullPath"] || "none",
         #analytics_profile:                      aoeu,
-        default_pool:                           vserver["pool"],
+        default_pool:                           vserver["pool"] || "none",
         stateless:                              true,
       )
     end

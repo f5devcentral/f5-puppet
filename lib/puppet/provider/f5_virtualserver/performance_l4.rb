@@ -96,11 +96,11 @@ Puppet::Type.type(:f5_virtualserver).provide(:performance_l4, parent: Puppet::Pr
         destination_address:                    destination_address,
         destination_mask:                       vserver["mask"],
         service_port:                           destination_port,
-        fallback_persistence_profile:           vserver["fallbackPersistence"],
+        fallback_persistence_profile:           vserver["fallbackPersistence"] || "none",
         #vserver["enabled"]
         vs_score:                               vserver["gtmScore"],
         protocol:                               vserver["ipProtocol"],
-        last_hop_pool:                          vserver["lastHopPool"],
+        last_hop_pool:                          vserver["lastHopPool"] || "none",
         #vserver["mobileAppTunnel"]
         nat64:                                  vserver["nat64"],
         connection_rate_limit:                  vserver["rateLimit"],
@@ -116,16 +116,16 @@ Puppet::Type.type(:f5_virtualserver).provide(:performance_l4, parent: Puppet::Pr
         vlan_and_tunnel_traffic:                vlan_and_tunnel_traffic,
         clone_pool_client:                      clone_pool_client,
         clone_pool_server:                      clone_pool_server,
-        default_persistence_profile:            default_persistence_profile,
+        default_persistence_profile:            default_persistence_profile || "none",
         #definition:                             vserver["apiAnonymous"],
         protocol_profile_client:                protocol_profile_client,
-        statistics_profile:                     ((applied_profiles["statistics"]||[]).first || {})["fullPath"],
-        irules:                                 ((applied_profiles["rules"     ]||[]).first || {})["fullPath"],
+        statistics_profile:                     ((applied_profiles["statistics"]||[]).first || {})["fullPath"] || "none",
+        irules:                                 vserver["rules"] || "none",
         #analytics_profile:                      aoeu,
         bandwidth_controller:                   vserver["bwcPolicy"],
         traffic_class:                          vserver["trafficClasses"],
         rate_class:                             vserver["rateClass"],
-        default_pool:                           vserver["pool"],
+        default_pool:                           vserver["pool"] || "none",
       )
     end
 
