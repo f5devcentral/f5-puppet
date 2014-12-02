@@ -369,6 +369,17 @@ Puppet::Type.newtype(:f5_virtualserver) do
       end
     end
 
+    if self[:provider] == :performance_http
+      if self[:protocol_profile_client].nil?
+        fail ArgumentError, "ERROR: `protocol_profile_client` must be specified for the performance_http provider and must be a 'fasthttp' protocol profile."
+      end
+    end
+    if self[:provider] == :performance_l4
+      if self[:protocol_profile_client].nil?
+        fail ArgumentError, "ERROR: `protocol_profile_client` must be specified for the performance_l4 provider and must be a 'fastl4' protocol profile."
+      end
+    end
+
     if ! self[:service_port]
       fail ArgumentError, 'ERROR: `service_port` must be specified'
     end
