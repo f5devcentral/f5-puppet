@@ -93,7 +93,7 @@ Puppet::Type.type(:f5_virtualserver).provide(:forwarding_layer_2, parent: Puppet
         #vserver["enabled"]
         vs_score:                               vserver["gtmScore"],
         protocol:                               vserver["ipProtocol"],
-        last_hop_pool:                          vserver["lastHopPool"],
+        last_hop_pool:                          vserver["lastHopPool"] || "none",
         connection_mirroring:                   vserver["mirror"],
         #vserver["mobileAppTunnel"]
         nat64:                                  vserver["nat64"],
@@ -112,12 +112,12 @@ Puppet::Type.type(:f5_virtualserver).provide(:forwarding_layer_2, parent: Puppet
         clone_pool_server:                      clone_pool_server,
         #definition:                             vserver["apiAnonymous"],
         protocol_profile_client:                protocol_profile_client,
-        statistics_profile:                     ((applied_profiles["statistics"]||[]).first || {})["fullPath"],
-        irules:                                 ((applied_profiles["rules"     ]||[]).first || {})["fullPath"],
+        statistics_profile:                     ((applied_profiles["statistics"]||[]).first || {})["fullPath"] || "none",
+        irules:                                 ((applied_profiles["rules"     ]||[]).first || {})["fullPath"] || "none",
         #analytics_profile:                      aoeu,
         bandwidth_controller:                   vserver["bwcPolicy"],
         traffic_class:                          vserver["trafficClasses"],
-        rate_class:                             vserver["rateClass"],
+        rate_class:                             vserver["rateClass"] || "none",
         default_pool:                           vserver["pool"],
         l2_forward:                             true,
       )

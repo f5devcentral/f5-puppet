@@ -117,7 +117,7 @@ Puppet::Type.type(:f5_virtualserver).provide(:performance_http, parent: Puppet::
         default_persistence_profile:            default_persistence_profile,
         #definition:                             vserver["apiAnonymous"],
         protocol_profile_client:                protocol_profile_client,
-        statistics_profile:                     ((applied_profiles["statistics"]||[]).first || {})["fullPath"],
+        statistics_profile:                     ((applied_profiles["statistics"]||[]).first || {})["fullPath"] || "none",
         irules:                                 ((applied_profiles["rules"     ]||[]).first || {})["fullPath"],
         #analytics_profile:                      aoeu,
         bandwidth_controller:                   vserver["bwcPolicy"],
