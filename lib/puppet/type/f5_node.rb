@@ -33,6 +33,10 @@ Puppet::Type.newtype(:f5_node) do
   newproperty(:connection_rate_limit, :parent => Puppet::Property::F5ConnectionRateLimit)
 
   validate do
+    if ! self[:address] and ! self.provider.address
+      fail ArgumentError, 'ERROR: Address is a required parameter'
+    end
+
     if ! self[:health_monitors] and self[:availability_requirement]
       fail ArgumentError, 'ERROR:  Availability cannot be set when no monitor is assigned.'
     end

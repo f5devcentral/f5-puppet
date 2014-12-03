@@ -163,6 +163,7 @@ Puppet::Type.newtype(:f5_pool) do
 
   newproperty(:ignore_persisted_weight) do
     desc "Ignore persisted weight?
+    ignore_persisted_weight is only applicable to the following load_balancing_method values: ratio-member, observed-member, predictive-member, ratio-node, observed-node, predictive-node
     Valid options: <true|false>"
 
     newvalues(:true, :false)
@@ -179,20 +180,28 @@ Puppet::Type.newtype(:f5_pool) do
   end
 
   newproperty(:members, :array_matching => :all) do
-    options = "[{ name => '/Partition/name', port => '1-65535', enable => <true|false> , ratio => <Integer>, connection_limit => <Integer> } ]"
-    desc "An array of hashes containing pool members.
-    Valid options: #{options}"
+    options = "[{ name => '/Partition/node_name', port => <Integer 0-65535> }] or 'none'"
+    desc "An array of hashes containing pool node members and their port, or 'none'
+    Valid options:
+      [
+        {
+          'name' => '/Partition/node_name',
+          'port' => <Integer 0-65535>,
+        },
+        ...
+      ]"
 
     validate do |value|
+      return if value == 'none'
       # First we check that all required keys exist in the hash.
-      ['name', 'port', 'enable'].each do |k|
+      ['name', 'port'].each do |k|
         fail ArgumentError, "Key #{k} is missing.  Valid options: #{options}" unless value.key?(k)
       end
 
       # Next we ensure unwanted keys don't exist.
       value.each do |k, v|
-        unless ['name', 'port', 'enable', 'ratio', 'connection_limit'].include?(k)
-          fail ArgumentError "Key #{k} is invalid.  Valid options: #{options}"
+        unless ['name', 'port'].include?(k)
+          fail ArgumentError "Key #{k} is requried. Valid options: #{options}"
         end
 
         # Then we check each value in turn.
@@ -201,20 +210,8 @@ Puppet::Type.newtype(:f5_pool) do
           fail ArgumentError, "#{v} must be a String" unless v.is_a?(String)
           fail ArgumentError, "#{v} must match the pattern /Partition/name" unless v =~ /^\/\w+\/(\w|\.)+$/
         when 'port'
-          unless v.to_s =~ /^\d+$/ && v.to_i.between?(1,65535)
+          unless v.to_s =~ /^\d+$/ && v.to_i.between?(0,65535)
             fail ArgumentError, "Valid options: #{options}"
-          end
-        when 'enable'
-          unless v.to_s =~ /^(enabled|disabled|true|false)+$/
-            fail ArgumentError, "Valid options: #{options}"
-          end
-        when 'ratio'
-          unless v.to_s =~ /^\d+$/
-            raise ArgumentError, "#{name} must be an Integer"
-          end
-        when 'connection_limit'
-          unless v.to_s =~ /^\d+$/
-            raise ArgumentError, "#{name} must be an Integer"
           end
         end
       end
