@@ -354,42 +354,42 @@ Puppet::Type.newtype(:f5_virtualserver) do
     #end
 
     if self[:provider] == :standard
-      case self[:protocol]
+      case (self[:protocol] or self.provider.protocol)
       when :all,"all"
-        fail ArgumentError, "ERROR: `ipother_profile` is required when `protocol => all`" if self[:ipother_profile].nil?
+        fail ArgumentError, "ERROR: `ipother_profile` is required when `protocol => all`" if ! self[:ipother_profile] and ! self.provider.ipother_profile
       when :tcp,"tcp"
-        self[:protocol_profile_client] = '/Common/tcp' if self[:protocol_profile_client].nil?
-        self[:protocol_profile_server] = '/Common/tcp' if self[:protocol_profile_server].nil?
+        self[:protocol_profile_client] = '/Common/tcp' if self[:protocol_profile_client].nil? and ! self.provider.protocol_profile_client
+        self[:protocol_profile_server] = '/Common/tcp' if self[:protocol_profile_server].nil? and ! self.provider.protocol_profile_server
       when :udp,"udp"
-        self[:protocol_profile_client] = '/Common/udp' if self[:protocol_profile_client].nil?
-        self[:protocol_profile_server] = '/Common/udp' if self[:protocol_profile_server].nil?
+        self[:protocol_profile_client] = '/Common/udp' if self[:protocol_profile_client].nil? and ! self.provider.protocol_profile_client
+        self[:protocol_profile_server] = '/Common/udp' if self[:protocol_profile_server].nil? and ! self.provider.protocol_profile_server
       when :sctp,"sctp"
-        self[:protocol_profile_client] = '/Common/sctp' if self[:protocol_profile_client].nil?
-        self[:protocol_profile_server] = '/Common/sctp' if self[:protocol_profile_server].nil?
+        self[:protocol_profile_client] = '/Common/sctp' if self[:protocol_profile_client].nil? and ! self.provider.protocol_profile_client
+        self[:protocol_profile_server] = '/Common/sctp' if self[:protocol_profile_server].nil? and ! self.provider.protocol_profile_server
       else
         fail ArgumentError, "ERROR: `protocol` must be specified and must be one of `all`, `tcp`, `udp`, or `sctp`"
       end
     end
 
     if self[:provider] == :performance_http
-      if self[:protocol_profile_client].nil?
+      if ! self[:protocol_profile_client] and ! self.provider.protocol_profile_client
         fail ArgumentError, "ERROR: `protocol_profile_client` must be specified for the performance_http provider and must be a 'fasthttp' protocol profile."
       end
     end
     if self[:provider] == :performance_l4
-      if self[:protocol_profile_client].nil?
+      if ! self[:protocol_profile_client] and ! self.provider.protocol_profile_client
         fail ArgumentError, "ERROR: `protocol_profile_client` must be specified for the performance_l4 provider and must be a 'fastl4' protocol profile."
       end
     end
 
-    if ! self[:service_port]
+    if ! self[:service_port] and ! self.provider.service_port
       fail ArgumentError, 'ERROR: `service_port` must be specified'
     end
-    if ! self[:destination_address]
+    if ! self[:destination_address] and ! self.provider.destination_address
       fail ArgumentError, 'ERROR: `destination_address` must be specified'
     end
-    if ! self[:protocol] and self[:provider] != :performance_http
-      fail ArgumentError, 'ERROR: `service_port` must be specified'
+    if self[:provider] != :performance_http and ! self[:protocol] and ! self.provider.protocol
+      fail ArgumentError, 'ERROR: `protocol` must be specified'
     end
 
 
