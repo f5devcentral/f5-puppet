@@ -1,4 +1,5 @@
 require 'puppet/provider/f5'
+require 'puppet/type/f5_node'
 require 'json'
 
 Puppet::Type.type(:f5_pool).provide(:rest, parent: Puppet::Provider::F5) do
@@ -34,8 +35,10 @@ Puppet::Type.type(:f5_pool).provide(:rest, parent: Puppet::Provider::F5) do
       if pool['membersReference']['items']
         pool['membersReference']['items'].each do |member|
           name, port = member['fullPath'].split(':')
-          members << { 'name' => name, 'connection_limit' => member['connectionLimit'].to_s,
-                       'ratio' => member['ratio'].to_s, 'port' => port.to_s, 'enable' => enable(member) }
+          members << {
+            'name' => name,
+            'port' => port.to_s,
+          }
         end
       end
 
@@ -152,21 +155,16 @@ Puppet::Type.type(:f5_pool).provide(:rest, parent: Puppet::Provider::F5) do
     if message[:members]
       # Members is a whole world of pain.
       members = []
+      nodes = Puppet::Type::F5_node.instances
       message[:members].each do |member|
+        node = nodes.find do |node|
+          node.name == member['name']
+        end
+        fail ArgumentError, "Could not find existing f5_node with the name '#{member['node']}'" if node.nil?
+        node = node.provider
         member[:name] = "#{member['name']}:#{member['port']}"
         member.delete('port')
-        case member['enable']
-        when 'enabled'
-          member['state'] = 'user-up'
-          member['session'] = 'user-enabled'
-        when 'disabled'
-          member['state'] = 'user-down'
-          member['session'] = 'user-enabled'
-        when 'forced_offline'
-          member['state'] = 'user-down'
-          member['session'] = 'user-disabled'
-        end
-        member.delete('enable')
+        member[:address] = node.address
 
         converted = convert_underscores(member)
         members << converted
