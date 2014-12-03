@@ -180,8 +180,8 @@ Puppet::Type.newtype(:f5_pool) do
   end
 
   newproperty(:members, :array_matching => :all) do
-    options = "[{ name => '/Partition/node_name', port => <Integer 0-65535> }]"
-    desc "An array of hashes containing pool node members and their port.
+    options = "[{ name => '/Partition/node_name', port => <Integer 0-65535> }] or 'none'"
+    desc "An array of hashes containing pool node members and their port, or 'none'
     Valid options:
       [
         {
@@ -192,6 +192,7 @@ Puppet::Type.newtype(:f5_pool) do
       ]"
 
     validate do |value|
+      return if value == 'none'
       # First we check that all required keys exist in the hash.
       ['name', 'port'].each do |k|
         fail ArgumentError, "Key #{k} is missing.  Valid options: #{options}" unless value.key?(k)

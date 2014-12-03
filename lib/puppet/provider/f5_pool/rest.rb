@@ -41,6 +41,7 @@ Puppet::Type.type(:f5_pool).provide(:rest, parent: Puppet::Provider::F5) do
           }
         end
       end
+      members << 'none' if members.empty?
 
       # We force everything to a string because we get Integers from the F5 and
       # strings back from the type, meaning it churns properties for no reason.
@@ -153,23 +154,27 @@ Puppet::Type.type(:f5_pool).provide(:rest, parent: Puppet::Provider::F5) do
     message = monitor_conversion(message)
 
     if message[:members]
-      # Members is a whole world of pain.
-      members = []
-      nodes = Puppet::Type::F5_node.instances
-      message[:members].each do |member|
-        node = nodes.find do |node|
-          node.name == member['name']
-        end
-        fail ArgumentError, "Could not find existing f5_node with the name '#{member['node']}'" if node.nil?
-        node = node.provider
-        member[:name] = "#{member['name']}:#{member['port']}"
-        member.delete('port')
-        member[:address] = node.address
+      if message[:members] == ['none']
+        message[:members] = []
+      else
+        # Members is a whole world of pain.
+        members = []
+        nodes = Puppet::Type::F5_node.instances
+        message[:members].each do |member|
+          node = nodes.find do |node|
+            node.name == member['name']
+          end
+          fail ArgumentError, "Could not find existing f5_node with the name '#{member['node']}'" if node.nil?
+          node = node.provider
+          member[:name] = "#{member['name']}:#{member['port']}"
+          member.delete('port')
+          member[:address] = node.address
 
-        converted = convert_underscores(member)
-        members << converted
+          converted = convert_underscores(member)
+          members << converted
+        end
+        message[:members] = members
       end
-      message[:members] = members
     end
 
     # Do a bunch of renaming back to what the API expects.  This is awful.
