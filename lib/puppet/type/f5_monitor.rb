@@ -154,6 +154,14 @@ Puppet::Type.newtype(:f5_monitor) do
     end
   end
 
+  newproperty(:parent_monitor) do
+    desc "Specifies the parent predefined or user-defined monitor."
+    validate do |value|
+      unless value == 'none' || value.match(%r{^/\w+/[\w\.-]+$})
+        fail ArgumentError, "#{name} must be: 'none' or '/Partition/name'; got #{value.inspect}"
+      end
+    end
+  end
   newproperty(:debug, :required_features => :debug, :parent => Puppet::Property::F5truthy) do
     truthy_property("Debug option for LDAP, SIP, and UDP monitors", :yes, :no)
   end

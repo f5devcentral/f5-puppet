@@ -26,6 +26,7 @@ Puppet::Type.type(:f5_monitor).provide(:https, parent: Puppet::Provider::F5) do
         ensure:                :present,
         alias_address:          aliasAddress,
         alias_service_port:     aliasServicePort,
+        parent_monitor:         monitor['defaultsFrom'] || 'none',
         cipher_list:            monitor['cipherlist'],
         client_certificate:     monitor['cert'],
         client_key:             monitor['key'],
@@ -80,7 +81,10 @@ Puppet::Type.type(:f5_monitor).provide(:https, parent: Puppet::Provider::F5) do
       :'cipher-list'            => :cipherlist,
       :'client-certificate'     => :cert,
       :'client-key'             => :key,
+      :'parent-monitor'         => :defaultsFrom,
     }
+
+    message.delete(:parent_monitor) if message[:parent_monitor] == "none"
 
     message = strip_nil_values(message)
     message = convert_underscores(message)
@@ -123,4 +127,7 @@ Puppet::Type.type(:f5_monitor).provide(:https, parent: Puppet::Provider::F5) do
 
   mk_resource_methods
 
+  def parent_monitor=(value)
+    fail ArgumentError, "ERROR: Attempting to change `parent_monitor` from '#{self.provider.parent_monitor}' to '#{self[:parent_monitor]}'; cannot be modified after a monitor has been created."
+  end
 end
