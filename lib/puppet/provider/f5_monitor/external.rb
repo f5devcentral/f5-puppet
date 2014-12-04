@@ -20,6 +20,7 @@ Puppet::Type.type(:f5_monitor).provide(:external, parent: Puppet::Provider::F5) 
         ensure:                :present,
         alias_address:          aliasAddress,
         alias_service_port:     aliasServicePort,
+        parent_monitor:         monitor['defaultsFrom'] || 'none',
         external_program:       monitor['run'],
         arguments:              monitor['args'],
         variables:              monitor['apiRawValues'],
@@ -63,7 +64,10 @@ Puppet::Type.type(:f5_monitor).provide(:external, parent: Puppet::Provider::F5) 
       :'external-program' => :run,
       :arguments          => :args,
       :variables          => :apiRawValues,
+      :'parent-monitor'   => :defaultsFrom,
     }
+
+    message.delete(:parent_monitor) if message[:parent_monitor] == "none"
 
     message = strip_nil_values(message)
     message = convert_underscores(message)
@@ -106,4 +110,7 @@ Puppet::Type.type(:f5_monitor).provide(:external, parent: Puppet::Provider::F5) 
 
   mk_resource_methods
 
+  def parent_monitor=(value)
+    fail ArgumentError, "ERROR: Attempting to change `parent_monitor` from '#{self.provider.parent_monitor}' to '#{self[:parent_monitor]}'; cannot be modified after a monitor has been created."
+  end
 end

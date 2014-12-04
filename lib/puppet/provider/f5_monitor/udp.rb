@@ -25,6 +25,7 @@ Puppet::Type.type(:f5_monitor).provide(:udp, parent: Puppet::Provider::F5) do
         ensure:                 :present,
         alias_address:          aliasAddress,
         alias_service_port:     aliasServicePort,
+        parent_monitor:         monitor['defaultsFrom'] || 'none',
         debug:                  monitor['debug'],
         description:            monitor['description'],
         interval:               monitor['interval'],
@@ -71,7 +72,10 @@ Puppet::Type.type(:f5_monitor).provide(:udp, parent: Puppet::Provider::F5) do
       :'send-string'            => :send,
       :'receive-string'         => :recv,
       :'receive-disable-string' => :recvDisable,
+      :'parent-monitor'         => :defaultsFrom,
     }
+
+    message.delete(:parent_monitor) if message[:parent_monitor] == "none"
 
     message = convert_underscores(message)
     message = rename_keys(map, message)
@@ -113,4 +117,7 @@ Puppet::Type.type(:f5_monitor).provide(:udp, parent: Puppet::Provider::F5) do
 
   mk_resource_methods
 
+  def parent_monitor=(value)
+    fail ArgumentError, "ERROR: Attempting to change `parent_monitor` from '#{self.provider.parent_monitor}' to '#{self[:parent_monitor]}'; cannot be modified after a monitor has been created."
+  end
 end

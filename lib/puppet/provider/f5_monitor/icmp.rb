@@ -18,6 +18,7 @@ Puppet::Type.type(:f5_monitor).provide(:icmp, parent: Puppet::Provider::F5) do
     monitors.each do |monitor|
       instances << new(
         ensure:                 :present,
+        parent_monitor:         monitor['defaultsFrom'] || 'none',
         alias_address:          monitor['destination'],
         description:            monitor['description'],
         interval:               monitor['interval'],
@@ -56,7 +57,11 @@ Puppet::Type.type(:f5_monitor).provide(:icmp, parent: Puppet::Provider::F5) do
     message = object.to_hash
 
     # Map for conversion in the message.
-    map = {}
+    map = {
+      :'parent-monitor' => :defaultsFrom,
+    }
+
+    message.delete(:parent_monitor) if message[:parent_monitor] == "none"
 
     message = convert_underscores(message)
     message = rename_keys(map, message)
@@ -98,4 +103,7 @@ Puppet::Type.type(:f5_monitor).provide(:icmp, parent: Puppet::Provider::F5) do
 
   mk_resource_methods
 
+  def parent_monitor=(value)
+    fail ArgumentError, "ERROR: Attempting to change `parent_monitor` from '#{self.provider.parent_monitor}' to '#{self[:parent_monitor]}'; cannot be modified after a monitor has been created."
+  end
 end
