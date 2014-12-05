@@ -1,6 +1,6 @@
-require 'puppet/parameter/name'
+require 'puppet/parameter/f5_name'
 require 'puppet/property/f5_availability_requirement'
-require 'puppet/property/description'
+require 'puppet/property/f5_description'
 require 'puppet/property/f5_health_monitors'
 
 Puppet::Type.newtype(:f5_pool) do

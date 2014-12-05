@@ -1,6 +1,6 @@
-require 'puppet/parameter/name'
-require 'puppet/property/description'
-require 'puppet/property/truthy'
+require 'puppet/parameter/f5_name'
+require 'puppet/property/f5_description'
+require 'puppet/property/f5_truthy'
 
 Puppet::Type.newtype(:f5_monitor) do
   @doc = 'Manage monitor objects. Docs at https://support.f5.com/kb/en-us/products/big-ip_ltm/manuals/product/ltm_configuration_guide_10_0_0/ltm_appendixa_monitor_types.html#1172375'
