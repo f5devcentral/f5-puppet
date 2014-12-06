@@ -1,5 +1,5 @@
-require 'puppet/parameter/name'
-require 'puppet/property/truthy'
+require 'puppet/parameter/f5_name'
+require 'puppet/property/f5_truthy'
 
 Puppet::Type.newtype(:f5_irule) do
   @doc = 'Manage irule objects'

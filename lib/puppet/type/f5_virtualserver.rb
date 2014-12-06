@@ -1,10 +1,10 @@
-require 'puppet/parameter/name'
-require 'puppet/property/connection_limit'
-require 'puppet/property/connection_rate_limit'
-require 'puppet/property/description'
-require 'puppet/property/state'
-require 'puppet/property/truthy'
-require 'puppet/property/profile'
+require 'puppet/parameter/f5_name'
+require 'puppet/property/f5_connection_limit'
+require 'puppet/property/f5_connection_rate_limit'
+require 'puppet/property/f5_description'
+require 'puppet/property/f5_state'
+require 'puppet/property/f5_truthy'
+require 'puppet/property/f5_profile'
 
 Puppet::Type.newtype(:f5_virtualserver) do
   @doc = 'Manage node objects'
