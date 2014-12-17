@@ -208,7 +208,7 @@ Puppet::Type.newtype(:f5_virtualserver) do
     end
   end
 
-  newproperty(:connection_rate_limit_mode, :required_features => :connection_rate) do
+  newproperty(:connection_rate_limit_mode) do
     desc "The connection rate limit mode.
     Valid options: per_virtual_server, per_virtual_server_and_source_address, per_virtual_server_and_destination_address, per_virtual_server_destination_and_source_address, per_source_address, per_destination_address, per_source_and_destination_address"
     newvalues(
@@ -223,7 +223,7 @@ Puppet::Type.newtype(:f5_virtualserver) do
   end
 
   # Only required for per_virtual_server and per_destination_address
-  newproperty(:connection_rate_limit_source_mask, :required_features => :connection_rate) do
+  newproperty(:connection_rate_limit_source_mask) do
     options = "<0-32>"
     desc "The CIDR mask of connection sources with rate limiting.
     Valid options: #{options}"
@@ -236,7 +236,7 @@ Puppet::Type.newtype(:f5_virtualserver) do
   end
 
   # Any property with a destination.
-  newproperty(:connection_rate_limit_destination_mask, :required_features => :connection_rate) do
+  newproperty(:connection_rate_limit_destination_mask) do
     options = "<0-32>"
     desc "The CIDR mask of connection destinations with rate limiting.
     Valid options: #{options}"
