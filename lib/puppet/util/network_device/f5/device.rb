@@ -2,7 +2,6 @@ require 'puppet/util/network_device/base'
 require 'puppet/util/network_device/f5'
 require 'puppet/util/network_device/f5/facts'
 require 'puppet/util/network_device/transport/f5'
-require 'faraday'
 
 class Puppet::Util::NetworkDevice::F5::Device
   attr_reader :connection
