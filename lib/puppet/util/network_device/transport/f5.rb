@@ -1,12 +1,12 @@
 require 'puppet/util/network_device'
 require 'puppet/util/network_device/transport'
 require 'puppet/util/network_device/transport/base'
-require 'faraday'
 
 class Puppet::Util::NetworkDevice::Transport::F5 < Puppet::Util::NetworkDevice::Transport::Base
   attr_reader :connection
 
   def initialize(url, _options = {})
+    require 'faraday'
     @connection = Faraday.new(url: url, ssl: { verify: false })
   end
 
