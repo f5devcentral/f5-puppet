@@ -48,7 +48,7 @@ Additionally, you must install the faraday gem into the Puppet Ruby environment 
 
 ####Before you begin
 
-This example is built around the following infrastructure: A server running a Puppet master is connected to the F5 device. The F5 device contains a management VLAN, a client VLAN which will contain the virtual server, and a server VLAN which will connect to the two web servers the module will be setting up. 
+This example is built around the following pre-existing infrastructure: A server running a Puppet master is connected to the F5 device. The F5 device contains a management VLAN, a client VLAN which will contain the virtual server, and a server VLAN which will connect to the two web servers the module will be setting up.
 
 In order to successfully set up your web servers, you must know the following information about your systems:
 
@@ -81,7 +81,7 @@ node bigip {
     ensure                    => 'present',
     members                   => [
       { name => '/Common/WWW_Server_1', port => '80', },
-      { name => '/Common/WWW_Server_1', port => '80', },
+      { name => '/Common/WWW_Server_2', port => '80', },
     ],
     availability_requirement  => 'all',
     health_monitors           => ['/Common/http_head_f5'],
@@ -107,17 +107,19 @@ Then you establish the pool of servers. The pool is also set up with the minimum
 
 The virtual server brings your setup together. Your virtual server **must** have a `provider` assigned. 
 
-####Step Two: Run your Puppet master
+####Step Two: Run puppet device
 
-Run the following to have the Puppet master apply your classifications and configure the f5 device: 
+Run the following to have the device proxy node generate a certificate and apply your classifications to the F5 device.
 
 ~~~
-$ puppet device -v
+$ puppet device -v --user=root
 ~~~
 
 If you do not run this command, clients will not be able to make requests to the web servers.
 
 At this point, your basic web servers should be up and fielding requests.
+
+(Note: Due to [a bug](https://tickets.puppetlabs.com/browse/PUP-1391) passing `--user=root` is required, even though the command is already run as root.)
 
 ###Tips and Tricks
 
