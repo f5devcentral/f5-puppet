@@ -2,16 +2,18 @@
   "name": "puppetlabs-f5",
   "version": "1.0.0",
   "author": "puppetlabs",
-  "summary": "Manages F5 loadbalancers.",
-  "license": "Apache 2.0",
-  "source": "https://github.com/puppetlabs/puppetlabs-f5",
-  "project_page": "https://github.com/puppetlabs/puppetlabs-f5",
-  "issues_url": "https://github.com/puppetlabs/puppetlabs-f5/issues",
+  "summary": "Manages F5 BIGIP loadbalancers.",
+  "license": "PuppetLabs-Enterprise",
+  "source": "https://forge.puppetlabs.com/puppetlabs/f5",
+  "project_page": "https://forge.puppetlabs.com/puppetlabs/f5",
+  "issues_url": "https://tickets.puppetlabs.com/browse/MODULES",
+  "tags": [
+    "f5",
+    "bigip",
+    "network",
+    "loadbalancer"
+  ],
   "dependencies": [
-    {
-      "name": "puppetlabs-stdlib",
-      "version_range": ">= 1.0.0"
-    }
+    {"name":"puppetlabs-pe_gem","version_requirement":">= 0.1.0"}
   ]
 }
-
