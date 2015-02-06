@@ -178,14 +178,20 @@ Puppet::Type.newtype(:f5_virtualserver) do
   end
 
   newproperty(:source_address_translation, :required_features => :source_translation) do
-    #XXX need other options like LSN and none
-    options = "<automap|{ 'snat' => '/Partition/pool_name'}|{ 'lsn' => '/Partition/pool_name'}>"
+    options = "<none|automap|{ 'snat' => '/Partition/pool_name'}|{ 'lsn' => '/Partition/pool_name'}>"
     desc "Assigns an existing SNAT or LSN pool to the virtual server, or enables the Automap feature. When you use this setting, the BIG-IP system automatically maps all original source IP addresses passing through the virtual server to an address in the SNAT or LSN pool.
     Valid options: #{options}"
     validate do |value|
       # Make sure we either have automap or a hash.
-      fail ArgumentError, "Source_address_translation: Valid options: #{options}; got #{value.inspect}" unless value == "automap" || value.is_a?(Hash)
-      if value.is_a?(Hash)
+      if value.is_a?(String)
+        if value != "automap" and value != "none"
+          fail ArgumentError, "Source_address_translation: Valid options: #{options}; got #{value.inspect}"
+        end
+      elsif value.is_a?(Hash)
+        # Make sure the hash only contains one key
+        if value.length != 1
+          fail ArgumentError, "Source_address_translation: must only have a single hash entry. Valid options #{options}; got #{value.inspect}"
+        end
         # Make sure the hash contains 'snat' or 'lsn' as the key.
         if (! value['snat'] and ! value['lsn']) or (value['lsn'] and value['snat'])
           fail ArgumentError, "Source_address_translation: Missing 'snat' or 'lsn' key. Valid options: #{options}; got #{value.inspect}"
@@ -194,6 +200,8 @@ Puppet::Type.newtype(:f5_virtualserver) do
         if ! [value['snat'],value['lsn']].select { |x| x.match(%r{^/\w+/[\w\.-]+$}) if x }
           fail ArgumentError, "Source_address_translation: 'snat' or 'lsn' value is not in the correct form. Valid options: #{options}; got #{value.inspect}"
         end
+      else
+        fail ArgumentError, "Source_address_translation: Valid options: #{options}; got #{value.inspect}"
       end
     end
   end

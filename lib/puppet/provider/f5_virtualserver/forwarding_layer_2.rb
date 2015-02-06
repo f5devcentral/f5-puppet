@@ -69,7 +69,7 @@ Puppet::Type.type(:f5_virtualserver).provide(:forwarding_layer_2, parent: Puppet
       when 'snat'
         source_address_translation = { 'snat' => vserver["sourceAddressTranslation"]["pool"] }
       else
-        source_address_translation = nil
+        source_address_translation = 'none'
       end
 
       case vserver["sourcePort"]
