@@ -2,7 +2,7 @@
   "name": "puppetlabs-f5",
   "version": "1.0.0",
   "author": "puppetlabs",
-  "summary": "Manages F5 BIGIP loadbalancers.",
+  "summary": "Manages F5 BIG-IP Application Delivery Controllers",
   "license": "PuppetLabs-Enterprise",
   "source": "https://forge.puppetlabs.com/puppetlabs/f5",
   "project_page": "https://forge.puppetlabs.com/puppetlabs/f5",
@@ -11,6 +11,8 @@
     "f5",
     "bigip",
     "network",
+    "Application Delivery Controllers",
+    "ADC",
     "loadbalancer"
   ],
   "dependencies": [
