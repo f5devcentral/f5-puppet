@@ -133,11 +133,8 @@ To begin with you can simply call the types from the proxy system.
 $ FACTER_url=https://<USERNAME>:<PASSWORD>@<IP ADDRESS OF BIGIP> puppet resource f5_node
 ```
 
-You can change a property by hand this way, too.
-
-```
-$ FACTER_url=https://<USERNAME>:<PASSWORD>@<IP ADDRESS OF BIGIP> puppet resource f5_user node ensure=absent
-``` 
+To create, modify, or remove resources, they must be evaluated by `puppet
+device` on a node that is contacting a puppet master.
 
 ####Role and Profiles
 The [above example](#set-up-two-load-balanced-web-servers) is for setting up a simple configuration of two web servers. However, for anything more complicated, you will want to use the roles and profiles pattern when classifying nodes or devices for F5.
