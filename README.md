@@ -1012,7 +1012,7 @@ Valid options: '< IPADDRESS/ 0 - 32 >'. For instance: '78.0.0.0/8'.
 
 Assigns an existing SNAT or LSN pool to the virtual server, or enables the Automap feature. When you use this setting, the BIG-IP system automatically maps all original source IP addresses passing through the virtual server to an address in the SNAT or LSN pool. (Requires `source_translation` feature.)
 
-Valid options: 'automap', { 'snat' => '/Partition/pool_name'}, or { 'lsn' => '/Partition/pool_name'}
+Valid options: 'none', 'automap', { 'snat' => '/Partition/pool_name'}, or { 'lsn' => '/Partition/pool_name'}
 
 ####source_port
 

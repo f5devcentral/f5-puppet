@@ -91,8 +91,18 @@ class Puppet::Provider::F5Virtualserver < Puppet::Provider::F5
     message[:irules] = [] if message[:irules] == ["none"]
     # We want last_hop_pool, default_pool, and perhaps others to stay "none", so don't delete them from message
 
-    message[:source_address_translation]["type"] = message[:source_address_translation].first[0] if message[:source_address_translation]
-    message[:source_address_translation]["pool"] = message[:source_address_translation].first[1] if message[:source_address_translation]
+    if message[:source_address_translation]
+      sat = message[:source_address_translation]
+      message[:source_address_translation] = Hash.new
+      if sat.is_a? String and sat == 'automap'
+        message[:source_address_translation]["type"] = sat
+      elsif sat.is_a? String and sat == 'none'
+        message[:source_address_translation]["type"] = sat
+      elsif sat.is_a? Hash
+        message[:source_address_translation]["type"] = sat.first[0]
+        message[:source_address_translation]["pool"] = sat.first[1]
+      end
+    end
 
     # Configure the state
     if message[:state] == "forced_offline" or message[:state] == "disabled"
