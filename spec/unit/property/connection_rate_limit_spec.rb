@@ -6,9 +6,9 @@ describe 'connection_rate_limit' do
     @node = Puppet::Type.type(:f5_node).new(:name => '/Common/testing')
   end
 
-  %w(1 20 300 400 5000).each do |connection_rate_limit|
+  [1,20,300,400,5000].each do |connection_rate_limit|
     it "should allow connection_rate_limit to be set to #{connection_rate_limit}" do
-      @node[:connection_rate_limit] = connection_rate_limit
+      @node[:connection_rate_limit] = connection_rate_limit.to_s
       expect(@node[:connection_rate_limit]).to eq(connection_rate_limit)
     end
   end
