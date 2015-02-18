@@ -38,7 +38,7 @@ type f5
 url https://<USERNAME>:<PASSWORD>@<IP ADDRESS OF BIGIP>/
 ~~~
 
-In the above example, <USERNAME> and <PASSWORD> refer to Puppet's login for the device.
+In the above example, `<USERNAME>` and `<PASSWORD>` refer to Puppet's login for the device.
 
 Additionally, you must install the faraday gem into the Puppet Ruby environment on the proxy host (Puppet agent). You can do this by declaring the `f5` class on that host. If you do not install the faraday gem, the module will not work.
 
@@ -133,8 +133,11 @@ To begin with you can simply call the types from the proxy system.
 $ FACTER_url=https://<USERNAME>:<PASSWORD>@<IP ADDRESS OF BIGIP> puppet resource f5_node
 ```
 
-To create, modify, or remove resources, they must be evaluated by `puppet
-device` on a node that is contacting a puppet master.
+To manage the device (create, modify, or remove resources), classify the bigip
+just the same as you would classify any other puppet node (site.pp, ENC,
+Console, etc.) using the device certname which is specified in device.conf.
+Then run `puppet device -v` on the proxy node as you would normally use the
+puppet agent command.
 
 ####Role and Profiles
 The [above example](#set-up-two-load-balanced-web-servers) is for setting up a simple configuration of two web servers. However, for anything more complicated, you will want to use the roles and profiles pattern when classifying nodes or devices for F5.
