@@ -1,3 +1,7 @@
+2015-02-17 Release 1.0.1
+This release fixes a bug with the 'none' and 'automap' values for
+`f5_virtualserver` `source_address_translation` property
+
 2014-12-18 Release 1.0.0
 
 Initial release.
