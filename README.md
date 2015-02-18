@@ -137,7 +137,7 @@ To manage the device (create, modify, or remove resources), classify the bigip
 just the same as you would classify any other puppet node (site.pp, ENC,
 Console, etc.) using the device certname which is specified in device.conf.
 Then run `puppet device -v` on the proxy node as you would normally use the
-puppet agent command.
+`puppet agent` command.
 
 ####Role and Profiles
 The [above example](#set-up-two-load-balanced-web-servers) is for setting up a simple configuration of two web servers. However, for anything more complicated, you will want to use the roles and profiles pattern when classifying nodes or devices for F5.
