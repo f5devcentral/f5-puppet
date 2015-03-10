@@ -42,13 +42,19 @@ In the above example, `<USERNAME>` and `<PASSWORD>` refer to Puppet's login for 
 
 Additionally, you must install the faraday gem into the Puppet Ruby environment on the proxy host (Puppet agent). You can do this by declaring the `f5` class on that host. If you do not install the faraday gem, the module will not work.
 
-##Usage
+##Usage example
 
 ###Set up two load-balanced web servers.
 
 ####Before you begin
 
-This example is built around the following pre-existing infrastructure: A server running a Puppet master is connected to the F5 device. The F5 device contains a management VLAN, a client VLAN which will contain the virtual server, and a server VLAN which will connect to the two web servers the module will be setting up.
+This example is built around the following pre-existing infrastructure: 
+
+1. A server running as a Puppet master.
+2. A Puppet agent running as a proxy or controller to the f5 device
+3. A f5 device that has been registered with the Puppet master via the proxy or controller.
+
+The F5 device contains a management VLAN, a client VLAN which will contain the virtual server, and a server VLAN which will connect to the two web servers the module will be setting up.
 
 In order to successfully set up your web servers, you must know the following information about your systems:
 
@@ -57,12 +63,18 @@ In order to successfully set up your web servers, you must know the following in
 3. The ports the web servers are listening on; and
 4. The IP address of the virtual server.
 
+### Steps
+1.  Classify the f5 device with the required resource types.
+2.  Apply classification to the device from the proxy or controller by running running 'puppet device -v --user=root'.
+
+below are these steps in further detail.
+
 ####Step One: Classifying your servers
 
-In your site.pp file, enter the below code:
+In your site.pp,  <devicecertname>.pp node manifest or a *profiles::<profile_name> manifest file, enter the below code in the relevent class statement or node declaration:
 
 ~~~
-node bigip {
+
   f5_node { '/Common/WWW_Server_1':
     ensure                   => 'present',
     address                  => '172.16.226.10',
@@ -98,7 +110,6 @@ node bigip {
     source                    => '0.0.0.0/0',
     vlan_and_tunnel_traffic   => {'enabled' => ['/Common/Client']},
   }
-}
 ~~~
 
 **The order of your resources is extremely important.** You must first establish your two web servers. In the code above, they are `f5_node { '/Common/WWW_Server_1'...` and `f5_node { '/Common/WWW_Server_2'...`. Each have the minimum number of parameters possible, and are set up with a health monitor that will ping each server directly to make sure it is still responsive. 
@@ -107,6 +118,7 @@ Then you establish the pool of servers. The pool is also set up with the minimum
 
 The virtual server brings your setup together. Your virtual server **must** have a `provider` assigned. 
 
+*Remember if your using a profile to apply the profile to the node either with the console your ENC or site.pp.
 ####Step Two: Run puppet device
 
 Run the following to have the device proxy node generate a certificate and apply your classifications to the F5 device.
