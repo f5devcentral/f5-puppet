@@ -1,0 +1,35 @@
+HOSTS:
+  "puppet":
+    roles:
+      - "master"
+      - "default"
+    vmname: "debian-wheezy"
+    platform: "debian-7-x86_64"
+    hypervisor: "ec2"
+    amisize: "t1.micro"
+    #amisize: "m3.medium"
+    snapshot: "ebs_pv"
+    user: "admin"
+  #"centos-7-x86-64-west":
+  #  roles:
+  #    - "master"
+  #    - "default"
+  #  vmname: "centos-7-x86-64-west"
+  #  platform: "el-7-x86_64"
+  #  hypervisor: "ec2"
+  #  #amisize: "c3.large"
+  #  amisize: "m3.medium"
+  #  snapshot: "foss"
+  "f5-good":
+    roles:
+      - "f5"
+    vmname: "f5-11.6.0-25mbps-good"
+    hypervisor: "f5"
+    platform: "el-f5-11.6.0-25mbps-good"
+    snapshot: "default"
+    amisize: "m3.large"
+    user: "admin"
+CONFIG:
+  type: "foss"
+  ec2_yaml: "spec/acceptance/nodesets/ec2.yaml"
+  log_level: "debug"
