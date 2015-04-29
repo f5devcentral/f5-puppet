@@ -18,7 +18,13 @@ def run_device(options={:allow_changes => true})
   else
     acceptable_exit_codes = [0,2]
   end
-  on(master, puppet('device', '-v', '--trace','--server',master.to_s), { :acceptable_exit_codes => acceptable_exit_codes })
+  on(default, puppet('device','--verbose','--color','false','--user','root','--trace','--server',master.to_s), { :acceptable_exit_codes => acceptable_exit_codes }) do |result|
+    if options[:allow_changes] == false
+      expect(result.stdout).to_not match(%r{^Notice: /Stage\[main\]})
+    end
+    expect(result.stderr).to_not match(%r{^Error:})
+    expect(result.stderr).to_not match(%r{^Warning:})
+  end
 end
 
 def run_resource(resource_type, resource_title=nil)
@@ -45,6 +51,10 @@ unless ENV['RS_PROVISION'] == 'no' or ENV['BEAKER_provision'] == 'no'
   -> service { 'puppetmaster': ensure => running, }
   EOS
   apply_manifest(pp)
+  if master['platform'].match(/^(deb|ubu)/)
+    # Why do we still have templatedir in the puppet.conf?
+    on master, "sed -i 's/templatedir=.*//' /etc/puppet/puppet.conf"
+  end
   #foss_opts = { :default_action => 'gem_install' }
   #install_puppet(foss_opts) #installs on all hosts
   #install_pe #takes forever
