@@ -69,9 +69,9 @@ Puppet::Type.newtype(:f5_virtualserver) do
     Valid options: #{options}"
 
     validate do |value|
-      fail ArgumentError, "Service_port: Valid options: #{options}" unless value =~ /^(\*|\d+)$/
+      fail ArgumentError, "Service_port: Valid options: #{options}" unless value.to_s =~ /^(\*|\d+)$/
       # Only check in the case of a number.
-      if value =~ /\d+$/
+      if value.to_s =~ /\d+$/
         fail ArgumentError, "Service_port:  Must be between 1-65535" unless value.to_i.between?(0,65535)
       end
     end
@@ -79,7 +79,7 @@ Puppet::Type.newtype(:f5_virtualserver) do
       if value == "*"
         0
       else
-        value
+        value.to_s
       end
     end
   end
