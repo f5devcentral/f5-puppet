@@ -77,6 +77,7 @@ Puppet::Type.type(:f5_monitor).provide(:http, parent: Puppet::Provider::F5) do
     }
 
     message.delete(:parent_monitor) if message[:parent_monitor] == "none"
+    message.delete(:parent_monitor) if ! @create_elements
 
     message = strip_nil_values(message)
     message = convert_underscores(message)
