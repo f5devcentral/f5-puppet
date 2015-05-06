@@ -70,8 +70,7 @@ RSpec.configure do |c|
   # Configure all nodes in nodeset
   c.before :suite do
     # Install module and dependencies
-    #puppet_module_install_on(master, {:source => proj_root, :module_name => 'f5'}) #This doesn't seem to work?
-    scp_to default, proj_root, "#{default['distmoduledir']}/f5"
+    copy_module_to(default, :source => proj_root, :module_name => 'f5')
     device_conf=<<-EOS
 [bigip]
 type f5
