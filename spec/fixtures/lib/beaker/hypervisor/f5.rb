@@ -114,11 +114,12 @@ module Beaker
     # @api private
     def enable_root(host)
       if host['user'] != 'root'
-        host.exec(Command.new("modify sys db systemauth.disablerootlogin value false"), :acceptable_exit_codes => [0,1])
         for tries in 1..10
           begin
             #This command is problematic as the F5 is not always done loading
-            if host.exec(Command.new("modify sys global-settings gui-setup disabled"), :acceptable_exit_codes => [0,1]).exit_code == 0 and host.exec(Command.new("save sys config"), :acceptable_exit_codes => [0,1]).exit_code == 0
+            if host.exec(Command.new("modify sys db systemauth.disablerootlogin value false"), :acceptable_exit_codes => [0,1]).exit_code == 0 \
+              and host.exec(Command.new("modify sys global-settings gui-setup disabled"), :acceptable_exit_codes => [0,1]).exit_code == 0 \
+              and host.exec(Command.new("save sys config"), :acceptable_exit_codes => [0,1]).exit_code == 0
               backoff_sleep(tries)
               break
             elsif tries == 10

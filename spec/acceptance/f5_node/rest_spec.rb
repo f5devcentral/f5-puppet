@@ -65,10 +65,11 @@ describe 'f5_node' do
   it 'sets ratio to 1' do
     pp=<<-EOS
     f5_node { '/Common/my_node':
-      ensure          => present,
-      address         => '10.10.10.10',
-      health_monitors => '/Common/icmp',
-      ratio           => '1',
+      ensure                   => present,
+      address                  => '10.10.10.10',
+      health_monitors          => '/Common/icmp',
+      availability_requirement => 'all',
+      ratio                    => '1',
     }
     EOS
     make_site_pp(pp)
@@ -78,10 +79,11 @@ describe 'f5_node' do
   it 'sets ratio to 100' do
     pp=<<-EOS
     f5_node { '/Common/my_node':
-      ensure          => present,
-      address         => '10.10.10.10',
-      health_monitors => '/Common/icmp',
-      ratio           => '100',
+      ensure                   => present,
+      address                  => '10.10.10.10',
+      health_monitors          => '/Common/icmp',
+      availability_requirement => 'all',
+      ratio                    => '100',
     }
     EOS
     make_site_pp(pp)

@@ -40,7 +40,6 @@ describe 'f5_monitor icmp provider' do
       ensure             => 'present',
       provider           => 'icmp',
       alias_address      => '10.10.10.8',
-      alias_service_port => '80',
       receive_string     => 'foo',
       transparent        => 'enabled',
     }
