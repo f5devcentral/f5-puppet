@@ -15,7 +15,13 @@
     "ADC",
     "loadbalancer"
   ],
+  "operatingsystem_support": [
+    {
+    "operatingsystem":"BigIp",
+    "operatingsystemrelease":[ "11.6" ]
+    }
+   ],
   "dependencies": [
-    {"name":"puppetlabs-pe_gem","version_requirement":">= 0.1.0"}
+    {"name":"puppetlabs-pe_gem","version_requirement":">= 0.1.0 <1.0.0"}
   ]
 }
