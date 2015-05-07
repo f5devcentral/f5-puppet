@@ -39,6 +39,16 @@ def run_resource(resource_type, resource_title=nil)
   end
 end
 
+def wait_for_api()
+  5.times do
+    on(master, "curl -kIL https://admin:#{hosts_as('f5').first[:ssh][:password]}@#{hosts_as('f5').first["ip"]}", { :acceptable_exit_codes => [0,1] }) do |result|
+      return if result.stdout =~ /200 OK/
+      sleep 10
+    end
+  end
+  raise Puppet::Error, "Could not connect to API."
+end
+
 unless ENV['RS_PROVISION'] == 'no' or ENV['BEAKER_provision'] == 'no'
   #install_puppet_from_rpm master, {:release => '7', :family => 'el'}
   install_puppet_from_deb master, {}

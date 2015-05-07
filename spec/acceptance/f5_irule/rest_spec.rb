@@ -9,6 +9,7 @@ describe 'f5_irule' do
     }
     EOS
     make_site_pp(pp)
+    wait_for_api()
     run_device(:allow_changes => true)
     run_device(:allow_changes => false)
   end
@@ -19,12 +20,12 @@ describe 'f5_irule' do
       definition => 'when HTTP_REQUEST {
        HTTP::redirect https://[getfield [HTTP::host] ":" 1][HTTP::uri]
     }
-definition-signature mwyl4XlRKRMQc0prWs7RtpgPcNfocOKb+MaFwAnQgAuUZZyG68OaGZsOCN3poUOFdHOc6fk2XAdGRmTRiP/7BCT7thsOX5zLFzA1N1wcr57KWVzEZt3ezxVXn2Z974OmbWm7P5Lclcr7N3adrLJMWfyfPPVF1tUYn0IQPD2QNMmfbcbr1oCuO93n/5dn0s6/EacHZGG53hVibW7xQuJXdMtoQ6ArSZ4U3n4vCDTb6NLYbAj6PirVzKY2pcsWFHFUSVrphSFwERc8+0XGHUE6Cb3ihzygoZc2cQ5jk3frFY70MkDluPTShFRbHd7PlMPRezrfkVZVeUHA/iBPcYcD+w==
-',
+definition-signature mwyl4XlRKRMQc0prWs7RtpgPcNfocOKb+MaFwAnQgAuUZZyG68OaGZsOCN3poUOFdHOc6fk2XAdGRmTRiP/7BCT7thsOX5zLFzA1N1wcr57KWVzEZt3ezxVXn2Z974OmbWm7P5Lclcr7N3adrLJMWfyfPPVF1tUYn0IQPD2QNMmfbcbr1oCuO93n/5dn0s6/EacHZGG53hVibW7xQuJXdMtoQ6ArSZ4U3n4vCDTb6NLYbAj6PirVzKY2pcsWFHFUSVrphSFwERc8+0XGHUE6Cb3ihzygoZc2cQ5jk3frFY70MkDluPTShFRbHd7PlMPRezrfkVZVeUHA/iBPcYcD+w==',
       verify_signature => true,
     }
     EOS
     make_site_pp(pp)
+    wait_for_api()    
     run_device(:allow_changes => true)
     run_device(:allow_changes => false)
   end
@@ -35,6 +36,7 @@ definition-signature mwyl4XlRKRMQc0prWs7RtpgPcNfocOKb+MaFwAnQgAuUZZyG68OaGZsOCN3
     }
     EOS
     make_site_pp(pp)
+    wait_for_api()
     run_device(:allow_changes => true)
     run_device(:allow_changes => false)
   end
