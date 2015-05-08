@@ -72,7 +72,7 @@ class Puppet::Util::NetworkDevice::Transport::F5 < Puppet::Util::NetworkDevice::
     return nil if string.nil?
     if string == "default"
       ["default"]
-    elsif string == "/Common/none"
+    elsif string == "none"
       ["none"]
     else
       string.scan(/(\/\S+)/).flatten

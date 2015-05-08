@@ -12,14 +12,4 @@ class Puppet::Property::F5HealthMonitors < Puppet::Property
       fail ArgumentError, 'Valid options: <["/Partition/Objects"]|default|none>'
     end
   end
-  munge do |value|
-    case value
-    when /default/
-      "default"
-    when /none/
-      "/Common/none"
-    else
-      value
-    end
-  end
 end
