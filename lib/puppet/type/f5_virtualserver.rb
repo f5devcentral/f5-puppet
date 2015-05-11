@@ -361,19 +361,21 @@ Puppet::Type.newtype(:f5_virtualserver) do
     #  fail ArgumentError, 'ERROR:  One of the `http_profile`, `ftp_profile`, `rtsp_profile`, `socks_profile`, or `xml_profile` attributes must be set for standard virtualservers'
     #end
 
+    partition =  File.dirname(self[:name]).split("/")[1]
+
     if self[:provider] == :standard
       case (self[:protocol] or self.provider.protocol)
       when :all,"all"
         fail ArgumentError, "ERROR: `ipother_profile` is required when `protocol => all`" if ! self[:ipother_profile] and ! self.provider.ipother_profile
       when :tcp,"tcp"
-        self[:protocol_profile_client] = '/Common/tcp' if self[:protocol_profile_client].nil? and ! self.provider.protocol_profile_client
-        self[:protocol_profile_server] = '/Common/tcp' if self[:protocol_profile_server].nil? and ! self.provider.protocol_profile_server
+        self[:protocol_profile_client] = "/#{partition}/tcp" if self[:protocol_profile_client].nil? and ! self.provider.protocol_profile_client
+        self[:protocol_profile_server] = "/#{partition}/tcp" if self[:protocol_profile_server].nil? and ! self.provider.protocol_profile_server
       when :udp,"udp"
-        self[:protocol_profile_client] = '/Common/udp' if self[:protocol_profile_client].nil? and ! self.provider.protocol_profile_client
-        self[:protocol_profile_server] = '/Common/udp' if self[:protocol_profile_server].nil? and ! self.provider.protocol_profile_server
+        self[:protocol_profile_client] = "/#{partition}/udp" if self[:protocol_profile_client].nil? and ! self.provider.protocol_profile_client
+        self[:protocol_profile_server] = "/#{partition}/udp" if self[:protocol_profile_server].nil? and ! self.provider.protocol_profile_server
       when :sctp,"sctp"
-        self[:protocol_profile_client] = '/Common/sctp' if self[:protocol_profile_client].nil? and ! self.provider.protocol_profile_client
-        self[:protocol_profile_server] = '/Common/sctp' if self[:protocol_profile_server].nil? and ! self.provider.protocol_profile_server
+        self[:protocol_profile_client] = "/#{partition}/sctp" if self[:protocol_profile_client].nil? and ! self.provider.protocol_profile_client
+        self[:protocol_profile_server] = "/#{partition}/sctp" if self[:protocol_profile_server].nil? and ! self.provider.protocol_profile_server
       else
         fail ArgumentError, "ERROR: `protocol` must be specified and must be one of `all`, `tcp`, `udp`, or `sctp`"
       end

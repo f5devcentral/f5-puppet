@@ -42,7 +42,7 @@ Puppet::Type.newtype(:f5_node) do
     end
 
     if self[:health_monitors].is_a?(Array)
-      if self[:health_monitors] == ["default"] or self[:health_monitors] == ["/Common/none"]
+      if self[:health_monitors] == ["default"] or self[:health_monitors] == ["none"]
         if self[:availability_requirement]
           fail ArgumentError, 'ERROR:  Availability cannot be managed when monitor is default or none'
         end
