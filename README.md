@@ -1098,6 +1098,24 @@ Defines the formatting and attack pattern checks for the security policy. (Requi
 
 Valid options: 'none' or '/< PARTITION >/< VIRTUAL SERVER NAME >'
 
+###f5_partition
+
+Manages partitions on the F5 device. Go [here](https://support.f5.com/kb/en-us/solutions/public/7000/200/sol7230.html) for information about configuring F5 partitions.
+
+####Parameters:
+
+####name
+
+Specifies the name(s) of the partition(s) resource(s) to manage.
+
+Valid options: String
+
+####description
+
+Sets the description of the node.
+
+Valid options: String
+
 ##Limitations
 
 F5: v11.5+.
