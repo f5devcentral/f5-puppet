@@ -108,14 +108,6 @@ Puppet::Type.type(:f5_pool).provide(:rest, parent: Puppet::Provider::F5) do
     end
   end
 
-  def basename
-    File.basename(resource[:name])
-  end
-
-  def partition
-    File.dirname(resource[:name])
-  end
-
   def convert_underscores(hash)
     # Here lies some evil magic.  We want to replace all _'s with -'s in the
     # key names of the hash we create from the object we've passed into message.
@@ -214,7 +206,7 @@ Puppet::Type.type(:f5_pool).provide(:rest, parent: Puppet::Provider::F5) do
 
   def flush
     if @property_hash != {}
-      result = Puppet::Provider::F5.put("/mgmt/tm/ltm/pool/#{basename}", message(@property_hash))
+      result = Puppet::Provider::F5.put("/mgmt/tm/ltm/pool/#{api_name}", message(@property_hash))
     end
     return result
   end
@@ -232,7 +224,7 @@ Puppet::Type.type(:f5_pool).provide(:rest, parent: Puppet::Provider::F5) do
   end
 
   def destroy
-    result = Puppet::Provider::F5.delete("/mgmt/tm/ltm/pool/#{basename}")
+    result = Puppet::Provider::F5.delete("/mgmt/tm/ltm/pool/#{api_name}")
     @property_hash.clear
 
     return result

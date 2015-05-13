@@ -63,6 +63,18 @@ class Puppet::Provider::F5 < Puppet::Provider
     return rename_hash
   end
 
+  def partition
+    File.dirname(resource[:name]).split('/')[1]
+  end
+
+  def basename
+    File.basename(resource[:name])
+  end
+
+  def api_name
+    "~#{partition}~#{basename}"
+  end
+
   def create_message(basename, partition, hash)
     # Create the message by stripping :present.
     new_hash            = hash.reject { |k, _| [:ensure, :provider, Puppet::Type.metaparams].flatten.include?(k) }

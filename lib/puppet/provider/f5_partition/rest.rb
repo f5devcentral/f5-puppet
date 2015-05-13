@@ -28,14 +28,6 @@ Puppet::Type.type(:f5_partition).provide(:rest, parent: Puppet::Provider::F5) do
     end
   end
 
-  def basename
-    File.basename(resource[:name])
-  end
-
-  def partition
-    File.dirname(resource[:name])
-  end
-
   def create_message(basename, hash)
     # Create the message by stripping :present.
     new_hash            = hash.reject { |k, _| [:ensure, :provider, Puppet::Type.metaparams].flatten.include?(k) }

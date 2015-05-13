@@ -46,14 +46,6 @@ Puppet::Type.type(:f5_node).provide(:rest, parent: Puppet::Provider::F5) do
     end
   end
 
-  def basename
-    File.basename(resource[:name])
-  end
-
-  def partition
-    File.dirname(resource[:name])
-  end
-
   def message(object)
     # Allows us to pass in resources and get all the attributes out
     # in the form of a hash.
@@ -93,7 +85,7 @@ Puppet::Type.type(:f5_node).provide(:rest, parent: Puppet::Provider::F5) do
     if @property_hash != {}
       # You can only pass address to create, not modifications.
       flush_message = @property_hash.reject { |k, _| k == :address }
-      result = Puppet::Provider::F5.put("/mgmt/tm/ltm/node/#{basename}", message(flush_message))
+      result = Puppet::Provider::F5.put("/mgmt/tm/ltm/node/#{api_name}", message(flush_message))
     end
     return result
   end
@@ -111,7 +103,7 @@ Puppet::Type.type(:f5_node).provide(:rest, parent: Puppet::Provider::F5) do
   end
 
   def destroy
-    result = Puppet::Provider::F5.delete("/mgmt/tm/ltm/node/#{basename}")
+    result = Puppet::Provider::F5.delete("/mgmt/tm/ltm/node/#{api_name}")
     @property_hash.clear
 
     return result
