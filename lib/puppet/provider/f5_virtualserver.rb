@@ -10,17 +10,9 @@ class Puppet::Provider::F5Virtualserver < Puppet::Provider::F5
     end
   end
 
-  def basename
-    File.basename(resource[:name])
-  end
-
-  def partition
-    File.dirname(resource[:name])
-  end
-
   def flush
     if @property_hash != {}
-      result = Puppet::Provider::F5.put("/mgmt/tm/ltm/virtual/#{basename}", message(@property_hash))
+      result = Puppet::Provider::F5.put("/mgmt/tm/ltm/virtual/#{api_name}", message(@property_hash))
     end
     return result
   end
@@ -39,7 +31,7 @@ class Puppet::Provider::F5Virtualserver < Puppet::Provider::F5
   end
 
   def destroy
-    result = Puppet::Provider::F5.delete("/mgmt/tm/ltm/virtual/#{basename}")
+    result = Puppet::Provider::F5.delete("/mgmt/tm/ltm/virtual/#{api_name}")
     @property_hash.clear
 
     return result

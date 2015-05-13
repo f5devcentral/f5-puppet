@@ -45,14 +45,6 @@ Puppet::Type.type(:f5_monitor).provide(:tcp_half, parent: Puppet::Provider::F5) 
     end
   end
 
-  def basename
-    File.basename(resource[:name])
-  end
-
-  def partition
-    File.dirname(resource[:name])
-  end
-
   def message(object)
     # Allows us to pass in resources and get all the attributes out
     # in the form of a hash.
@@ -78,7 +70,7 @@ Puppet::Type.type(:f5_monitor).provide(:tcp_half, parent: Puppet::Provider::F5) 
 
   def flush
     if @property_hash != {}
-      result = Puppet::Provider::F5.put("/mgmt/tm/ltm/monitor/tcp-half-open/#{basename}", message(@property_hash))
+      result = Puppet::Provider::F5.put("/mgmt/tm/ltm/monitor/tcp-half-open/#{api_name}", message(@property_hash))
     end
     return result
   end
@@ -97,7 +89,7 @@ Puppet::Type.type(:f5_monitor).provide(:tcp_half, parent: Puppet::Provider::F5) 
   end
 
   def destroy
-    result = Puppet::Provider::F5.delete("/mgmt/tm/ltm/monitor/tcp-half-open/#{basename}")
+    result = Puppet::Provider::F5.delete("/mgmt/tm/ltm/monitor/tcp-half-open/#{api_name}")
     @property_hash.clear
 
     return result

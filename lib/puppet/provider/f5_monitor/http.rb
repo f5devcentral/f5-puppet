@@ -55,14 +55,6 @@ Puppet::Type.type(:f5_monitor).provide(:http, parent: Puppet::Provider::F5) do
     end
   end
 
-  def basename
-    File.basename(resource[:name])
-  end
-
-  def partition
-    File.dirname(resource[:name])
-  end
-
   def message(object)
     # Allows us to pass in resources and get all the attributes out
     # in the form of a hash.
@@ -93,7 +85,7 @@ Puppet::Type.type(:f5_monitor).provide(:http, parent: Puppet::Provider::F5) do
 
   def flush
     if @property_hash != {}
-      result = Puppet::Provider::F5.put("/mgmt/tm/ltm/monitor/http/#{basename}", message(@property_hash))
+      result = Puppet::Provider::F5.put("/mgmt/tm/ltm/monitor/http/#{api_name}", message(@property_hash))
     end
     return result
   end
@@ -112,7 +104,7 @@ Puppet::Type.type(:f5_monitor).provide(:http, parent: Puppet::Provider::F5) do
   end
 
   def destroy
-    result = Puppet::Provider::F5.delete("/mgmt/tm/ltm/monitor/http/#{basename}")
+    result = Puppet::Provider::F5.delete("/mgmt/tm/ltm/monitor/http/#{api_name}")
     @property_hash.clear
 
     return result

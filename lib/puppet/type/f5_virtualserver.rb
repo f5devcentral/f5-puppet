@@ -361,7 +361,7 @@ Puppet::Type.newtype(:f5_virtualserver) do
     #  fail ArgumentError, 'ERROR:  One of the `http_profile`, `ftp_profile`, `rtsp_profile`, `socks_profile`, or `xml_profile` attributes must be set for standard virtualservers'
     #end
 
-    partition =  File.dirname(self[:name]).split("/")[1]
+    partition =  File.dirname(self[:name]).split('/')[1]
 
     if self[:provider] == :standard
       case (self[:protocol] or self.provider.protocol)
