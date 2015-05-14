@@ -1,6 +1,6 @@
 {
   "name": "puppetlabs-f5",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "author": "puppetlabs",
   "summary": "Manages F5 BIG-IP Application Delivery Controllers",
   "license": "PuppetLabs-Enterprise",
@@ -17,10 +17,12 @@
   ],
   "operatingsystem_support": [
     {
-    "operatingsystem":"BigIp",
-    "operatingsystemrelease":[ "11.6" ]
+      "operatingsystem": "BigIp",
+      "operatingsystemrelease": [
+        "11.6"
+      ]
     }
-   ],
+  ],
   "dependencies": [
     {"name":"puppetlabs-pe_gem","version_requirement":">= 0.1.0 <1.0.0"}
   ]
