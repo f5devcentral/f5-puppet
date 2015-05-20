@@ -169,9 +169,9 @@ Puppet::Type.newtype(:f5_virtualserver) do
         fail ArgumentError, "Vlan_and_tunnel_traffic: Valid options: #{options}" unless value['enabled'] || value['disabled']
         # Count after validation matches the count before so all validated OK.
         if value['enabled']
-          fail ArgumentError, "Vlan_and_tunnel_traffic: Valid options: #{options}" unless value['enabled'].select { |obj| obj.match(%r{^/\w+/[\w\.-]+$}) }.count == value['enabled'].count
+          fail ArgumentError, "Vlan_and_tunnel_traffic: Valid options: #{options}" unless value['enabled'].select { |obj| obj.match(%r{/[\w\.-]+/[\w\.-]+$}) }.count == value['enabled'].count
         elsif value['disabled']
-          fail ArgumentError, "Vlan_and_tunnel_traffic: Valid options: #{options}" unless value['disabled'].select { |obj| obj.match(%r{^/\w+/[\w\.-]+$}) }.count == value['disabled'].count
+          fail ArgumentError, "Vlan_and_tunnel_traffic: Valid options: #{options}" unless value['disabled'].select { |obj| obj.match(%r{/[\w\.-]+/[\w\.-]+$}) }.count == value['disabled'].count
         end
       end
     end
@@ -197,7 +197,7 @@ Puppet::Type.newtype(:f5_virtualserver) do
           fail ArgumentError, "Source_address_translation: Missing 'snat' or 'lsn' key. Valid options: #{options}; got #{value.inspect}"
         end
         # Make sure the hash value is an object.
-        if ! [value['snat'],value['lsn']].select { |x| x.match(%r{^/\w+/[\w\.-]+$}) if x }
+        if ! [value['snat'],value['lsn']].select { |x| x.match(%r{/[\w\.-]+/[\w\.-]+$}) if x }
           fail ArgumentError, "Source_address_translation: 'snat' or 'lsn' value is not in the correct form. Valid options: #{options}; got #{value.inspect}"
         end
       else
@@ -212,7 +212,7 @@ Puppet::Type.newtype(:f5_virtualserver) do
   newproperty(:traffic_class, :array_matching => :all) do
     desc "Traffic classes to apply to the virtualserver. Accepts an array of /Partition/traffic_class_name objects."
     validate do |value|
-      fail ArgumentError, "Traffic_class: Values must take the form /Partition/name; #{value} does not" unless value.match(%r{^/\w+/[\w\.-]+$})
+      fail ArgumentError, "Traffic_class: Values must take the form /Partition/name; #{value} does not" unless value =~ /^\/[\w\.-]+\/(\w|\.)+$/
     end
   end
 
@@ -335,7 +335,7 @@ Puppet::Type.newtype(:f5_virtualserver) do
     options = "An array of </Partition/Object> irules or 'none'"
     validate do |value|
       if value != "none"
-        fail ArgumentError, "Irules: Valid options: #{options}" unless value.match(%r{^/\w+/[\w\.-]+$})
+        fail ArgumentError, "Irules: Valid options: #{options}" unless value =~ /^\/[\w\.-]+\/(\w|\.)+$/
       end
     end
   end
@@ -343,7 +343,7 @@ Puppet::Type.newtype(:f5_virtualserver) do
   newproperty(:policies, :required_features => :policies, :array_matching => :all) do
     options = "An array of </Partition/Object> policies"
     validate do |value|
-      fail ArgumentError, "Policies: Valid options: #{options}" unless value.match(%r{^/\w+/[\w\.-]+$})
+      fail ArgumentError, "Policies: Valid options: #{options}" unless value =~ /^\/[\w\.-]+\/(\w|\.)+$/
     end
   end
 

@@ -8,7 +8,7 @@ class Puppet::Property::F5HealthMonitors < Puppet::Property
   end
 
   validate do |value|
-    unless value =~ /^(default|none|\/\S+)$/
+    unless value =~ /^(default|none|\/[\w\.-]+\/(\w|\.)+)$/
       fail ArgumentError, 'Valid options: <["/Partition/Objects"]|default|none>'
     end
   end
