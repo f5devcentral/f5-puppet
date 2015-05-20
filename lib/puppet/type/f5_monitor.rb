@@ -157,7 +157,7 @@ Puppet::Type.newtype(:f5_monitor) do
   newproperty(:parent_monitor) do
     desc "Specifies the parent predefined or user-defined monitor."
     validate do |value|
-      unless value =~ /^(none|\/[\w\.-]+\/(\w|\.)+)$/
+      unless value =~ /^(none|\/[\w\.-]+\/[\w\.-]+)$/
         fail ArgumentError, "#{name} must be: 'none' or '/Partition/name'; got #{value.inspect}"
       end
     end
