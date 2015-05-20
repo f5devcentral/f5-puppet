@@ -212,7 +212,7 @@ Puppet::Type.newtype(:f5_virtualserver) do
   newproperty(:traffic_class, :array_matching => :all) do
     desc "Traffic classes to apply to the virtualserver. Accepts an array of /Partition/traffic_class_name objects."
     validate do |value|
-      fail ArgumentError, "Traffic_class: Values must take the form /Partition/name; #{value} does not" unless value =~ /^\/[\w\.-]+\/(\w|\.)+$/
+      fail ArgumentError, "Traffic_class: Values must take the form /Partition/name; #{value} does not" unless value =~ /^\/[\w\.-]+\/[\w|\.-]+$/
     end
   end
 
@@ -335,7 +335,7 @@ Puppet::Type.newtype(:f5_virtualserver) do
     options = "An array of </Partition/Object> irules or 'none'"
     validate do |value|
       if value != "none"
-        fail ArgumentError, "Irules: Valid options: #{options}" unless value =~ /^\/[\w\.-]+\/(\w|\.)+$/
+        fail ArgumentError, "Irules: Valid options: #{options}" unless value =~ /^\/[\w\.-]+\/[\w\.-]+$/
       end
     end
   end
@@ -343,7 +343,7 @@ Puppet::Type.newtype(:f5_virtualserver) do
   newproperty(:policies, :required_features => :policies, :array_matching => :all) do
     options = "An array of </Partition/Object> policies"
     validate do |value|
-      fail ArgumentError, "Policies: Valid options: #{options}" unless value =~ /^\/[\w\.-]+\/(\w|\.)+$/
+      fail ArgumentError, "Policies: Valid options: #{options}" unless value =~ /^\/[\w\.-]+\/[\w\.-]+$/
     end
   end
 

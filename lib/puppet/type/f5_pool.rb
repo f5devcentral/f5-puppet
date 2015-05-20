@@ -139,7 +139,7 @@ Puppet::Type.newtype(:f5_pool) do
     validate do |value|
       # We need to check that the value conforms to /Partition/Name, as well
       # as ensuring the Name part is from the above list of encapsulations.
-      unless encapsulations.include?(File.basename(value)) && value =~ /^\/[\w\.-]+\/(\w|\.)+$/
+      unless encapsulations.include?(File.basename(value)) && value =~ /^\/[\w\.-]+\/[\w\.-]+$/
         fail ArgumentError, "Valid options: <[#{encaps_with_partition}]>"
       end
     end
@@ -208,7 +208,7 @@ Puppet::Type.newtype(:f5_pool) do
         case k
         when 'name'
           fail ArgumentError, "#{v} must be a String" unless v.is_a?(String)
-          fail ArgumentError, "#{v} must match the pattern /Partition/name" unless v =~ /^\/[\w\.-]+\/(\w|\.)+$/
+          fail ArgumentError, "#{v} must match the pattern /Partition/name" unless v =~ /^\/[\w\.-]+\/[\w\.-]+$/
         when 'port'
           unless v.to_s =~ /^\d+$/ && v.to_i.between?(0,65535)
             fail ArgumentError, "Valid options: #{options}"

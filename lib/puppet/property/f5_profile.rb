@@ -7,7 +7,7 @@ class Puppet::Property::F5Profile < Puppet::Property
   end
 
   validate do |value|
-    unless value =~ /^(none|\/[\w\.-]+\/(\w|\.)+)$/
+    unless value =~ /^(none|\/[\w\.-]+\/[\w\.-]+)$/
       fail ArgumentError, "#{name} must be: 'none' or '/Partition/name'; got #{value.inspect}"
     end
   end
