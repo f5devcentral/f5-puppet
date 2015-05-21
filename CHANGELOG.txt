@@ -1,3 +1,11 @@
+##2015-05-21 Release 1.1.1
+###Summary
+
+This bugfix release addresses a bug parsing partition and resource names with a dash in the name.
+
+####Bugfixes
+- Fixes handling of dashes in partition and resource names. (e.g. "/partition-name/resource-name")
+
 ##2015-05-14 Release 1.1.0
 ###Summary
 
