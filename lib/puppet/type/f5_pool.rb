@@ -41,7 +41,10 @@ Puppet::Type.newtype(:f5_pool) do
     Valid options: #{options}"
 
     validate do |value|
-      fail ArgumentError, "Valid options: #{options}" unless value =~ /^\d+$/
+      fail ArgumentError, "Valid options: #{options}" unless value.to_s =~ /^\d+$/
+    end
+    munge do |value|
+      value.to_s
     end
   end
 
@@ -51,9 +54,12 @@ Puppet::Type.newtype(:f5_pool) do
     Valid options: #{options}"
 
     validate do |value|
-      unless value =~ /^(pass-through|mimic)$/ || (value =~ /^\d+$/ && value.to_i.between?(0,255))
+      unless value =~ /^(pass-through|mimic)$/ || (value.to_s =~ /^\d+$/ && value.to_i.between?(0,255))
         fail ArgumentError, "Valid options: #{options}"
       end
+    end
+    munge do |value|
+      value.to_s
     end
   end
 
@@ -63,9 +69,12 @@ Puppet::Type.newtype(:f5_pool) do
     Valid options: #{options}"
 
     validate do |value|
-      unless value =~ /^(pass-through|mimic)$/ || (value =~ /^\d+$/ && value.to_i.between?(0,255))
+      unless value =~ /^(pass-through|mimic)$/ || (value.to_s =~ /^\d+$/ && value.to_i.between?(0,255))
         fail ArgumentError, "Valid options: #{options}"
       end
+    end
+    munge do |value|
+      value.to_s
     end
   end
 
@@ -75,9 +84,12 @@ Puppet::Type.newtype(:f5_pool) do
     Valid options: #{options}"
 
     validate do |value|
-      unless value =~ /^pass-through$/ || (value =~ /^\d+$/ && value.to_i.between?(0,7))
+      unless value =~ /^pass-through$/ || (value.to_s =~ /^\d+$/ && value.to_i.between?(0,7))
         fail ArgumentError, "Valid options: #{options}"
       end
+    end
+    munge do |value|
+      value.to_s
     end
   end
 
@@ -87,9 +99,12 @@ Puppet::Type.newtype(:f5_pool) do
     Valid options: #{options}"
 
     validate do |value|
-      unless value =~ /^pass-through$/ || (value =~ /^\d+$/ && value.to_i.between?(0,7))
+      unless value =~ /^pass-through$/ || (value.to_s =~ /^\d+$/ && value.to_i.between?(0,7))
         fail ArgumentError, "Valid options: #{options}"
       end
+    end
+    munge do |value|
+      value.to_s
     end
   end
 
@@ -99,7 +114,10 @@ Puppet::Type.newtype(:f5_pool) do
     Valid options: #{options}"
 
     validate do |value|
-      fail ArgumentError, "Valid options: #{options}" unless value =~ /^\d+$/ && value.to_i.between?(0,65535)
+      fail ArgumentError, "Valid options: #{options}" unless value.to_s =~ /^\d+$/ && value.to_i.between?(0,65535)
+    end
+    munge do |value|
+      value.to_s
     end
   end
 
@@ -116,7 +134,10 @@ Puppet::Type.newtype(:f5_pool) do
     Valid options: #{options}"
 
     validate do |value|
-      fail ArgumentError, "Valid options: #{options}" unless value =~ /^\d+$/
+      fail ArgumentError, "Valid options: #{options}" unless value.to_s =~ /^\d+$/
+    end
+    munge do |value|
+      value.to_s
     end
   end
 
@@ -126,7 +147,10 @@ Puppet::Type.newtype(:f5_pool) do
     Valid options: #{options}"
 
     validate do |value|
-      fail ArgumentError, "Valid options: #{options}" unless value =~ /^\d+$/
+      fail ArgumentError, "Valid options: #{options}" unless value.to_s =~ /^\d+$/
+    end
+    munge do |value|
+      value.to_s
     end
   end
 
@@ -175,7 +199,10 @@ Puppet::Type.newtype(:f5_pool) do
     Valid options: #{options}"
 
     validate do |value|
-      fail ArgumentError, "Valid options: #{options}" unless value =~ /^(disabled|\d+)$/
+      fail ArgumentError, "Valid options: #{options}" unless value.to_s =~ /^(disabled|\d+)$/
+    end
+    munge do |value|
+      value.to_s
     end
   end
 
@@ -215,6 +242,10 @@ Puppet::Type.newtype(:f5_pool) do
           end
         end
       end
+    end
+    munge do |value|
+      value['port'] = value['port'].to_s
+      value
     end
   end
 

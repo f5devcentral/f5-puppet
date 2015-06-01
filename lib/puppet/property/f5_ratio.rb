@@ -11,4 +11,7 @@ class Puppet::Property::F5Ratio < Puppet::Property
       raise ArgumentError, "#{name} must be an Integer"
     end
   end
+  munge do |value|
+    value.to_s
+  end
 end

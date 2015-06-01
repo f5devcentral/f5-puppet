@@ -139,6 +139,9 @@ Puppet::Type.newtype(:f5_monitor) do
         fail ArgumentError, "Alias_service_port:  Must be between 1-65535" unless value.to_i.between?(1,65535)
       end
     end
+    munge do |value|
+      value.to_s
+    end
   end
 
   newproperty(:ip_dscp, :required_features => :dscp) do
@@ -215,6 +218,9 @@ Puppet::Type.newtype(:f5_monitor) do
         fail ArgumentError, "Valid options: #{options}"
       end
     end
+    munge do |value|
+      value.to_s
+    end
   end
 
   newproperty(:additional_rejected_status_codes, :required_features => :sip, :array_matching => :all) do
@@ -224,6 +230,9 @@ Puppet::Type.newtype(:f5_monitor) do
       unless ['*', 'any', 'none'].include?(value) or value.to_i.between?(100,999)
         fail ArgumentError, "Valid options: #{options}"
       end
+    end
+    munge do |value|
+      value.to_s
     end
   end
 

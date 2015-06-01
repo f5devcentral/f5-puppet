@@ -10,8 +10,7 @@ class Puppet::Util::NetworkDevice::F5::Device
   def initialize(url, options = {})
     @autoloader = Puppet::Util::Autoload.new(
       self,
-      "puppet/util/network_device/transport",
-      :wrap => false
+      "puppet/util/network_device/transport"
     )
     if @autoloader.load("f5")
       @transport = Puppet::Util::NetworkDevice::Transport::F5.new(url,options[:debug])
