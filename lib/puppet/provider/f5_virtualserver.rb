@@ -74,7 +74,7 @@ class Puppet::Provider::F5Virtualserver < Puppet::Provider::F5
       fail ArgumentError, "Incorrect protocol_profile_client for performance_l4 provider: Must be a 'fastl4' protocol profile, got '#{self.class.find_profile_type(message[:protocol_profile_client])}'"
     end
 
-    message[:destination] = "#{partition}/#{message[:destination_address]}:#{message[:service_port]}"
+    message[:destination] = "#{message[:destination_address]}:#{message[:service_port]}"
     message.delete(:destination_address)
     message.delete(:service_port)
     message[:default_persistence_profile] = [] if message[:default_persistence_profile] == "none"
