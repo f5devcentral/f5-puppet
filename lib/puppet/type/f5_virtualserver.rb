@@ -77,7 +77,7 @@ Puppet::Type.newtype(:f5_virtualserver) do
     end
     munge do |value|
       if value == "*"
-        0
+        "0"
       else
         value.to_s
       end
