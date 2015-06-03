@@ -42,13 +42,13 @@ Puppet::Type.newtype(:f5_virtualserver) do
   newproperty(:state, :parent => Puppet::Property::F5State)
 
   newproperty(:source) do
-    desc "CIDR notation for traffic source address."
+    desc "CIDR notation for traffic source address, optionally including a route domain ID."
     # TODO: Should we validate this to an IP?
     # yes; cidr
   end
 
   newproperty(:destination_address) do
-    desc "The IP address of the virtual server."
+    desc "The IP address of the virtual server. Optionally includes a route domain ID"
     #options = "{ 'host': '<address>' } or { 'network': '<address> <mask>' }"
 
     #validate do |value|

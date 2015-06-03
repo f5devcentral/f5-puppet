@@ -119,7 +119,7 @@ Puppet::Type.newtype(:f5_monitor) do
   end
 
   newproperty(:alias_address) do
-    options = '<ipv4|ipv6>'
+    options = '<ipv4|ipv6>[%<route domain ID>]'
     desc "Specifies the destination IP address that the monitor checks.
     Valid options: #{options}"
 

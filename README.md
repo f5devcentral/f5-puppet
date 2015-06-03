@@ -178,9 +178,9 @@ Valid options: String
 
 ####address
 
-Specifies the IP address of the node resource.
+Specifies the IP address and route domain ID of the node resource.
 
-Valid options: 'ipv4' or 'ipv6'
+Valid options: ipv4 or ipv6 addresses optionally followed by % sign and a route domain ID. Eg: "10.0.5.5%3"
 
 ####availability
 
@@ -822,7 +822,7 @@ Valid options: String
 
 ####destination_address
 
-Sets the IP address of the virtual server.
+Sets the IP address of the virtual server. Optionally includes a route domain ID. Eg: '10.0.5.5%3'
 
 Valid options: IP Address
 
@@ -1016,9 +1016,9 @@ Valid options: 'none' or '/< PARTITION >/< VIRTUAL SERVER NAME >'
 
 ####source
 
-Specifies the CIDR notation for traffic source address.
+Specifies the CIDR notation for traffic source address. Optionally includes a route domain ID.
 
-Valid options: '< IPADDRESS/ 0 - 32 >'. For instance: '78.0.0.0/8'.
+Valid options: '< IPADDRESS[%ID]/ 0 - 32 >'. For instance: '78.0.0.0%3/8'.
 
 ####source_address_translation
 
