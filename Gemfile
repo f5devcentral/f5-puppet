@@ -5,9 +5,6 @@ group :development, :unit_tests do
   gem 'rspec-puppet',            :require => false
   gem 'puppetlabs_spec_helper',  :require => false
   gem 'puppet-lint',             :require => false
-  gem 'puppet_facts',            :require => false
-  gem 'faraday',                 :require => false
-  gem 'vcr',                     :require => false
   gem 'pry',                     :require => false
 end
 
