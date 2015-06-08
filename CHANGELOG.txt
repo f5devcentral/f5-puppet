@@ -1,3 +1,14 @@
+##2015-05-21 Release 1.2.0
+###Summary
+
+This is a feature release that adds domain routing support. Also includes a bugfix and test cleanup.
+
+####Features
+- Adds domain routing support.
+
+####Bugfixes
+- Adds fixes to validation and idempotency for all port parameters.
+
 ##2015-05-21 Release 1.1.1
 ###Summary
 
