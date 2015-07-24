@@ -239,7 +239,7 @@ Valid options: Integers
 
 Sets the state of the node resource.
 
-Valid options: 'user-up' or 'user-down'
+Valid options: 'enabled', 'disabled' or 'forced_offline'
 
 
 ###f5_pool
