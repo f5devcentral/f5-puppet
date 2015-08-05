@@ -151,5 +151,26 @@ module Beaker
         host.exec(Command.new("hostname #{host.name}"))
       end
     end
+
+    # Retrieve the public key locally from the executing users ~/.ssh directory
+    #
+    # @return [String] contents of public key
+    # @api private
+    def public_key
+      user_specified_key = Array(options[:ssh][:keys]).first + '.pub'
+      filename = File.expand_path(user_specified_key)
+      unless File.exists? filename
+        filename = File.expand_path('~/.ssh/id_rsa.pub')
+        unless File.exists? filename
+          filename = File.expand_path('~/.ssh/id_dsa.pub')
+          unless File.exists? filename
+            raise RuntimeError, "Expected one of #{user_specified_key}, " +
+              "~/.ssh/id_rsa.pub, or ~/.ssh/id_dsa.pub but found none"
+          end
+        end
+      end
+
+      File.read(filename)
+    end
   end
 end
