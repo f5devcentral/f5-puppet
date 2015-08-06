@@ -9,7 +9,6 @@ describe 'f5_irule' do
     }
     EOS
     make_site_pp(pp)
-    wait_for_api()
     run_device(:allow_changes => true)
     run_device(:allow_changes => false)
   end
@@ -25,7 +24,6 @@ definition-signature mwyl4XlRKRMQc0prWs7RtpgPcNfocOKb+MaFwAnQgAuUZZyG68OaGZsOCN3
     }
     EOS
     make_site_pp(pp)
-    wait_for_api()    
     run_device(:allow_changes => true)
     run_device(:allow_changes => false)
   end
@@ -36,7 +34,6 @@ definition-signature mwyl4XlRKRMQc0prWs7RtpgPcNfocOKb+MaFwAnQgAuUZZyG68OaGZsOCN3
     }
     EOS
     make_site_pp(pp)
-    wait_for_api()
     run_device(:allow_changes => true)
     run_device(:allow_changes => false)
   end
