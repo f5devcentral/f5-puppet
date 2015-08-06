@@ -170,7 +170,22 @@ module Beaker
         end
       end
 
+      add_private_key(filename)
+      @logger.debug "aws-sdk: Found local public key"
       File.read(filename)
+    end
+
+    # Retrieves the private key locally from the executing users ~/.ssh directory
+    # and adds it to the local SSH Agent
+    #
+    # @return [String] filepath
+    def add_private_key(pub_key="~/.ssh/id_rsa.pub")
+      private_key, ext = pub_key.split('.pub', -1)
+      filename = File.expand_path(private_key)
+      if File.exists? filename
+        @logger.debug "aws-sdk: Adding SSH Private Key to SSH Agent"
+        system "/usr/bin/ssh-add #{filename}"
+      end   
     end
   end
 end
