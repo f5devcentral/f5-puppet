@@ -39,11 +39,14 @@ def run_resource(resource_type, resource_title=nil)
   end
 end
 
-def wait_for_api()
-  5.times do
+def wait_for_api(max_retries)
+  1.upto(max_retries) do |retries|
     on(master, "curl -kIL https://admin:#{hosts_as('f5').first[:ssh][:password]}@#{hosts_as('f5').first["ip"]}", { :acceptable_exit_codes => [0,1] }) do |result|
       return if result.stdout =~ /200 OK/
-      sleep 10
+
+      counter = 10 * retries
+      logger.debug "Unable to connect to F5 REST API, retrying in #{counter} seconds..." 
+      sleep counter
     end
   end
   raise Puppet::Error, "Could not connect to API."
@@ -91,5 +94,8 @@ EOS
     on master, puppet('plugin','download','--server',master.to_s)
     on master, puppet('device','-v','--waitforcert','0','--server',master.to_s), {:acceptable_exit_codes => [0,1] }
     on master, puppet('cert','sign','bigip'), {:acceptable_exit_codes => [0,24] }
+
+    #Queries the REST API until it's been initialized
+    wait_for_api(10)
   end
 end
