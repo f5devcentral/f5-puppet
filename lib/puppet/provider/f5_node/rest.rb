@@ -18,11 +18,22 @@ Puppet::Type.type(:f5_node).provide(:rest, parent: Puppet::Provider::F5) do
       else
         state = "disabled"
       end
+      default_route_domain = find_default_route_domain(partition(node["fullPath"])).to_s
+      if node["address"].include?("%")
+        address, route_domain = node['address'].split("%")
+      else
+        address, route_domain = [node['address'],"0"]
+      end
+      p route_domain
+      p default_route_domain
+      if route_domain != default_route_domain
+        address = "#{address}%#{route_domain}"
+      end
 
       instances << new(
         ensure:                   :present,
         name:                     node['fullPath'],
-        address:                  node['address'],
+        address:                  address,
         availability_requirement: find_availability(node['monitor']),
         connection_limit:         node['connectionLimit'].to_s,
         connection_rate_limit:    node['rateLimit'],

@@ -64,7 +64,11 @@ class Puppet::Provider::F5 < Puppet::Provider
   end
 
   def partition
-    File.dirname(resource[:name]).split('/')[1]
+    self.class.partion(resource[:name])
+  end
+
+  def self.partition(path)
+    File.dirname(path).split('/')[1]
   end
 
   def basename
@@ -189,6 +193,23 @@ class Puppet::Provider::F5 < Puppet::Provider
         m.merge!(profile["fullPath"] => profile_type)
       end
       memo.merge! profile_hash
+    end
+  end
+
+  def self.find_default_route_domain(partition)
+    partitions = @@partition_cache ||= get_partitions
+    if partitions[partition]
+      partitions[partition]["defaultRouteDomain"]
+    else
+      @@partition_cache = get_partitions
+      @@partition_cache[partition]["defaultRouteDomain"]
+    end
+  end
+
+  def self.get_partitions
+    Puppet::Provider::F5.call("/mgmt/tm/auth/partition").inject({}) do |memo,partition|
+      memo[partition["name"]] = partition
+      memo
     end
   end
 end
