@@ -12,13 +12,6 @@ module Beaker
       # Perform the main launch work
       launch_all_nodes()
 
-      # Wait for each node to reach status :running
-      wait_for_status(:running)
-
-      # Wait for each node's status checks to be :ok, otherwise the F5
-      # application (mcpd) may not be started yet
-      wait_for_status_checks("ok")
-
       # Add metadata tags to each instance
       add_tags()
 
@@ -28,83 +21,22 @@ module Beaker
       #enable root if user is not root
       enable_root_on_hosts()
 
+      # This is done by the Beaker AWS hypervisor but isn't valid for F5
       # Set the hostname for each box
-      #set_hostnames()
+      # set_hostnames()
 
+      # This is done by the Beaker AWS hypervisor but isn't valid for F5
       # Configure /etc/hosts on each host
-      configure_hosts()
+      # configure_hosts()
 
-      @logger.notify("f5: Provisioning complete in #{Time.now - start_time} seconds")
+      @logger.notify("aws-sdk: Provisioning complete in #{Time.now - start_time} seconds")
 
       nil #void
     end
 
-    # Waits until all boxes' status checks reach the desired state
-    #
-    # @param status [String] EC2 state to wait for, "ok" "initializing" etc.
-    # @return [void]
-    # @api private
-    def wait_for_status_checks(status)
-      @logger.notify("f5: Now wait for all hosts' status checks to reach state #{status}")
-      @hosts.each do |host|
-        instance = host['instance']
-        name = host.name
-
-        @logger.notify("f5: Wait for status check #{status} for node #{name}")
-
-        # TODO: should probably be a in a shared method somewhere
-        for tries in 1..10
-          begin
-            if instance.client.describe_instance_status({:instance_ids => [instance.id]})[:instance_status_set].first[:system_status][:status] == status
-              # Always sleep, so the next command won't cause a throttle
-              backoff_sleep(tries)
-              break
-            elsif tries == 10
-              raise "Instance never reached state #{status}"
-            end
-          rescue AWS::EC2::Errors::InvalidInstanceID::NotFound => e
-            @logger.debug("Instance #{name} not yet available (#{e})")
-          end
-          backoff_sleep(tries)
-        end
-      end
-    end
-
-    # Configure /etc/hosts for each node
-    #
-    # @return [void]
-    # @api private
-    def configure_hosts
-      #@hosts.each do |host|
-      #  etc_hosts = "127.0.0.1\tlocalhost localhost.localdomain\n"
-      #  name = host.name
-      #  domain = get_domain_name(host)
-      #  ip = host['private_ip']
-      #  etc_hosts += "#{ip}\t#{name} #{name}.#{domain} #{host['dns_name']}\n"
-      #  @hosts.each do |neighbor|
-      #    if neighbor == host
-      #      next
-      #    end
-      #    name = neighbor.name
-      #    domain = get_domain_name(neighbor)
-      #    ip = neighbor['ip']
-      #    etc_hosts += "#{ip}\t#{name} #{name}.#{domain} #{neighbor['dns_name']}\n"
-      #  end
-      #  set_etc_hosts(host, etc_hosts)
-      #end
-    end
-
-    # Enables root for instances with custom username like ubuntu-amis
-    #
-    # @return [void]
-    # @api private
-    def enable_root_on_hosts
-      @hosts.each do |host|
-        enable_root(host)
-      end
-    end
-
-    # Override this from hypervisor.rb
+    # If we don't define this method then the default will be used, which
+    # logs into the host and twiddles the /etc/sshd_config and otherwise
+    # isn't applicable to f5
     def configure
     end
 
@@ -112,44 +44,31 @@ module Beaker
     #
     # @return [void]
     # @api private
-    def enable_root(host)
-      if host['user'] != 'root'
-        for tries in 1..10
-          begin
-            #This command is problematic as the F5 is not always done loading
-            if host.exec(Command.new("modify sys db systemauth.disablerootlogin value false"), :acceptable_exit_codes => [0,1]).exit_code == 0 \
-              and host.exec(Command.new("modify sys global-settings gui-setup disabled"), :acceptable_exit_codes => [0,1]).exit_code == 0 \
-              and host.exec(Command.new("save sys config"), :acceptable_exit_codes => [0,1]).exit_code == 0
-              backoff_sleep(tries)
-              break
-            elsif tries == 10
-              raise "Instance was unable to be configured"
-            end
-          rescue Beaker::Host::CommandFailure => e
-            @logger.debug("Instance not yet configured (#{e})")
+    def enable_root_f5(host)
+      for tries in 1..10
+        begin
+          #This command is problematic as the F5 is not always done loading
+          if host.exec(Command.new("modify sys db systemauth.disablerootlogin value false"), :acceptable_exit_codes => [0,1]).exit_code == 0 \
+            and host.exec(Command.new("modify sys global-settings gui-setup disabled"), :acceptable_exit_codes => [0,1]).exit_code == 0 \
+            and host.exec(Command.new("save sys config"), :acceptable_exit_codes => [0,1]).exit_code == 0
+            backoff_sleep(tries)
+            break
+          elsif tries == 10
+            raise "Instance was unable to be configured"
           end
-          backoff_sleep(tries)
+        rescue Beaker::Host::CommandFailure => e
+          @logger.debug("Instance not yet configured (#{e})")
         end
-        host['user'] = 'root'
-        host.close
-        sha256 = Digest::SHA256.new
-        password = sha256.hexdigest((1..50).map{(rand(86)+40).chr}.join.gsub(/\\/,'\&\&'))
-        host['ssh'] = {:password => password}
-        host.exec(Command.new("echo -e '#{password}\\n#{password}' | tmsh modify auth password admin"))
-        @logger.notify("f5: Configured admin password to be #{password}")
-        host.close
+        backoff_sleep(tries)
       end
-    end
-
-    # Set the hostname of all instances to be the hostname defined in the
-    # beaker configuration.
-    #
-    # @return [void]
-    # @api private
-    def set_hostnames
-      @hosts.each do |host|
-        host.exec(Command.new("hostname #{host.name}"))
-      end
+      host['user'] = 'root'
+      host.close
+      sha256 = Digest::SHA256.new
+      password = sha256.hexdigest((1..50).map{(rand(86)+40).chr}.join.gsub(/\\/,'\&\&'))
+      host.exec(Command.new("echo -e '#{password}\\n#{password}' | tmsh modify auth password admin"))
+      host['ssh'][:password] = password
+      @logger.notify("f5: Configured admin password to be #{password}")
+      host.close
     end
 
     # Retrieve the public key locally from the executing users ~/.ssh directory
@@ -185,7 +104,7 @@ module Beaker
       if File.exists? filename
         @logger.debug "aws-sdk: Adding SSH Private Key to SSH Agent"
         system "/usr/bin/ssh-add #{filename}"
-      end   
+      end
     end
   end
 end
