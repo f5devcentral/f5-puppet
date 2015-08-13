@@ -92,7 +92,7 @@ EOS
     create_remote_file(master, File.join(master[:puppetpath], "device.conf"), device_conf)
     apply_manifest("include f5")
     on master, puppet('plugin','download','--server',master.to_s)
-    on master, puppet('device','-v','--waitforcert','0','--server',master.to_s), {:acceptable_exit_codes => [0,1] }
+    on master, puppet('device','-v','--user','root','--waitforcert','0','--server',master.to_s), {:acceptable_exit_codes => [0,1] }
     on master, puppet('cert','sign','bigip'), {:acceptable_exit_codes => [0,24] }
 
     #Queries the REST API until it's been initialized
