@@ -19,6 +19,7 @@ AMI:
   "centos-7-x86-64-west":
     :image:
       :foss: "ami-bd420e8d"
+      :ebs: "ami-f7d1d0c7"
     :region: "us-west-2"
   "f5-11.6.0-25mbps-good":
     :image:
