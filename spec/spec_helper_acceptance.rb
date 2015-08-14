@@ -53,8 +53,8 @@ def wait_for_api(max_retries)
 end
 
 unless ENV['RS_PROVISION'] == 'no' or ENV['BEAKER_provision'] == 'no'
-  #install_puppet_from_rpm master, {:release => '7', :family => 'el'}
-  install_puppet_from_deb master, {}
+  install_puppet_from_rpm master, {:release => '7', :family => 'el'}
+  #install_puppet_from_deb master, {}
   pp=<<-EOS
   $pkg = $::osfamily ? {
     'Debian' => 'puppetmaster',
