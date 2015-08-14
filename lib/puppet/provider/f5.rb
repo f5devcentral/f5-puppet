@@ -64,7 +64,7 @@ class Puppet::Provider::F5 < Puppet::Provider
   end
 
   def partition
-    self.class.partion(resource[:name])
+    self.class.partition(resource[:name])
   end
 
   def self.partition(path)
