@@ -109,6 +109,7 @@ EOS
     on master, puppet('device','-v','--user','root','--waitforcert','0','--server',master.to_s), {:acceptable_exit_codes => [0,1] }
     on master, puppet('cert','sign','f5-dut'), {:acceptable_exit_codes => [0,24] }
     on master, "service #{master['puppetservice']} start"
+    wait_for_master(3)
 
     #Queries the F5 REST API & Puppet Master until they have been initialized
     wait_for_api(10)
