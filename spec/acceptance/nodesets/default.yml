@@ -1,6 +1,6 @@
 # Requires that ~/.fog have aws_access_key_id and aws_secret_access_key
 HOSTS:
-  "puppet":
+  "puppet-master":
     roles:
       - "master"
       - "default"
