@@ -9,7 +9,7 @@ def wait_for_master(max_retries)
     on(master, "curl -kIL https://puppet:8140", { :acceptable_exit_codes => [0,1,7] }) do |result|
       return if result.stdout =~ /400 Bad Request/
 
-      counter = 2 ** retries
+      counter = 3 ** retries
       logger.debug "Unable to reach Puppet Master, Sleeping #{counter} seconds for retry #{retries}..."
       sleep counter
     end
@@ -109,7 +109,6 @@ EOS
     on master, puppet('device','-v','--user','root','--waitforcert','0','--server',master.to_s), {:acceptable_exit_codes => [0,1] }
     on master, puppet('cert','sign','f5-dut'), {:acceptable_exit_codes => [0,24] }
     on master, "service #{master['puppetservice']} start"
-    wait_for_master(3)
 
     #Queries the F5 REST API & Puppet Master until they have been initialized
     wait_for_api(10)
