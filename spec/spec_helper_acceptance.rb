@@ -4,12 +4,26 @@ $:.unshift File.join(File.dirname(__FILE__),  'fixtures', 'lib')
 require 'beaker-rspec'
 require 'beaker/hypervisor/f5' #from spec/fixtures/lib
 
+def wait_for_master(max_retries)
+  1.upto(max_retries) do |retries|
+    on(master, "curl -kIL https://puppet:8140", { :acceptable_exit_codes => [0,1,7] }) do |result|
+      return if result.stdout =~ /400 Bad Request/
+
+      counter = 3 ** retries
+      logger.debug "Unable to reach Puppet Master, Sleeping #{counter} seconds for retry #{retries}..."
+      sleep counter
+    end
+  end
+  raise Puppet::Error, "Could not connect to Puppet Master."
+end
+
 def make_site_pp(pp, path = File.join(master['puppetpath'], 'manifests'))
   on master, "mkdir -p #{path}"
   create_remote_file(master, File.join(path, "site.pp"), pp)
   on master, "chown -R #{master['user']}:#{master['group']} #{path}"
   on master, "chmod -R 0755 #{path}"
   on master, "service #{master['puppetservice']} restart"
+  wait_for_master(3)
 end
 
 def run_device(options={:allow_changes => true})
@@ -41,8 +55,8 @@ end
 
 def wait_for_api(max_retries)
   1.upto(max_retries) do |retries|
-    on(master, "curl -kIL https://admin:#{hosts_as('f5').first[:ssh][:password]}@#{hosts_as('f5').first["ip"]}", { :acceptable_exit_codes => [0,1] }) do |result|
-      return if result.stdout =~ /200 OK/
+    on(master, "curl -kIL https://admin:#{hosts_as('f5').first[:ssh][:password]}@#{hosts_as('f5').first["ip"]}/tmui/", { :acceptable_exit_codes => [0,1] }) do |result|
+      return if result.stdout =~ /302 Found/
 
       counter = 10 * retries
       logger.debug "Unable to connect to F5 REST API, retrying in #{counter} seconds..." 
@@ -85,7 +99,7 @@ RSpec.configure do |c|
     # Install module and dependencies
     copy_module_to(default, :source => proj_root, :module_name => 'f5')
     device_conf=<<-EOS
-[bigip]
+[f5-dut]
 type f5
 url https://admin:#{hosts_as('f5').first[:ssh][:password]}@#{hosts_as("f5").first["ip"]}/
 EOS
@@ -93,7 +107,7 @@ EOS
     apply_manifest("include f5")
     on master, puppet('plugin','download','--server',master.to_s)
     on master, puppet('device','-v','--user','root','--waitforcert','0','--server',master.to_s), {:acceptable_exit_codes => [0,1] }
-    on master, puppet('cert','sign','bigip'), {:acceptable_exit_codes => [0,24] }
+    on master, puppet('cert','sign','f5-dut'), {:acceptable_exit_codes => [0,24] }
 
     #Queries the REST API until it's been initialized
     wait_for_api(10)
