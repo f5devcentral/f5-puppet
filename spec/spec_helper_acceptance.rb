@@ -108,9 +108,11 @@ EOS
     on master, puppet('plugin','download','--server',master.to_s)
     on master, puppet('device','-v','--user','root','--waitforcert','0','--server',master.to_s), {:acceptable_exit_codes => [0,1] }
     on master, puppet('cert','sign','f5-dut'), {:acceptable_exit_codes => [0,24] }
+    on master, "service #{master['puppetservice']} start"
     wait_for_master(3)
 
     #Queries the REST API until it's been initialized
     wait_for_api(10)
+    on master, puppet('device','-v','--user','root','--server',master.to_s), {:acceptable_exit_codes => [0,1] }
   end
 end
