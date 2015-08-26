@@ -9,7 +9,7 @@ def wait_for_master(max_retries)
     on(master, "curl -kIL https://puppet:8140", { :acceptable_exit_codes => [0,1,7] }) do |result|
       return if result.stdout =~ /400 Bad Request/
 
-      counter = 3 ** retries
+      counter = 2 ** retries
       logger.debug "Unable to reach Puppet Master, Sleeping #{counter} seconds for retry #{retries}..."
       sleep counter
     end
