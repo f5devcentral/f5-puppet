@@ -9,7 +9,7 @@ HOSTS:
     platform: "el-7-x86_64"  
     snapshot: "ebs"
     amisize: m3.xlarge
-  "f5-good":
+  "f5-dut":
     roles:
       - "f5"
     vmname: "f5-11.6.0-25mbps-good"
