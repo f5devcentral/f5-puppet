@@ -1,7 +1,7 @@
 AMI:
   "debian-wheezy":
     :image:
-      :ebs_pv: "ami-68006058"
+      :ebs_pv: "ami-c481ecf4"
     :region: "us-west-2"
   "amzn-201409":
     :image:
@@ -18,7 +18,6 @@ AMI:
     :region: "us-west-2"
   "centos-7-x86-64-west":
     :image:
-      :foss: "ami-bd420e8d"
       :ebs: "ami-f7d1d0c7"
     :region: "us-west-2"
   "f5-11.6.0-25mbps-good":

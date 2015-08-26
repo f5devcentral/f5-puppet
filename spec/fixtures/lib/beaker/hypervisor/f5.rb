@@ -12,6 +12,10 @@ module Beaker
       # Perform the main launch work
       launch_all_nodes()
 
+      # Wait for each node's status checks to be :ok, otherwise the F5
+      # application (mcpd) may not be started yet
+      wait_for_status_checks("ok")
+
       # Add metadata tags to each instance
       add_tags()
 
@@ -32,6 +36,37 @@ module Beaker
       @logger.notify("aws-sdk: Provisioning complete in #{Time.now - start_time} seconds")
 
       nil #void
+    end
+    
+    # Waits until all boxes' status checks reach the desired state
+    #
+    # @param status [String] EC2 state to wait for, "ok" "initializing" etc.
+    # @return [void]
+    # @api private
+    def wait_for_status_checks(status)
+      @logger.notify("f5: Now wait for all hosts' status checks to reach state #{status}")
+      @hosts.each do |host|
+        instance = host['instance']
+        name = host.name
+
+        @logger.notify("f5: Wait for status check #{status} for node #{name}")
+
+        # TODO: should probably be a in a shared method somewhere
+        for tries in 1..10
+          begin
+            if instance.client.describe_instance_status({:instance_ids => [instance.id]})[:instance_status_set].first[:system_status][:status] == status
+              # Always sleep, so the next command won't cause a throttle
+              backoff_sleep(tries)
+              break
+            elsif tries == 10
+              raise "Instance never reached state #{status}"
+            end
+          rescue AWS::EC2::Errors::InvalidInstanceID::NotFound => e
+            @logger.debug("Instance #{name} not yet available (#{e})")
+          end
+          backoff_sleep(tries)
+        end
+      end
     end
 
     # If we don't define this method then the default will be used, which
