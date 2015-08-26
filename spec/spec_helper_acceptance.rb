@@ -6,7 +6,7 @@ require 'beaker/hypervisor/f5' #from spec/fixtures/lib
 
 def wait_for_master(max_retries)
   1.upto(max_retries) do |retries|
-    on(master, "curl -kIL https://puppet:8140", { :acceptable_exit_codes => [0,1,7] }) do |result|
+    on(master, "curl -kIL https://puppet-master:8140", { :acceptable_exit_codes => [0,1,7] }) do |result|
       return if result.stdout =~ /400 Bad Request/
 
       counter = 3 ** retries
@@ -108,6 +108,7 @@ EOS
     on master, puppet('plugin','download','--server',master.to_s)
     on master, puppet('device','-v','--user','root','--waitforcert','0','--server',master.to_s), {:acceptable_exit_codes => [0,1] }
     on master, puppet('cert','sign','f5-dut'), {:acceptable_exit_codes => [0,24] }
+    wait_for_master(3)
 
     #Queries the REST API until it's been initialized
     wait_for_api(10)
