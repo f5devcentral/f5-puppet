@@ -9,12 +9,25 @@ def wait_for_master(max_retries)
     on(master, "curl -kIL https://puppet:8140", { :acceptable_exit_codes => [0,1,7] }) do |result|
       return if result.stdout =~ /400 Bad Request/
 
-      counter = 3 ** retries
+      counter = 2 ** retries
       logger.debug "Unable to reach Puppet Master, Sleeping #{counter} seconds for retry #{retries}..."
       sleep counter
     end
   end
   raise Puppet::Error, "Could not connect to Puppet Master."
+end
+
+def device_facts_ok(max_retries)
+  1.upto(max_retries) do |retries|
+    on master, puppet('device','-v','--user','root','--server',master.to_s), {:acceptable_exit_codes => [0,1] } do |result|
+      return if result.stdout =~ /Notice: Finished catalog run/
+
+      counter = 2 ** retries
+      logger.debug "Unable to get a successful catalog run, Sleeping #{counter} seconds for retry #{retries}"
+      sleep counter
+    end
+  end
+  raise Puppet::Error, "Could not get a successful catalog run."
 end
 
 def make_site_pp(pp, path = File.join(master['puppetpath'], 'manifests'))
@@ -67,6 +80,7 @@ def wait_for_api(max_retries)
 end
 
 unless ENV['RS_PROVISION'] == 'no' or ENV['BEAKER_provision'] == 'no'
+  on master, "setenforce 0"
   install_puppet_from_rpm master, {:release => '7', :family => 'el'}
   #install_puppet_from_deb master, {}
   pp=<<-EOS
@@ -110,10 +124,9 @@ EOS
     on master, puppet('cert','sign','f5-dut'), {:acceptable_exit_codes => [0,24] }
     on master, "service #{master['puppetservice']} start"
     wait_for_master(3)
+    device_facts_ok(3)
 
     #Queries the F5 REST API & Puppet Master until they have been initialized
     wait_for_api(10)
-    wait_for_master(3)
-    on master, puppet('device','-v','--user','root','--server',master.to_s), {:acceptable_exit_codes => [0,1] }
   end
 end
