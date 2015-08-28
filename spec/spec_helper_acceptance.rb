@@ -22,7 +22,7 @@ def device_facts_ok(max_retries)
     on master, puppet('device','-v','--user','root','--server',master.to_s), {:acceptable_exit_codes => [0,1] } do |result|
       return if result.stdout =~ /Notice: Finished catalog run/
 
-      counter = 2 ** retries
+      counter = 10 * retries
       logger.debug "Unable to get a successful catalog run, Sleeping #{counter} seconds for retry #{retries}"
       sleep counter
     end
@@ -68,8 +68,8 @@ end
 
 def wait_for_api(max_retries)
   1.upto(max_retries) do |retries|
-    on(master, "curl -kIL https://admin:#{hosts_as('f5').first[:ssh][:password]}@#{hosts_as('f5').first["ip"]}/tmui/", { :acceptable_exit_codes => [0,1] }) do |result|
-      return if result.stdout =~ /302 Found/
+    on(master, "curl -kIL https://admin:#{hosts_as('f5').first[:ssh][:password]}@#{hosts_as('f5').first["ip"]}/mgmt/tm/cm/device", { :acceptable_exit_codes => [0,1] }) do |result|
+      return if result.stdout =~ /502 Bad Gateway/
 
       counter = 10 * retries
       logger.debug "Unable to connect to F5 REST API, retrying in #{counter} seconds..." 
@@ -123,10 +123,12 @@ EOS
     on master, puppet('device','-v','--user','root','--waitforcert','0','--server',master.to_s), {:acceptable_exit_codes => [0,1] }
     on master, puppet('cert','sign','f5-dut'), {:acceptable_exit_codes => [0,24] }
     on master, "service #{master['puppetservice']} start"
+    #Verify the Puppet Master is ready
     wait_for_master(3)
-    device_facts_ok(3)
-
     #Queries the F5 REST API & Puppet Master until they have been initialized
     wait_for_api(10)
+    #Verify Facts can be retreived 
+    device_facts_ok(3)
+    
   end
 end
