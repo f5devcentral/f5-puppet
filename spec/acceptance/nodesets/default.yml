@@ -13,8 +13,8 @@ HOSTS:
     roles:
       - "f5"
     vmname: "f5-11.6.0-25mbps-good"
-    hypervisor: "f5"
-    platform: "el-f5-11.6.0-25mbps-good"
+    hypervisor: "ec2"
+    platform: "f5-11.6.0-25mbps-good"
     snapshot: "default"
     amisize: "m3.large"
     user: "admin"
