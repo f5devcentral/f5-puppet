@@ -1,8 +1,4 @@
-# Add the fixtures lib dir to RUBYLIB
-$:.unshift File.join(File.dirname(__FILE__),  'fixtures', 'lib')
-
 require 'beaker-rspec'
-require 'beaker/hypervisor/f5' #from spec/fixtures/lib
 
 def wait_for_master(max_retries)
   1.upto(max_retries) do |retries|
@@ -82,7 +78,6 @@ end
 unless ENV['RS_PROVISION'] == 'no' or ENV['BEAKER_provision'] == 'no'
   on master, "setenforce 0"
   install_puppet_from_rpm master, {:release => '7', :family => 'el'}
-  #install_puppet_from_deb master, {}
   pp=<<-EOS
   $pkg = $::osfamily ? {
     'Debian' => 'puppetmaster',
