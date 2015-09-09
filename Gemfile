@@ -16,7 +16,7 @@ group :system_tests do
   # this version of Beaker. Our channges need to be merged into Beaker and
   # afterwards we can remove or custom hypervisor and unpin our version or
   # Beaker (or at least allow it to slide).
-  gem 'beaker', '2.22.0', :require => false
+  gem 'beaker', '2.23.0', :require => false
 end
 
 if facterversion = ENV['FACTER_GEM_VERSION']
