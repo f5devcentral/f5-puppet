@@ -1116,6 +1116,97 @@ Sets the description of the node.
 
 Valid options: String
 
+###f5_vlan
+
+Manages vlans on the F5 device. Go [here](https://support.f5.com/kb/en-us/products/big-ip_ltm/manuals/product/tmos_management_guide_10_1/tmos_vlans.html#1024711) for information about configuring F5 vlans.
+
+####Parameters:
+
+####name
+
+Specifies the name(s) of the partition(s) resource(s) to manage.
+
+Valid options: String
+
+####description
+
+Sets the description of the node.
+
+Valid options: String
+
+####vlan_tag
+
+Specifies the VLAN ID. If you do not specify a VLAN ID, the BIG-IP system assigns an ID automatically. 
+
+Valid range: 1 - 4094.
+
+####source_check
+
+Causes the BIG-IP system to verify that the return path of an initial packet is through the same VLAN from which the packet originated. 
+
+Valid options: 'enabled' or 'disabled'.
+
+####mtu
+
+Specifies the Maximum Transmission Unit.
+
+Valid range: 576 - 65535.
+
+####fail_safe
+
+Triggers fail-over in a redundant system when certain VLAN-related events occur. 
+
+Valid options: 'enabled' or 'disabled'.
+
+####fail_safe_timeout
+
+Fail Safe Timeout. 
+
+Valid range: 0 - 4294967295.
+
+####fail_safe_action
+
+Fail Safe Action. 
+
+Valid options: 'reboot' or 'restart-all'.
+
+####auto_last_hop
+
+Auto Last Hop. 
+
+Valid options: 'default', 'enabled' or 'disabled'.
+
+####cmp_hash
+
+CMP Hash. 
+
+Valid options: 'default', 'src-ip' or 'dst-ip'.
+
+####dag_round_robin
+
+DAG Round Robin. 
+
+Valid options: 'enabled' or 'disabled'
+
+####sflow_polling_interval
+
+SFLOW Polling Interval (Seconds). 
+
+Valid range: 0 - 86400.
+
+####sflow_sampling_rate
+
+SFLOW Sampling Rate (Packets). 
+
+Valid range: 0 - 102400.
+
+####interface
+
+An array of interfaces that this vlan resource is bound to. 
+
+Correct format example is: 
+`[{name => '1.1', tagged => true}, {name => '2.1', tagged => true}]`
+
 ##Limitations
 
 F5: v11.5+.
