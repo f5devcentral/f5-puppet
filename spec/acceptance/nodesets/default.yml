@@ -18,6 +18,7 @@ HOSTS:
     snapshot: "default"
     amisize: "m3.large"
     user: "admin"
+    ports: 443
 CONFIG:
   type: "foss"
   ec2_yaml: "spec/acceptance/nodesets/ec2.yaml"
