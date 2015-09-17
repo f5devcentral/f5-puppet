@@ -2,7 +2,7 @@ require 'beaker-rspec'
 
 def wait_for_master(max_retries)
   1.upto(max_retries) do |retries|
-    on(master, "curl -kIL https://puppet:8140", { :acceptable_exit_codes => [0,1,7] }) do |result|
+    on(master, "curl -skIL https://puppet:8140", { :acceptable_exit_codes => [0,1,7] }) do |result|
       return if result.stdout =~ /400 Bad Request/
 
       counter = 2 ** retries
@@ -64,7 +64,7 @@ end
 
 def wait_for_api(max_retries)
   1.upto(max_retries) do |retries|
-    on(master, "curl -kIL https://admin:#{hosts_as('f5').first[:ssh][:password]}@#{hosts_as('f5').first["ip"]}/mgmt/tm/cm/device", { :acceptable_exit_codes => [0,1] }) do |result|
+    on(master, "curl -skIL https://admin:#{hosts_as('f5').first[:ssh][:password]}@#{hosts_as('f5').first["ip"]}/mgmt/tm/cm/device", { :acceptable_exit_codes => [0,1] }) do |result|
       return if result.stdout =~ /502 Bad Gateway/
 
       counter = 10 * retries
