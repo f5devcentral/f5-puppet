@@ -1,5 +1,5 @@
-require 'puppet/parameter/f5_name'
-require 'puppet/property/f5_truthy'
+require File.expand_path(File.join(File.dirname(__FILE__),'..','..','puppet/parameter/f5_name.rb'))
+require File.expand_path(File.join(File.dirname(__FILE__),'..','..','puppet/property/f5_truthy.rb'))
 
 Puppet::Type.newtype(:f5_irule) do
   @doc = 'Manage irule objects'
