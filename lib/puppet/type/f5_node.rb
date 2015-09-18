@@ -1,12 +1,12 @@
-require 'puppet/parameter/f5_name'
-require 'puppet/property/f5_address'
-require 'puppet/property/f5_availability_requirement'
-require 'puppet/property/f5_connection_limit'
-require 'puppet/property/f5_connection_rate_limit'
-require 'puppet/property/f5_description'
-require 'puppet/property/f5_health_monitors'
-require 'puppet/property/f5_ratio'
-require 'puppet/property/f5_state'
+require File.expand_path(File.join(File.dirname(__FILE__),'..','..','puppet/parameter/f5_name.rb'))
+require File.expand_path(File.join(File.dirname(__FILE__),'..','..','puppet/property/f5_address.rb'))
+require File.expand_path(File.join(File.dirname(__FILE__),'..','..','puppet/property/f5_availability_requirement.rb'))
+require File.expand_path(File.join(File.dirname(__FILE__),'..','..','puppet/property/f5_connection_limit.rb'))
+require File.expand_path(File.join(File.dirname(__FILE__),'..','..','puppet/property/f5_connection_rate_limit.rb'))
+require File.expand_path(File.join(File.dirname(__FILE__),'..','..','puppet/property/f5_description.rb'))
+require File.expand_path(File.join(File.dirname(__FILE__),'..','..','puppet/property/f5_health_monitors.rb'))
+require File.expand_path(File.join(File.dirname(__FILE__),'..','..','puppet/property/f5_ratio.rb'))
+require File.expand_path(File.join(File.dirname(__FILE__),'..','..','puppet/property/f5_state.rb'))
 
 Puppet::Type.newtype(:f5_node) do
   @doc = 'Manage node objects'

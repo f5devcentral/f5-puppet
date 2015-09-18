@@ -1,7 +1,7 @@
-require 'puppet/parameter/f5_name'
-require 'puppet/property/f5_availability_requirement'
-require 'puppet/property/f5_description'
-require 'puppet/property/f5_health_monitors'
+require File.expand_path(File.join(File.dirname(__FILE__),'..','..','puppet/parameter/f5_name.rb'))
+require File.expand_path(File.join(File.dirname(__FILE__),'..','..','puppet/property/f5_availability_requirement.rb'))
+require File.expand_path(File.join(File.dirname(__FILE__),'..','..','puppet/property/f5_description.rb'))
+require File.expand_path(File.join(File.dirname(__FILE__),'..','..','puppet/property/f5_health_monitors.rb'))
 
 Puppet::Type.newtype(:f5_pool) do
   @doc = 'Manage pool objects'

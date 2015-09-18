@@ -1,10 +1,10 @@
-require 'puppet/parameter/f5_name'
-require 'puppet/property/f5_connection_limit'
-require 'puppet/property/f5_connection_rate_limit'
-require 'puppet/property/f5_description'
-require 'puppet/property/f5_state'
-require 'puppet/property/f5_truthy'
-require 'puppet/property/f5_profile'
+require File.expand_path(File.join(File.dirname(__FILE__),'..','..','puppet/parameter/f5_name.rb'))
+require File.expand_path(File.join(File.dirname(__FILE__),'..','..','puppet/property/f5_connection_limit.rb'))
+require File.expand_path(File.join(File.dirname(__FILE__),'..','..','puppet/property/f5_connection_rate_limit.rb'))
+require File.expand_path(File.join(File.dirname(__FILE__),'..','..','puppet/property/f5_description.rb'))
+require File.expand_path(File.join(File.dirname(__FILE__),'..','..','puppet/property/f5_state.rb'))
+require File.expand_path(File.join(File.dirname(__FILE__),'..','..','puppet/property/f5_truthy.rb'))
+require File.expand_path(File.join(File.dirname(__FILE__),'..','..','puppet/property/f5_profile.rb'))
 
 Puppet::Type.newtype(:f5_virtualserver) do
   @doc = 'Manage node objects'
