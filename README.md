@@ -1207,6 +1207,42 @@ An array of interfaces that this vlan resource is bound to.
 Correct format example is: 
 `[{name => '1.1', tagged => true}, {name => '2.1', tagged => true}]`
 
+###f5_selfip
+
+A self IP address is an IP address on the BIG-IP® system that you associate with a VLAN, to access hosts in that VLAN. By virtue of its netmask, a self IP address represents an address space, that is, a range of IP addresses spanning the hosts in the VLAN, rather than a single host address. You can associate self IP addresses not only with VLANs, but also with VLAN groups
+
+####Parameters:
+
+####name
+
+Specifies the name(s) of the selfip to manage.
+
+Valid options: String
+
+####address
+
+Specify either an IPv4 or an IPv6 address. For an IPv4 address, you must specify a /32 IP address per RFC 3021 and a CIDR range. EG 9.9.9.9/255
+
+Valid options: ip/cidr
+
+####vlan
+
+Specifies the VLAN associated with this self IP address.
+
+Valid options: string
+
+####traffic_group
+
+Specifies the traffic group to associate with the self IP. You can click the box to have the self IP inherit the traffic group from the root folder, or clear the box to select a specific traffic group for the self IP.
+
+Valid options: string
+
+####inherit_traffic_group
+
+Inherit traffic group from current partition / path
+
+Valid options: boolean
+
 ##Limitations
 
 F5: v11.5+.
