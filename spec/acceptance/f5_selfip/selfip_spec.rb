@@ -61,6 +61,21 @@ describe 'f5_selfip' do
     run_device(:allow_changes => false)
   end
 
+  it 'delete a selfip' do
+    pp=<<-EOS
+    f5_selfip { '/Common/test_self_ip':
+      ensure                 => 'absent',
+      address                => '9.9.9.9/24',
+      vlan                   => '/Common/other_vlan',
+      traffic_group          => '/Common/traffic-group-local-only',
+      inherit_traffic_group  => 'false',
+    }
+    EOS
+    make_site_pp(pp)
+    run_device(:allow_changes => true)
+    run_device(:allow_changes => false)
+  end
+
   it 'delete a test_vlan & other_vlan' do
     pp=<<-EOS
     f5_vlan { '/Common/test_vlan':
