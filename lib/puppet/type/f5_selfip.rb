@@ -26,4 +26,9 @@ Puppet::Type.newtype(:f5_selfip) do
     desc "Inherit traffic group from current partition / path"
     newvalues(:true, :false)
   end
+
+  # Autorequire appropriate resources
+  autorequire(:f5_vlan) do
+    self[:vlan]
+  end
 end
