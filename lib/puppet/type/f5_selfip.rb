@@ -3,7 +3,7 @@ require 'puppet/property/f5_description'
 require 'puppet/property/f5_truthy'
 
 Puppet::Type.newtype(:f5_selfip) do
-  @doc = 'A self IP address is an IP address on the BIG-IP® system that you associate with a VLAN, to access hosts in that VLAN. By virtue of its netmask, a self IP address represents an address space, that is, a range of IP addresses spanning the hosts in the VLAN, rather than a single host address. You can associate self IP addresses not only with VLANs, but also with VLAN groups.'
+  @doc = 'A self IP address is an IP address on the BIG-IP system that you associate with a VLAN, to access hosts in that VLAN. By virtue of its netmask, a self IP address represents an address space, that is, a range of IP addresses spanning the hosts in the VLAN, rather than a single host address. You can associate self IP addresses not only with VLANs, but also with VLAN groups.'
 
   apply_to_device
   ensurable
