@@ -1,4 +1,4 @@
-##2015-10-13 Release 1.4.0
+##2015-10-20 Release 1.4.0
 ###Summary
 
 Adding 2 new resources selfip and vlan with some minor fixes.
