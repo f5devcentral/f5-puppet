@@ -10,6 +10,16 @@ Puppet::Type.type(:f5_selfip).provide(:rest, parent: Puppet::Provider::F5) do
     return [] if selfips.nil?
 
     selfips.each do |selfip|
+      portlockdown = []
+      unless selfip['allowService'].nil?
+        if selfip['allowService'].is_a? (String)
+          portlockdown = selfip['allowService']
+        else
+          selfip['allowService'].each do |service|
+            portlockdown << service
+          end
+        end
+      end
       create = {
         ensure:                 :present,
         name:                   selfip['fullPath'],
@@ -17,6 +27,7 @@ Puppet::Type.type(:f5_selfip).provide(:rest, parent: Puppet::Provider::F5) do
         inherit_traffic_group:  selfip['inheritedTrafficGroup'],
         traffic_group:          selfip['trafficGroup'],
         address:                selfip['address'],
+        port_lockdown:          portlockdown,
       }
 
       instances << new(create)
@@ -64,6 +75,7 @@ Puppet::Type.type(:f5_selfip).provide(:rest, parent: Puppet::Provider::F5) do
     map = {
       :'inherit_traffic_group'  => :inheritedTrafficGroup,
       :'traffic_group'          => :trafficGroup,
+      :'port_lockdown'          => :allowService,
     }
     message = rename_keys(map, message)
     message = create_message(basename, partition, message)
