@@ -1,3 +1,15 @@
+##2015-10-13 Release 1.4.0
+###Summary
+
+Adding 2 new resources selfip and vlan with some minor fixes.
+
+#### Features/Improvements
+- selfip resource added
+- vlan resource added
+- Only display f5_node non-default route domain
+- Fix requires in various types
+- Test improvements
+
 ##2015-07-24 Release 1.3.0
 ###Summary
 
