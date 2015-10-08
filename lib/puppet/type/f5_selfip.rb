@@ -27,6 +27,23 @@ Puppet::Type.newtype(:f5_selfip) do
     newvalues(:true, :false)
   end
 
+  newproperty(:port_lockdown, :array_matching => :all) do
+    desc "Specifies the protocols and services from which this self IP can accept traffic. Note that fewer active protocols enhances the security level of the self IP and its associated VLANs.
+Default: Activates only the default protocols and services. You can determine the supported protocols and services by running the tmsh list net self-allow defaults command on the command line.
+All: Activates all TCP and UDP services on this self IP.
+None / nothing specified: Specifies that this self IP accepts no traffic. If you are using this self IP as the local endpoint for WAN optimization, select this option to avoid potential port conflicts.
+Allow Custom: Expands the Custom List option, where you can specify the protocols and services to activate on this self IP."
+    #the regex here checks for string:number, to reflect protocol:port, ie udp:0, tcp:80
+    newvalues("Default", "All", /\s*:\d+/)
+
+    #this is a comparison that ignores order
+    def insync?(is)
+      return false unless is.length == @should.length
+      return (is.sort == @should.sort or is == @should.map(&:to_s).sort)
+    end
+  end
+
+
   # Autorequire appropriate resources
   autorequire(:f5_vlan) do
     self[:vlan]

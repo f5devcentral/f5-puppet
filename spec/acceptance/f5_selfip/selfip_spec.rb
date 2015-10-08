@@ -53,6 +53,7 @@ describe 'f5_selfip' do
       address                => '9.9.9.9/24',
       vlan                   => '/Common/other_vlan',
       traffic_group          => '/Common/traffic-group-local-only',
+      port_lockdown          => ['gre:0', 'udp:0'],
       inherit_traffic_group  => 'false',
     }
     EOS
