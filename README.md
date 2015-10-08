@@ -1243,6 +1243,16 @@ Inherit traffic group from current partition / path
 
 Valid options: boolean
 
+####port_lockdown
+
+Specifies the protocols and services from which this self IP can accept traffic. Note that fewer active protocols enhances the security level of the self IP and its associated VLANs.
+Not specified empty: This self IP accepts no traffic. If you are using this self IP as the local endpoint for WAN optimization,
+Default: Activates only the default protocols and services. You can determine the supported protocols and services by running the tmsh list net self-allow defaults command on the command line.
+All: Activates all TCP and UDP services on this self IP.
+Custom: Expands the Custom List option, where you can specify the protocols and services to activate on this self IP."
+
+Valid options (array of): "Default", "All", protocol:port eg
+port_lockdown= ["TCP:80", "UDP:55"]
 ##Limitations
 
 F5: v11.5+.
