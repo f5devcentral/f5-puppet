@@ -1173,9 +1173,10 @@ Valid options: 'enabled' or 'disabled'.
 
 ##### mtu
 
-TODO: NEED TO KNOW WHAT THIS DOES. Specifies the Maximum Transmission Unit.
+Specifies the Maximum Transmission Unit.
 
 Valid range: 576 - 65535.
+
 ##### fail_safe
 
 Triggers fail-over in a redundant system when certain VLAN-related events occur. 
@@ -1184,15 +1185,16 @@ Valid options: 'enabled' or 'disabled'.
 
 ##### fail_safe_timeout
 
-TODO: NEED TO KNOW WHAT THIS DOES. Sets the Fail Safe Timeout. 
+Specifies the number of seconds that a system can run without detecting network traffic on this VLAN before it takes the fail-safe action.
 
 Valid range: 0 - 4294967295.
 
 ##### fail_safe_action
 
-TODO: NEED TO KNOW WHAT THIS DOES. Fail Safe Action. 
+Specifies the action that the system takes when it does not detect any traffic on this VLAN, and the timeout has expired. The default is 'reboot'. Valid options:
 
-Valid options: 'reboot' or 'restart-all'.
+* 'reboot': The system reboots.
+* 'restart-all': The system restarts all services.
 
 ##### auto_last_hop
 
@@ -1202,25 +1204,25 @@ Valid options: 'default', 'enabled', or 'disabled'.
 
 ##### cmp_hash
 
-TODO: NEED TO KNOW WHAT THIS DOES. Sets the CMP Hash. 
+Specifies how the traffic on the VLAN will be disaggregated. The value selected determines the traffic disaggregation method. You can choose to disaggregate traffic based on `src-ip`, `dst-ip`, or default, which specifies that the default CMP hash uses L4 ports.
 
 Valid options: 'default', 'src-ip' or 'dst-ip'.
 
 ##### dag_round_robin
 
-TODO: NEED TO KNOW WHAT THIS DOES. DAG Round Robin. 
+Specifies whether some of the stateless traffic on the VLAN should be disaggregated in a round-robin order instead of using a static hash.
 
 Valid options: 'enabled' or 'disabled'
 
 ##### sflow_polling_interval
 
-TODO: NEED TO KNOW WHAT THIS DOES. SFLOW Polling Interval (Seconds). 
+Specifies the maximum interval in seconds between two pollings.
 
 Valid range: 0 - 86400.
 
 ##### sflow_sampling_rate
 
-TODO: NEED TO KNOW WHAT THIS DOES. SFLOW Sampling Rate (Packets). 
+Specifies the ratio of packets observed to the samples generated.
 
 Valid range: 0 - 102400.
 
@@ -1270,14 +1272,12 @@ Valid options: true, false.
 
 ##### port_lockdown
 
-Specifies the protocols and services from which this self IP can accept traffic. Note that fewer active protocols enhances the security level of the self IP and its associated VLANs. Accepts an array of 'Default', 'All', or `protocol:port` (for example,
-`port_lockdown= ["TCP:80", "UDP:55"]`). Options behave as follows:
+Specifies the protocols and services from which this self IP can accept traffic. Note that fewer active protocols enhances the security level of the self IP and its associated VLANs. Accepts an array of: 'default', 'all', protocol:port (for example, `["TCP:80", "UDP:55"]`). Options behave as follows:
 
-* Not specified (empty): This self IP accepts no traffic. Use this setting if you use this self IP as the local endpoint for WAN optimization.
-* Default: Activates only the default protocols and services. You can determine the supported protocols and services by running the tmsh list net self-allow defaults command on the command line.
-* All: Activates all TCP and UDP services on this self IP.
-* Custom: Expands the Custom List option, where you can specify the protocols and services to activate on this self IP.
-
+* `protocol:port`: the protocols and ports to activate on this self IP.
+* `default`: Activates only the default protocols and services. You can determine the supported protocols and services by running the tmsh list net self-allow defaults command on the command line. May be combined with further protocol:port values.
+* `all`: Activates all TCP and UDP services on this self IP. May not be combined with any other value.
+* `none`: Specifies that this self IP accepts no traffic. May not be combined with any other values.
 
 ## Limitations
 
