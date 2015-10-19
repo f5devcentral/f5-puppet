@@ -11,14 +11,10 @@ Puppet::Type.type(:f5_selfip).provide(:rest, parent: Puppet::Provider::F5) do
 
     selfips.each do |selfip|
       portlockdown = []
-      unless selfip['allowService'].nil?
-        if selfip['allowService'].is_a? (String)
-          portlockdown = selfip['allowService']
-        else
-          selfip['allowService'].each do |service|
-            portlockdown << service
-          end
-        end
+      if selfip['allowService'].nil?
+        portlockdown = 'none'
+      else
+        portlockdown = selfip['allowService']
       end
       create = {
         ensure:                 :present,
@@ -27,35 +23,13 @@ Puppet::Type.type(:f5_selfip).provide(:rest, parent: Puppet::Provider::F5) do
         inherit_traffic_group:  selfip['inheritedTrafficGroup'],
         traffic_group:          selfip['trafficGroup'],
         address:                selfip['address'],
-        port_lockdown:          portlockdown,
+        port_lockdown:          Array(portlockdown),
       }
 
       instances << new(create)
     end
 
     instances
-  end
-
-  # state: unchecked, session: user-enabled  -> GUI enabled.
-  # state: unchecked, session: user-disabled -> GUI disabled.
-  # state: user-down, session: user-disabled -> GUI forced offline.
-  def self.enable(member)
-    case member['state']
-    when 'down'
-    # Temporary hack while I figure out how to handle monitor down.
-      return 'enabled' if member['session'] == 'monitor-enabled'
-    when 'unchecked', 'up'
-      case member['session']
-      when 'user-enabled', 'monitor-enabled'
-        return 'enabled'
-      else
-        return 'disabled'
-      end
-    when 'user-down'
-      return 'forced_offline' if member['session'] = 'user-disabled'
-    else
-      fail ArgumentError, 'Unknown state detected for enable.'
-    end
   end
 
   def self.prefetch(resources)
@@ -77,6 +51,14 @@ Puppet::Type.type(:f5_selfip).provide(:rest, parent: Puppet::Provider::F5) do
       :'traffic_group'          => :trafficGroup,
       :'port_lockdown'          => :allowService,
     }
+
+    if Array(message[:port_lockdown]) == ["all"]
+      message[:port_lockdown] = "all"
+    end
+    if Array(message[:port_lockdown]) == ["none"]
+      message[:port_lockdown] = []
+    end
+
     message = rename_keys(map, message)
     message = create_message(basename, partition, message)
 

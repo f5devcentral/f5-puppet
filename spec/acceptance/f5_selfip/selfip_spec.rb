@@ -38,6 +38,7 @@ describe 'f5_selfip' do
       address                => '9.9.9.9/24',
       vlan                   => '/Common/test_vlan',
       traffic_group          => '/Common/traffic-group-local-only',
+      port_lockdown          => ['default', 'gre:0', 'udp:0'],
       inherit_traffic_group  => 'false',
     }
     EOS
@@ -53,7 +54,7 @@ describe 'f5_selfip' do
       address                => '9.9.9.9/24',
       vlan                   => '/Common/other_vlan',
       traffic_group          => '/Common/traffic-group-local-only',
-      port_lockdown          => ['gre:0', 'udp:0'],
+      port_lockdown          => ['none'],
       inherit_traffic_group  => 'false',
     }
     EOS
@@ -65,11 +66,7 @@ describe 'f5_selfip' do
   it 'delete a selfip' do
     pp=<<-EOS
     f5_selfip { '/Common/test_self_ip':
-      ensure                 => 'absent',
-      address                => '9.9.9.9/24',
-      vlan                   => '/Common/other_vlan',
-      traffic_group          => '/Common/traffic-group-local-only',
-      inherit_traffic_group  => 'false',
+      ensure => 'absent',
     }
     EOS
     make_site_pp(pp)
@@ -80,34 +77,10 @@ describe 'f5_selfip' do
   it 'delete a test_vlan & other_vlan' do
     pp=<<-EOS
     f5_vlan { '/Common/test_vlan':
-      ensure                 => 'absent',
-      auto_last_hop          => 'enabled',
-      cmp_hash               => 'src-ip',
-      dag_round_robin        => 'enabled',
-      description            => 'This is VLAN 10',
-      fail_safe              => 'enabled',
-      fail_safe_action       => 'restart-all',
-      fail_safe_timeout      => '90',
-      mtu                    => '1500',
-      sflow_polling_interval => '3000',
-      sflow_sampling_rate    => '4000',
-      source_check           => 'enabled',
-      vlan_tag               => '10',
+      ensure => 'absent',
     }
     f5_vlan { '/Common/other_vlan':
-      ensure                 => 'absent',
-      auto_last_hop          => 'enabled',
-      cmp_hash               => 'src-ip',
-      dag_round_robin        => 'enabled',
-      description            => 'This is VLAN 11',
-      fail_safe              => 'enabled',
-      fail_safe_action       => 'restart-all',
-      fail_safe_timeout      => '90',
-      mtu                    => '1500',
-      sflow_polling_interval => '3000',
-      sflow_sampling_rate    => '4000',
-      source_check           => 'enabled',
-      vlan_tag               => '11',
+      ensure => 'absent',
     }
     EOS
     make_site_pp(pp)
