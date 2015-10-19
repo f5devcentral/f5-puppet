@@ -33,3 +33,5 @@ CONFIG:
   type: "foss"
   ec2_yaml: "spec/acceptance/nodesets/ec2.yaml"
   log_level: "debug"
+  ssh:
+    keys: "~/.ssh/id_rsa-acceptance"
