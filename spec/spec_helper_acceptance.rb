@@ -2,7 +2,7 @@ require 'beaker-rspec'
 
 def wait_for_master(max_retries)
   1.upto(max_retries) do |retries|
-    on(master, "curl -skIL https://puppet:8140", { :acceptable_exit_codes => [0,1,7] }) do |result|
+    on(master, "curl -skIL https://#{master.hostname}:8140", { :acceptable_exit_codes => [0,1,7] }) do |result|
       return if result.stdout =~ /400 Bad Request/
 
       counter = 2 ** retries
