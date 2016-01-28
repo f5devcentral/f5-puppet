@@ -21,8 +21,16 @@ class Puppet::Provider::F5 < Puppet::Provider
     transport.connection
   end
 
-  def self.call(url)
-    transport.call(url)
+  def self.call(url,args={})
+    transport.call(url,args)
+  end
+
+  def self.call_items(url,args={'expandSubcollections'=>'true'})
+    if call = transport.call(url,args)
+      call['items']
+    else
+      nil
+    end
   end
 
   def self.post(url, message)
@@ -184,11 +192,11 @@ class Puppet::Provider::F5 < Puppet::Provider
   # <profile name> => <profile type>
   # (profile names are unique for all profile types)
   def self.sort_profiles
-    profile_types = Puppet::Provider::F5.call("/mgmt/tm/ltm/profile").collect do |hash|
+    profile_types = Puppet::Provider::F5.call_items("/mgmt/tm/ltm/profile").collect do |hash|
       hash["reference"]["link"].match(%r{([^/]+)\?})[1]
     end
     profile_types.inject({}) do |memo,profile_type|
-      profile_array = Puppet::Provider::F5.call("/mgmt/tm/ltm/profile/#{profile_type}") || []
+      profile_array = Puppet::Provider::F5.call_items("/mgmt/tm/ltm/profile/#{profile_type}") || []
       profile_hash = profile_array.inject({}) do |m,profile|
         m.merge!(profile["fullPath"] => profile_type)
       end
@@ -207,7 +215,7 @@ class Puppet::Provider::F5 < Puppet::Provider
   end
 
   def self.get_partitions
-    Puppet::Provider::F5.call("/mgmt/tm/auth/partition").inject({}) do |memo,partition|
+    Puppet::Provider::F5.call_items("/mgmt/tm/auth/partition").inject({}) do |memo,partition|
       memo[partition["name"]] = partition
       memo
     end

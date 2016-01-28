@@ -5,7 +5,7 @@ Puppet::Type.type(:f5_partition).provide(:rest, parent: Puppet::Provider::F5) do
 
   def self.instances
     instances = []
-    nodes = Puppet::Provider::F5.call('/mgmt/tm/auth/partition')
+    nodes = Puppet::Provider::F5.call_items('/mgmt/tm/auth/partition')
     return [] if nodes.nil?
 
     nodes.each do |node|

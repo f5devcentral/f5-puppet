@@ -8,7 +8,7 @@ Puppet::Type.type(:f5_virtualserver).provide(:reject, parent: Puppet::Provider::
 
   def self.instances
     instances = []
-    virtualservers = Puppet::Provider::F5.call('/mgmt/tm/ltm/virtual')
+    virtualservers = Puppet::Provider::F5.call_items('/mgmt/tm/ltm/virtual')
     return [] if virtualservers.nil?
     virtualservers = virtualservers.select do |vs|
       vs['reject'] == true

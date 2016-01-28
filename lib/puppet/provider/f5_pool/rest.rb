@@ -6,7 +6,7 @@ Puppet::Type.type(:f5_pool).provide(:rest, parent: Puppet::Provider::F5) do
 
   def self.instances
     instances = []
-    pools = Puppet::Provider::F5.call('/mgmt/tm/ltm/pool')
+    pools = Puppet::Provider::F5.call_items('/mgmt/tm/ltm/pool')
     return [] if pools.nil?
 
     pools.each do |pool|

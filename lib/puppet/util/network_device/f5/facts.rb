@@ -13,8 +13,8 @@ class Puppet::Util::NetworkDevice::F5::Facts
 
   def parse_device_facts
     facts = {}
-    if response = @transport.call('/mgmt/tm/cm/device')
-      result = response.first
+    if response = @transport.call('/mgmt/tm/cm/device') and items = response['items']
+      result = items.first
     else
       raise Puppet::Error, "Could not retrieve facts"
     end

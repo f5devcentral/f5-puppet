@@ -10,7 +10,7 @@ Puppet::Type.type(:f5_virtualserver).provide(:stateless, parent: Puppet::Provide
 
   def self.instances
     instances = []
-    virtualservers = Puppet::Provider::F5.call('/mgmt/tm/ltm/virtual')
+    virtualservers = Puppet::Provider::F5.call_items('/mgmt/tm/ltm/virtual')
     return [] if virtualservers.nil?
     virtualservers = virtualservers.select do |vs|
       vs['stateless'] == true

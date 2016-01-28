@@ -5,13 +5,13 @@ Puppet::Type.type(:f5_vlan).provide(:rest, parent: Puppet::Provider::F5) do
 
   def self.instances
     instances = []
-    vlans = Puppet::Provider::F5.call('/mgmt/tm/net/vlan')
+    vlans = Puppet::Provider::F5.call_items('/mgmt/tm/net/vlan')
     return [] if vlans.nil?
 
     vlans.each do |vlan|
       full_path_uri = vlan['fullPath'].gsub('/','~')
 
-      interfaces = Puppet::Provider::F5.call("/mgmt/tm/net/vlan/#{full_path_uri}/interfaces")
+      interfaces = Puppet::Provider::F5.call_items("/mgmt/tm/net/vlan/#{full_path_uri}/interfaces")
       interfaces.each do |interface|
         interface.select! {|k,v| ["name", "tagged"].include?(k) }
         if not interface['tagged']
