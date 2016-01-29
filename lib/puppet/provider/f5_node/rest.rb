@@ -24,8 +24,6 @@ Puppet::Type.type(:f5_node).provide(:rest, parent: Puppet::Provider::F5) do
       else
         address, route_domain = [node['address'],"0"]
       end
-      p route_domain
-      p default_route_domain
       if route_domain != default_route_domain
         address = "#{address}%#{route_domain}"
       end
