@@ -174,6 +174,7 @@ If you have a '/Common/http_monitor' (which is available by default), then when 
 
 ### Types
 
+* [f5_iapp](#f5_iapp): Manages iApp instances on the F5 device.
 * [f5_node](#f5_node): Manages nodes on the F5 device.
 * [f5_pool](#f5_pool): Manages pools of `f5_node` resources on the F5 device.
 * [f5_irule](#f5_irule): Creates and manages iRule objects on your F5 device.
@@ -182,6 +183,32 @@ If you have a '/Common/http_monitor' (which is available by default), then when 
 * [f5_partition](#f5_partition): Manages partitions on the F5 device.
 * [f5_vlan](#f5_vlan): Manages virtual LANs on the F5 device.
 * [f5_selfip](#f5_selfip): Sets the self IP address on the BIG-IP system.
+
+### Type: f5_iapp
+
+Manage iApp application services on the F5 device. See [F5 documentation](https://devcentral.f5.com/wiki/iApp.HomePage.ashx) for information about iApps. The best way to get started is to create an application service in the F5 gui, then copy the manifest returned for it via `puppet resource f5_iapp`
+
+#### Parameters
+
+##### name
+Specifies the name of the iApp application service to manage. Must be in the form of `/<partition/<instance name>.app/<instance name>` . Example: `/Common/my_test.app/my_test`
+
+Valid options: a string.
+
+##### template
+Name of the iApp template to be used when creating the iApp application service.
+
+Valid options: a string.
+
+##### variables
+Hash containing iApp vars for the given template.
+
+Valid options: a hash.
+
+##### tables
+Hash containing iApp table entries for the given template.
+
+Valid options: a hash.
 
 ### Type: f5_node
 

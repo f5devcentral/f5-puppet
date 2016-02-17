@@ -17,7 +17,7 @@ Puppet::Type.type(:f5_monitor).provide(:https, parent: Puppet::Provider::F5) do
 
   def self.instances
     instances = []
-    monitors = Puppet::Provider::F5.call('/mgmt/tm/ltm/monitor/https')
+    monitors = Puppet::Provider::F5.call_items('/mgmt/tm/ltm/monitor/https')
     return [] if monitors.nil?
 
     monitors.each do |monitor|

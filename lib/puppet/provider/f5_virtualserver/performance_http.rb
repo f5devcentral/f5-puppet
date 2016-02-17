@@ -18,7 +18,7 @@ Puppet::Type.type(:f5_virtualserver).provide(:performance_http, parent: Puppet::
 
   def self.instances
     instances = []
-    virtualservers = Puppet::Provider::F5.call('/mgmt/tm/ltm/virtual')
+    virtualservers = Puppet::Provider::F5.call_items('/mgmt/tm/ltm/virtual')
     return [] if virtualservers.nil?
     virtualservers = virtualservers.select do |vs|
       vs['profilesReference']['items'].find do |x|

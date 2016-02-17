@@ -6,7 +6,7 @@ Puppet::Type.type(:f5_selfip).provide(:rest, parent: Puppet::Provider::F5) do
 
   def self.instances
     instances = []
-    selfips = Puppet::Provider::F5.call('/mgmt/tm/net/self')
+    selfips = Puppet::Provider::F5.call_items('/mgmt/tm/net/self')
     return [] if selfips.nil?
 
     selfips.each do |selfip|

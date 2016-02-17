@@ -16,7 +16,7 @@ Puppet::Type.type(:f5_monitor).provide(:udp, parent: Puppet::Provider::F5) do
 
   def self.instances
     instances = []
-    monitors = Puppet::Provider::F5.call('/mgmt/tm/ltm/monitor/udp')
+    monitors = Puppet::Provider::F5.call_items('/mgmt/tm/ltm/monitor/udp')
     return [] if monitors.nil?
 
     monitors.each do |monitor|

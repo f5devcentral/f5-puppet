@@ -10,12 +10,11 @@ class Puppet::Util::NetworkDevice::Transport::F5 < Puppet::Util::NetworkDevice::
     @connection = Faraday.new(url: url, ssl: { verify: false })
   end
 
-  def call(url)
-    result = connection.get("#{url}/?expandSubcollections=true")
-    output = JSON.parse(result.body)
-    # Return only the items for now.
-    output['items']
+  def call(url, args={})
+    result = connection.get(url, args)
+    JSON.parse(result.body)
   rescue JSON::ParserError
+    # This should be better at handling errors
     return nil
   end
 
