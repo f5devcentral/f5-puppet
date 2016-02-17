@@ -1,3 +1,10 @@
+## Release 1.5.0
+### Summary
+This feature release adds the `f5_iapp` resource for creating and managing instances of F5 iApp application services.
+
+#### Features/Improvements
+- Add `f5_iapp` type
+
 ## Release 1.4.1
 ###Summary
 
