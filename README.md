@@ -228,7 +228,7 @@ Specifies the IP address and route domain ID of the node resource.
 
 Valid options: IPv4 or IPv6 addresses optionally followed by % sign and a route domain ID, such as '10.0.5.5%3'.
 
-##### availability
+##### availability_requirement
 
 Sets the number of health monitors that must be available. This **must** be set if you have any monitors, but it cannot be set to more than the number of monitors you have.
 
@@ -261,7 +261,7 @@ Valid options: 'present' or 'absent'.
 ##### health_monitors
 
 Assigns health monitors to the node resource. You can assign a single monitor
-or an array of monitors. If you're using an array of monitors then you must also set `availability`. 
+or an array of monitors. If you're using an array of monitors then you must also set `availability_requirement`.
 
 Valid options: ["/PARTITION/OBJECTS"], 'default', or 'none'
 
@@ -312,7 +312,7 @@ Specifies whether to enable secure network address translations (SNAT) for the p
 
 Valid options: true or false
 
-##### availability
+##### availability_requirement
 
 Sets the number of health monitors that must be available.  This **must** be set if you have any monitors, but cannot be set to more than the number of monitors you have.
 
@@ -333,7 +333,7 @@ Valid options: 'present' or 'absent'
 ##### health_monitors
 
 Sets the health monitor for the pool. You can assign a single monitor
-or an array of monitors. If you're using an array of monitors then you must also set `availability`. 
+or an array of monitors. If you're using an array of monitors then you must also set `availability_requirement`.
 
 Valid options: ["/PARTITION/OBJECTS"], 'default', or 'none'
 
