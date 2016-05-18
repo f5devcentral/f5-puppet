@@ -1,8 +1,11 @@
 # Private class
 class f5::install {
-  $provider = $::puppetversion ? {
-    /Puppet Enterprise/ => 'pe_gem',
-    default             => 'gem',
+  if $::puppetversion and $::puppetversion =~ /Puppet Enterprise/ {
+    $provider = 'pe_gem'
+  } elsif $::puppetversion and versioncmp($::puppetversion, '4.0.0') >= 0 {
+    $provider = 'puppet_gem'
+  } else {
+    $provider = 'gem'
   }
   package { 'faraday':
     ensure   => present,
