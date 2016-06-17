@@ -17,6 +17,7 @@ group :system_tests do
   # afterwards we can remove or custom hypervisor and unpin our version or
   # Beaker (or at least allow it to slide).
   gem 'beaker', :require => false
+  gem 'beaker-puppet_install_helper', :require => false
 end
 
 if facterversion = ENV['FACTER_GEM_VERSION']
