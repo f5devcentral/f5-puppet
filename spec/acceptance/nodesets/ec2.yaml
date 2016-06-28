@@ -15,6 +15,7 @@ AMI:
   "centos-6-x86-64-west":
     :image:
       :foss: "ami-42fb6e72"
+      :ebs: "ami-81d092b1"
     :region: "us-west-2"
   "centos-7-x86-64-west":
     :image:
