@@ -27,7 +27,16 @@ def device_facts_ok(max_retries)
   raise Exception, "Could not get a successful catalog run."
 end
 
-def make_site_pp(pp, path = File.join(master['puppetpath'], 'manifests'))
+def make_site_pp(pp)
+  base_path = master['puppetpath']
+  if ENV['PUPPET_INSTALL_TYPE'] == 'pe'
+    if version_is_less(ENV['PUPPET_INSTALL_VERSION'], '4.0.0')
+      base_path = '/etc/puppetlabs/puppet/environments/production/'
+    else
+      base_path = '/etc/puppetlabs/code/environments/production/'
+    end
+  end
+  path = File.join(base_path, 'manifests')
   on master, "mkdir -p #{path}"
   create_remote_file(master, File.join(path, "site.pp"), pp)
   if ENV['PUPPET_INSTALL_TYPE'] == 'foss'
