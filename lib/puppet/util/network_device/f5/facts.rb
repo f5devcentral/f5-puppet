@@ -12,11 +12,15 @@ class Puppet::Util::NetworkDevice::F5::Facts
   end
 
   def parse_device_facts
-    facts = {}
+    facts = {
+      :operatingsystem => :F5
+    }
+
     if response = @transport.call('/mgmt/tm/cm/device') and items = response['items']
       result = items.first
     else
-      raise Puppet::Error, "Could not retrieve facts"
+      Puppet.warning("Did not receive device details. iControl REST requires Administrator level access.")
+      return facts
     end
 
       #'group_id',
@@ -39,7 +43,6 @@ class Puppet::Util::NetworkDevice::F5::Facts
     # Map F5 names to expected standard names.
     facts[:fqdn]            = facts[:hostname]
     facts[:macaddress]      = facts[:baseMac]
-    facts[:operatingsystem] = :F5
 
     return facts
   end
