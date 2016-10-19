@@ -15,7 +15,7 @@
 
 ## Overview
 
-The f5 module enables Puppet management of LTM F5 load balancers by providing types and REST-based providers. It supports F5 11.5+ and requires you to enable the REST endpoint.
+The f5 module enables Puppet management of LTM F5 load balancers by providing types and REST-based providers. It supports F5 11.6 and requires you to enable the REST endpoint.
 
 ## Module Description
 
