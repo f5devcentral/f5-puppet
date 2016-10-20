@@ -18,6 +18,7 @@ group :system_tests do
   # Beaker (or at least allow it to slide).
   gem 'beaker', :require => false
   gem 'beaker-puppet_install_helper', :require => false
+  gem 'serverspec'
 end
 
 if facterversion = ENV['FACTER_GEM_VERSION']
