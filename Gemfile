@@ -9,7 +9,7 @@ group :development, :unit_tests do
 end
 
 group :system_tests do
-  gem 'beaker-rspec',            '5.1.0'
+  gem 'beaker-rspec',            '5.1.0', :require => false
 
   # We pin this to what is currently the latest version of Beaker. We know
   # that our overriding in spec/fixtures/beaker/hypervisor/f5.rb work with
