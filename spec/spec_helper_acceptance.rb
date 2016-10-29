@@ -1,4 +1,5 @@
 require 'beaker-rspec'
+require 'beaker-pe'
 require 'beaker/puppet_install_helper'
 
 def wait_for_master(max_retries)

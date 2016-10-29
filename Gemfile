@@ -10,14 +10,9 @@ group :development, :unit_tests do
 end
 
 group :system_tests do
-  gem 'beaker-rspec',            '5.1.0', :require => false
-
-  # We pin this to what is currently the latest version of Beaker. We know
-  # that our overriding in spec/fixtures/beaker/hypervisor/f5.rb work with
-  # this version of Beaker. Our channges need to be merged into Beaker and
-  # afterwards we can remove or custom hypervisor and unpin our version or
-  # Beaker (or at least allow it to slide).
-  gem 'beaker', :require => false
+  gem 'beaker-rspec',                 :require => false
+  gem 'beaker',                       :require => false
+  gem 'beaker-pe',                    :require => false
   gem 'beaker-puppet_install_helper', :require => false
   gem 'serverspec'
 end
