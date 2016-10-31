@@ -29,3 +29,4 @@ CONFIG:
   folder: "Delivery/Quality Assurance/Enterprise/Dynamic"
   resourcepool: "delivery/Quality Assurance/Enterprise/Dynamic"
   pooling_api: "http://vcloud.delivery.puppetlabs.net/"
+  use_beaker_hostnames: true
