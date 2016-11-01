@@ -15,7 +15,7 @@
 
 ## Overview
 
-The f5 module enables Puppet management of LTM F5 load balancers by providing types and REST-based providers. It supports F5 11.5+ and requires you to enable the REST endpoint.
+The f5 module enables Puppet management of LTM F5 load balancers by providing types and REST-based providers. It supports F5 11.6 and requires you to enable the REST endpoint.
 
 ## Module Description
 
@@ -994,13 +994,15 @@ Valid options: 'all', 'tcp', 'udp', or 'sctp'
 
 ##### protocol_profile_client
 
+Setting this parameter requires setting `protocol_profile_server` as well. If you want to default this value, set `protocol_profile_server` to the same value as `protocol_profile_client`.
+
 Enables you to use specific protocol profiles that expand the capacities of specific protocols pertaining to incoming connections from a web client. The protocol profiles available when this parameter is enabled are: Fast L4, Fast HTTP, HTTP Class, TCP, UDP, and SCTP. (Requires `protocol_client` feature.)
 
 Valid options: 'none' or '/< PARTITION >/< VIRTUAL SERVER NAME >'
 
-Requires features protocol_client.
-
 ##### protocol_profile_server
+
+Setting this parameter requires setting `protocol_profile_client` as well. If you want to default this value, set `protocol_profile_client` to the same value as `protocol_profile_server`.
 
 Enables you to use specific protocol profiles that expand the capacities of specific protocols pertaining to F5's connection to the virtual server's it's sending traffic to. The protocol profiles available when this parameter is enabled are: Fast L4, Fast HTTP, HTTP Class, TCP, UDP, and SCTP. (Requires `protocol_server` feature.)
 

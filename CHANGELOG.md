@@ -1,3 +1,15 @@
+## Release 1.5.1
+### Summary
+This is a patch version with several bugfixes.
+
+#### Features/Improvements
+- Support for puppet-lint 2.0
+
+#### Bugfixes
+- FM-3348: Metadata updated to use puppet gem 
+- MODULES-3296: corrects logic for choosing the gem provider
+- FM-5424: site.pp creation fix
+
 ## Release 1.5.0
 ### Summary
 This feature release adds the `f5_iapp` resource for creating and managing instances of F5 iApp application services.
