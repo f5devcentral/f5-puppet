@@ -20,6 +20,10 @@ Puppet::Type.type(:f5_virtualserver).provide(:performance_l4, parent: Puppet::Pr
     instances = []
     virtualservers = Puppet::Provider::F5.call_items('/mgmt/tm/ltm/virtual')
     return [] if virtualservers.nil?
+
+    # empty profile type cache once
+    clear_profile_type_cache
+
     virtualservers = virtualservers.select do |vs|
       vs['profilesReference']['items'].find do |x|
         find_profile_type(x['fullPath']) == 'fastl4'

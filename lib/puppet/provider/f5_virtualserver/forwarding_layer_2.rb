@@ -24,6 +24,9 @@ Puppet::Type.type(:f5_virtualserver).provide(:forwarding_layer_2, parent: Puppet
       vs['l2Forward'] == true
     end
 
+    # empty profile type cache once
+    clear_profile_type_cache
+
     virtualservers.each do |vserver|
       destination_address = vserver['destination'].match(%r{/([^/]+):})[1]
       destination_port    = vserver['destination'].match(%r{:(\d+)$})[1]

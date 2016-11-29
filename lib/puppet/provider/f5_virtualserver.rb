@@ -67,6 +67,9 @@ class Puppet::Provider::F5Virtualserver < Puppet::Provider::F5
 
     message = message.reject { |k,v| v.nil? }
 
+    # empty profile type cache once
+    self.class.clear_profile_type_cache
+
     if message[:provider] == :performance_http and self.class.find_profile_type(message[:protocol_profile_client]) != 'fasthttp'
       fail ArgumentError, "Incorrect protocol_profile_client for performance_http provider: Must be a 'fasthttp' protocol profile, got '#{self.class.find_profile_type(message[:protocol_profile_client])}'"
     end

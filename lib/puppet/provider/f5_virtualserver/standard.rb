@@ -24,6 +24,10 @@ Puppet::Type.type(:f5_virtualserver).provide(:standard, parent: Puppet::Provider
     instances = []
     virtualservers = Puppet::Provider::F5.call_items('/mgmt/tm/ltm/virtual')
     return [] if virtualservers.nil?
+
+    # empty profile type cache once
+    clear_profile_type_cache
+
     virtualservers = virtualservers.reject do |vs|
       vs['l2Forward'] == true or
       vs['ipForward'] == true or
