@@ -182,10 +182,14 @@ class Puppet::Provider::F5 < Puppet::Provider
     profiles = @@profile_cache ||= sort_profiles
     if profiles[profile]
       profiles[profile]
-    else
-      @@profile_cache = sort_profiles
-      @@profile_cache[profile]
     end
+  end
+
+  # This function is to invalidate the cache, it is called once per provider
+  # previously, we were refreshing the cache many times per resource. If 
+  # the profile didnt exist
+  def self.clear_profile_type_cache
+    @@profile_cache = nil
   end
 
   # Find all profiles on the F5 and associate them as

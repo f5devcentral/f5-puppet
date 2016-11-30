@@ -14,6 +14,9 @@ Puppet::Type.type(:f5_virtualserver).provide(:reject, parent: Puppet::Provider::
       vs['reject'] == true
     end
 
+    # empty profile type cache once
+    clear_profile_type_cache
+
     virtualservers.each do |vserver|
       destination_address = vserver['destination'].match(%r{/([^/]+):})[1]
       destination_port    = vserver['destination'].match(%r{:(\d+)$})[1]
