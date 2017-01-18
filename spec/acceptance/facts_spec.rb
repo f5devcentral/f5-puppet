@@ -27,6 +27,6 @@ describe 'f5 facts' do
   it { expect(@result.stdout).to match /\[marketingName: BIG-IP Virtual Edition\]/ }
   it { expect(@result.stdout).to match /\[partition: Common\]/ }
   it { expect(@result.stdout).to match /\[platformId: Z100\]/ }
-  it { expect(@result.stdout).to match /\[timeZone: PDT\]/ }
+  it { expect(@result.stdout).to match /\[timeZone: (PDT|PST)\]/ }
   it { expect(@result.stdout).to match /\[version: 11.6.0\]/ }
 end
