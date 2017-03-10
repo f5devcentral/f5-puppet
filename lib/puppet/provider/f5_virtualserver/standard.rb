@@ -1,4 +1,4 @@
-require 'puppet/provider/f5_virtualserver'
+require_relative('../f5_virtualserver')
 
 Puppet::Type.type(:f5_virtualserver).provide(:standard, parent: Puppet::Provider::F5Virtualserver) do
 

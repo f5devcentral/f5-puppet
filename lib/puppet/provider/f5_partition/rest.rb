@@ -1,4 +1,4 @@
-require 'puppet/provider/f5'
+require_relative('../f5')
 require 'json'
 
 Puppet::Type.type(:f5_partition).provide(:rest, parent: Puppet::Provider::F5) do

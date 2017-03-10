@@ -1,4 +1,4 @@
-require 'puppet/provider/f5'
+require_relative('../f5')
 
 class Puppet::Provider::F5Virtualserver < Puppet::Provider::F5
   def self.prefetch(resources)
