@@ -4,7 +4,7 @@ require 'beaker/puppet_install_helper'
 
 def wait_for_master(max_retries)
   1.upto(max_retries) do |retries|
-    on(master, "curl -skIL https://#{master.hostname}:8140", { :acceptable_exit_codes => [0,1,7] }) do |result|
+    on(master, "curl -skIL https://#{master.hostname}:8140", acceptable_exit_codes: [0, 1, 7]) do |result|
       return if result.stdout =~ /400 Bad Request/
 
       counter = 2 ** retries
@@ -29,15 +29,7 @@ def device_facts_ok(max_retries)
 end
 
 def make_site_pp(pp)
-  base_path = master['puppetpath']
-  if ENV['PUPPET_INSTALL_TYPE'] == 'pe'
-    if version_is_less(ENV['PUPPET_INSTALL_VERSION'], '4.0.0')
-      base_path = '/etc/puppetlabs/puppet/environments/production/'
-    else
-      base_path = '/etc/puppetlabs/code/environments/production/'
-    end
-  end
-  path = File.join(base_path, 'manifests')
+  path = '/etc/puppetlabs/code/environments/production/manifests'
   on master, "mkdir -p #{path}"
   create_remote_file(master, File.join(path, "site.pp"), pp)
   if ENV['PUPPET_INSTALL_TYPE'] == 'foss'
@@ -91,22 +83,11 @@ end
 unless ENV['RS_PROVISION'] == 'no' or ENV['BEAKER_provision'] == 'no'
   run_puppet_install_helper_on master
 
-  on master, "setenforce 0"
-  if ENV['PUPPET_INSTALL_TYPE'] == 'pe'
-    pp=<<-EOS
-    package { 'puppetserver': ensure => present, }
-    -> service { 'puppetserver': ensure => running, }
-    EOS
-  else
-    pp=<<-EOS
-    $pkg = $::osfamily ? {
-      'Debian' => 'puppetmaster',
-      'RedHat' => 'puppet-server',
-    }
-    package { $pkg: ensure => present, }
-    -> service { 'puppetmaster': ensure => running, }
-    EOS
-  end
+  on(master, "setenforce 0", { :acceptable_exit_codes => [0,1] })
+  pp=<<-EOS
+  package { 'puppetserver': ensure => present, }
+  -> service { 'puppetserver': ensure => running, }
+  EOS
 
   apply_manifest_on(master, pp)
 end

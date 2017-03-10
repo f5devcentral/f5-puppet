@@ -1,4 +1,4 @@
-require_relative('../f5')
+require File.join(File.dirname(__FILE__), '../f5')
 
 Puppet::Type.type(:f5_monitor).provide(:dummy, :parent => Puppet::Provider::F5) do
   desc "Dummy default provider"

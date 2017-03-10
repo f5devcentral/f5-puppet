@@ -1,5 +1,5 @@
-require_relative('../f5')
-require_relative('../../type/f5_node')
+require File.join(File.dirname(__FILE__), '../f5')
+require File.join(File.dirname(__FILE__), '../../type/f5_node')
 require 'json'
 
 Puppet::Type.type(:f5_pool).provide(:rest, parent: Puppet::Provider::F5) do

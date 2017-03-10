@@ -1,4 +1,4 @@
-require_relative('../f5_virtualserver')
+require File.join(File.dirname(__FILE__), '../f5_virtualserver')
 
 Puppet::Type.type(:f5_virtualserver).provide(:reject, parent: Puppet::Provider::F5Virtualserver) do
 

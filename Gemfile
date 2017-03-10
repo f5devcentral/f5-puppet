@@ -17,6 +17,9 @@ group :system_tests do
   gem 'beaker-pe',                    :require => false
   gem 'beaker-puppet_install_helper', :require => false
   gem 'serverspec'
+  gem 'rbnacl'
+  gem 'rbnacl-libsodium'
+  gem 'bcrypt_pbkdf'
 end
 
 if facterversion = ENV['FACTER_GEM_VERSION']
