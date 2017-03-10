@@ -1,6 +1,6 @@
 require 'puppet/util/feature'
-require 'puppet/util/network_device/transport/f5'
-require 'puppet/util/network_device/f5/facts'
+require_relative('../util/network_device/transport/f5')
+require_relative('../util/network_device/f5/facts')
 
 Puppet.features.add(:f5_device) do
   begin

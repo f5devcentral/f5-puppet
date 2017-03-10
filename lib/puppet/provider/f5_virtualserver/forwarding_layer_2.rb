@@ -1,4 +1,4 @@
-require 'puppet/provider/f5_virtualserver'
+require_relative('../f5_virtualserver')
 
 Puppet::Type.type(:f5_virtualserver).provide(:forwarding_layer_2, parent: Puppet::Provider::F5Virtualserver) do
 

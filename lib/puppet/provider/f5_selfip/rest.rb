@@ -1,5 +1,5 @@
-require 'puppet/provider/f5'
-require 'puppet/type/f5_node'
+require_relative('../f5')
+require_relative('../../type/f5_node')
 require 'json'
 
 Puppet::Type.type(:f5_selfip).provide(:rest, parent: Puppet::Provider::F5) do

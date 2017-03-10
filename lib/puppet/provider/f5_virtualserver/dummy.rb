@@ -1,4 +1,4 @@
-require 'puppet/provider/f5'
+require_relative('../f5')
 
 Puppet::Type.type(:f5_virtualserver).provide(:dummy, :parent => Puppet::Provider::F5) do
   desc "Dummy default provider"

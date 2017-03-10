@@ -1,4 +1,4 @@
-require 'puppet/provider/f5_virtualserver'
+require_relative('../f5_virtualserver')
 
 Puppet::Type.type(:f5_virtualserver).provide(:performance_http, parent: Puppet::Provider::F5Virtualserver) do
   # Why anyone would use this provider, I don't know:

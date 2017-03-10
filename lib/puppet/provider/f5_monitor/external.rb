@@ -1,4 +1,4 @@
-require 'puppet/provider/f5'
+require_relative('../f5')
 require 'json'
 
 Puppet::Type.type(:f5_monitor).provide(:external, parent: Puppet::Provider::F5) do
