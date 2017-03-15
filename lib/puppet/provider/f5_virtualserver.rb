@@ -1,4 +1,4 @@
-require_relative('../f5')
+require File.join(File.dirname(__FILE__), 'f5')
 
 class Puppet::Provider::F5Virtualserver < Puppet::Provider::F5
   def self.prefetch(resources)

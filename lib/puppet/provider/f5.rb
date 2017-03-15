@@ -1,5 +1,5 @@
-require_relative('../util/network_device/f5')
-require_relative('../util/network_device/transport/f5')
+require File.join(File.dirname(__FILE__), '../util/network_device/f5')
+require File.join(File.dirname(__FILE__), '../util/network_device/transport/f5')
 require 'json'
 
 class Puppet::Provider::F5 < Puppet::Provider

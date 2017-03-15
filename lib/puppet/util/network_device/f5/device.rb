@@ -1,7 +1,7 @@
 require 'puppet/util/network_device/base'
-require_relative('../f5')
-require_relative('../f5/facts')
-require_relative('../transport/f5')
+require File.join(File.dirname(__FILE__), '../f5')
+require File.join(File.dirname(__FILE__), '../f5/facts')
+require File.join(File.dirname(__FILE__), '../transport/f5')
 
 class Puppet::Util::NetworkDevice::F5::Device
   attr_reader :connection
