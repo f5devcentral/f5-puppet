@@ -32,12 +32,10 @@ def make_site_pp(pp)
   path = '/etc/puppetlabs/code/environments/production/manifests'
   on master, "mkdir -p #{path}"
   create_remote_file(master, File.join(path, "site.pp"), pp)
-  if ENV['PUPPET_INSTALL_TYPE'] == 'foss'
-    on master, "chown -R #{master['user']}:#{master['group']} #{path}"
-    on master, "chmod -R 0755 #{path}"
-    on master, "service #{master['puppetservice']} restart"
-    wait_for_master(3)
-  end
+  on master, "chown -R #{master['user']}:#{master['group']} #{path}"
+  on master, "chmod -R 0755 #{path}"
+  #on master, "service #{master['puppetservice']} restart"
+  #wait_for_master(3)
 end
 
 def run_device(options={:allow_changes => true})
