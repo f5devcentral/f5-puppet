@@ -111,7 +111,7 @@ RSpec.configure do |c|
 type f5
 url https://admin:#{hosts_as('f5').first[:ssh][:password]}@#{hosts_as("f5").first["ip"]}/
 EOS
-    create_remote_file(master, File.join(master[:puppetpath], "device.conf"), device_conf)
+    create_remote_file(master, "/etc/puppetlabs/puppet/device.conf", device_conf)
     apply_manifest("include f5")
     on master, puppet('plugin','download','--server',master.to_s)
     on master, puppet('device','-v','--user','root','--waitforcert','0','--server',master.to_s), {:acceptable_exit_codes => [0,1] }
