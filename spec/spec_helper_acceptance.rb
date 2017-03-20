@@ -32,7 +32,11 @@ def make_site_pp(pp)
   path = '/etc/puppetlabs/code/environments/production/manifests'
   on master, "mkdir -p #{path}"
   create_remote_file(master, File.join(path, "site.pp"), pp)
-  on master, "chown -R #{master['user']}:#{master['group']} #{path}"
+  if ENV['PUPPET_INSTALL_TYPE'] == 'pe'
+    on master, "chown -R pe-puppet:pe-puppet #{path}"
+  else
+    on master, "chown -R root:puppet #{path}"
+  end
   on master, "chmod -R 0755 #{path}"
   #on master, "service #{master['puppetservice']} restart"
   #wait_for_master(3)
@@ -82,12 +86,14 @@ unless ENV['RS_PROVISION'] == 'no' or ENV['BEAKER_provision'] == 'no'
   run_puppet_install_helper_on master
 
   on(master, "setenforce 0", { :acceptable_exit_codes => [0,1] })
-  pp=<<-EOS
-  package { 'puppetserver': ensure => present, }
-  -> service { 'puppetserver': ensure => running, }
-  EOS
+  if ENV['PUPPET_INSTALL_TYPE'] == 'agent'
+    pp=<<-EOS
+    package { 'puppetserver': ensure => present, }
+    -> service { 'puppetserver': ensure => running, }
+    EOS
 
-  apply_manifest_on(master, pp)
+    apply_manifest_on(master, pp)
+  end
 end
 
 RSpec.configure do |c|
@@ -102,7 +108,6 @@ RSpec.configure do |c|
     # Install module and dependencies
     copy_module_to(default, :source => proj_root, :module_name => 'f5')
     if ENV['PUPPET_INSTALL_TYPE'] == 'pe'
-      on master, puppet('module', 'install', 'puppetlabs-pe_gem')
       on master, '/bin/echo "nodes: 20" > /etc/puppetlabs/license.key'
     end
 
