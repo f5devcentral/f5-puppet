@@ -1,6 +1,6 @@
 {
   "name": "puppetlabs-f5",
-  "version": "1.5.2",
+  "version": "1.5.3",
   "author": "puppetlabs",
   "summary": "Manages F5 BIG-IP Application Delivery Controllers",
   "license": "PuppetLabs-Enterprise",
