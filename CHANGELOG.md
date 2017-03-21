@@ -1,3 +1,12 @@
+## Release 1.5.2
+### Summary
+This release fixes issues when the f5 module is not in the puppet master or proxy host's modulepath, as well as drastically reducing the number of API calls and handling facts fetching failures.
+
+#### Fixed
+- Fix require issues in varying pluginsync environments
+- Reduced API calls
+- Fix error handling when facts cannot be retrieved (requires admin level)
+
 ## Release 1.5.1
 ### Summary
 This is a patch version with several bugfixes.
