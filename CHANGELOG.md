@@ -1,3 +1,10 @@
+## Release 1.5.3
+### Summary
+This release fixes an autoload issue related to PUP-6922 in which `f5_selfip` and `f5_pool` require the `f5_node` and cause a "redefine" error.
+
+#### Fixed
+- Use alternate API for autoloading f5\_node from f5\_selfip and f5\_pool
+
 ## Release 1.5.2
 ### Summary
 This release fixes issues when the f5 module is not in the puppet master or proxy host's modulepath, as well as drastically reducing the number of API calls and handling facts fetching failures.
