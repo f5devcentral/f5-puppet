@@ -84,6 +84,7 @@ Puppet::Type.type(:f5_iapp).provide(:rest, parent: Puppet::Provider::F5) do
       end
       tables
     end
+    message[:'execute-action'] = 'definition' unless @create_elements
 
     message = rename_keys(map, message)
     message = create_message(basename, partition, message)
