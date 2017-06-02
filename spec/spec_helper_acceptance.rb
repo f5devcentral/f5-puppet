@@ -17,7 +17,7 @@ end
 
 def device_facts_ok(max_retries)
   1.upto(max_retries) do |retries|
-    on master, puppet('device','-v','--user','root','--server',master.to_s), {:acceptable_exit_codes => [0,1] } do |result|
+    on default, puppet('device','-v','--user','root','--server',master.to_s), {:acceptable_exit_codes => [0,1] } do |result|
       return if result.stdout =~ %r{Notice: (Finished|Applied) catalog}
 
       counter = 10 * retries
@@ -71,7 +71,7 @@ end
 
 def wait_for_api(max_retries)
   1.upto(max_retries) do |retries|
-    on(master, "curl -skIL https://admin:#{hosts_as('f5').first[:ssh][:password]}@#{hosts_as('f5').first["ip"]}/mgmt/tm/cm/device", { :acceptable_exit_codes => [0,1] }) do |result|
+    on(default, "curl -skIL https://admin:#{hosts_as('f5').first[:ssh][:password]}@#{hosts_as('f5').first["ip"]}/mgmt/tm/cm/device", { :acceptable_exit_codes => [0,1] }) do |result|
       return if result.stdout =~ /502 Bad Gateway/
 
       counter = 10 * retries
@@ -83,7 +83,7 @@ def wait_for_api(max_retries)
 end
 
 unless ENV['RS_PROVISION'] == 'no' or ENV['BEAKER_provision'] == 'no'
-  run_puppet_install_helper_on master
+  run_puppet_install_helper_on([master, default])
 
   on(master, "setenforce 0", { :acceptable_exit_codes => [0,1] })
   if ENV['PUPPET_INSTALL_TYPE'] == 'agent'
@@ -106,7 +106,7 @@ RSpec.configure do |c|
   # Configure all nodes in nodeset
   c.before :suite do
     # Install module and dependencies
-    copy_module_to(default, :source => proj_root, :module_name => 'f5')
+    copy_module_to(master, :source => proj_root, :module_name => 'f5')
     if ENV['PUPPET_INSTALL_TYPE'] == 'pe'
       on master, '/bin/echo "nodes: 20" > /etc/puppetlabs/license.key'
     end
@@ -116,10 +116,12 @@ RSpec.configure do |c|
 type f5
 url https://admin:#{hosts_as('f5').first[:ssh][:password]}@#{hosts_as("f5").first["ip"]}/
 EOS
-    create_remote_file(master, "/etc/puppetlabs/puppet/device.conf", device_conf)
-    apply_manifest("include f5")
-    on master, puppet('plugin','download','--server',master.to_s)
-    on master, puppet('device','-v','--user','root','--waitforcert','0','--server',master.to_s), {:acceptable_exit_codes => [0,1] }
+    create_remote_file(default, "/etc/puppetlabs/puppet/device.conf", device_conf)
+    make_site_pp("include f5")
+    on default, puppet('agent', '-t'), {:acceptable_exit_codes => [0,2]}
+    make_site_pp("")
+    on default, puppet('plugin','download','--server',master.to_s)
+    on default, puppet('device','-v','--user','root','--waitforcert','0','--server',master.to_s), {:acceptable_exit_codes => [0,1] }
     on master, puppet('cert','sign','f5-dut'), {:acceptable_exit_codes => [0,24] }
 
     if ENV['PUPPET_INSTALL_TYPE'] == 'foss'
