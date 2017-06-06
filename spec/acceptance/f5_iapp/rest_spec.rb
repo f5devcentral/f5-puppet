@@ -72,7 +72,7 @@ describe 'f5_iapp' do
         'net__server_mode'                   => 'lan',
         'pool__addr'                         => '10.0.0.1',
         'pool__pool_to_use'                  => '/#create_new#',
-        'pool__port'                         => '7001',
+        'pool__port'                         => '7002',
         'ssl__mode'                          => 'no_ssl',
         'ssl_encryption_questions__advanced' => 'no',
         'ssl_encryption_questions__help'     => 'hide',
@@ -82,6 +82,7 @@ describe 'f5_iapp' do
     make_site_pp(pp)
     run_device(:allow_changes => true)
     run_device(:allow_changes => false)
+    expect(run_resource('f5_virtualserver', '/Common/my_iapp.app/my_iapp_vs')).to match(%{7002})
   end
   it 'deletes a iapp' do
     pp=<<-EOS

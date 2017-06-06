@@ -1,14 +1,20 @@
 # Requires that ~/.fog have aws_access_key_id and aws_secret_access_key
 HOSTS:
-  "puppet":
+  "master":
     roles:
       - "master"
-      - "default"
       - "database"
       - "dashboard"
       - "agent"
     hypervisor: "vmpooler"
     platform: "el-7-x86_64"  
+    template: "Delivery/Quality Assurance/Templates/vCloud/centos-7-x86_64"
+  "proxy":
+    roles:
+      - "default"
+      - "agent"
+    hypervisor: "vmpooler"
+    platform: "el-7-x86_64"
     template: "Delivery/Quality Assurance/Templates/vCloud/centos-7-x86_64"
   "f5-dut":
     roles:
