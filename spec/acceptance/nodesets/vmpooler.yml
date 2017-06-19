@@ -28,3 +28,5 @@ CONFIG:
   resourcepool: "delivery/Quality Assurance/Enterprise/Dynamic"
   pooling_api: "http://vmpooler.delivery.puppetlabs.net/"
   use_beaker_hostnames: true
+:host_tags:
+  :lifetime: "3h"
