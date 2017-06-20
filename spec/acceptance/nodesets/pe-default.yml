@@ -33,3 +33,5 @@ CONFIG:
   resourcepool: "delivery/Quality Assurance/Enterprise/Dynamic"
   pooling_api: "http://vcloud.delivery.puppetlabs.net/"
   fetch_local_then_push_to_host: true
+:host_tags:
+  :lifetime: "3h"

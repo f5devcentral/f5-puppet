@@ -1,3 +1,10 @@
+## Release 1.5.4
+### Summary
+This release fixes the `f5_iapp` type to cause changes in the variables of an F5 iApp to trigger a re-deploy of the dependent F5 resources.
+
+### Fixed
+- Call 'execute-action' when an `f5_iapp` is modified.
+
 ## Release 1.5.3
 ### Summary
 This release fixes an autoload issue related to PUP-6922 in which `f5_selfip` and `f5_pool` require the `f5_node` and cause a "redefine" error.

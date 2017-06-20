@@ -35,3 +35,5 @@ CONFIG:
   log_level: "debug"
   ssh:
     keys: "~/.ssh/id_rsa-acceptance"
+:host_tags:
+  :lifetime: "3h"
