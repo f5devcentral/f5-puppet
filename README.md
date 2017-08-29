@@ -1470,11 +1470,20 @@ Set the user password during creation or modification without prompting or confi
 
 #### Example
 
+##### Add a user
 ~~~puppet
     f5_user { '/Common/joe':
       name                   => 'joe',
       ensure                 => 'present',
       password               => 'joe',
+    }
+~~~
+
+##### Delete a user
+~~~puppet
+    f5_user { '/Common/joe':
+      name                   => 'joe',
+      ensure                 => 'absent',
     }
 ~~~
 
