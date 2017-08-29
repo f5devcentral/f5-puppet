@@ -30,19 +30,11 @@ Puppet::Type.newtype(:f5_addtotrust) do
 
   newproperty(:description, :parent => Puppet::Property::F5Description)
 
-  newproperty(:test) do
-    desc "test"
-  end
-
-  newproperty(:tmsh) do
-    desc "tmsh"
-  end
-
   newproperty(:device) do
     desc "device"
   end
-  newproperty(:deviceName) do
-    desc "deviceName"
+  newproperty(:device_name) do
+    desc "device_name"
   end
   newproperty(:username) do
     desc "username"

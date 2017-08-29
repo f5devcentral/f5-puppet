@@ -30,6 +30,7 @@ Puppet::Type.type(:f5_addtotrust).provide(:rest, parent: Puppet::Provider::F5) d
 
     # Map for conversion in the message.
     map = {
+      :'device-name'            => :deviceName,
     }
 
     message = strip_nil_values(message)
@@ -38,10 +39,11 @@ Puppet::Type.type(:f5_addtotrust).provide(:rest, parent: Puppet::Provider::F5) d
     message = create_message(basename, message)
     message = string_to_integer(message)
 
-puts message
-#   message = message[:tmsh]
    message1 = {"command"=>"run", "name"=>"Root", "caDevice"=>true}
    message = message1.merge!(message)
+
+  message.to_json
+  end
 
   def flush
     if @property_hash != {}
