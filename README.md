@@ -1324,7 +1324,8 @@ Specifies the protocols and services from which this self IP can accept traffic.
 
 ### f5_dns
 
-Manages system DNS settings on the F5 device. See [F5 documentation](https://support.f5.com/kb/en-us/products/big-ip_ltm/manuals/product/tmos_management_guide_10_1/tmos_device_info_and_config.html#1012408) to learn more about F5 DNS.
+Manages system DNS settings on the F5 device. See [F5 documentation](https://support.f5.com/kb/en-us/products/big-ip_ltm/manuals/product/tmos_management_guide_10_1/tmos_device_info_and_config.html#1012408) to learn more about F5 DNS. f5_dns has no `ensure => absent` functionality.
+
 
 #### Parameters
 
@@ -1400,7 +1401,7 @@ f5_ntp { '/Common/ntp':
 
 ### f5_globalsetting
 
-Manages system global settings on the F5 device. See [F5 documentation](https://support.f5.com/kb/en-us/products/big-ip_ltm/manuals/product/tmos_management_guide_10_1/tmos_packet_filters.html#1185763) to learn more about F5 global setting.
+Manages system global settings on the F5 device. See [F5 documentation](https://support.f5.com/kb/en-us/products/big-ip_ltm/manuals/product/tmos_management_guide_10_1/tmos_packet_filters.html#1185763) to learn more about F5 global setting. f5_globalsetting has no `ensure => absent` functionality.
 
 #### Parameters
 
@@ -1538,7 +1539,7 @@ Valid options: a string.
 
 ### f5_root
 
-Changes the password of the root user on the Big-IP system. The root user can be used for SSH to obtain remote access to the device. A root user can not send REST requests it is not a REST Framework user. 
+Changes the password of the root user on the Big-IP system. The root user can be used for SSH to obtain remote access to the device. A root user can not send REST requests it is not a REST Framework user. f5_root has no `ensure => absent` functionality.
 
 #### Parameters
 
@@ -1577,7 +1578,7 @@ Valid options: a string.
 
 ### f5_license
 
-Manage license installation and activation on BIG-IP devices
+Manage license installation and activation on BIG-IP devices. f5_license has no `ensure => absent` functionality
 
 #### Parameters
 
