@@ -1537,6 +1537,7 @@ Valid options: a string.
 
 #### Example
 
+##### Create default route
 ~~~puppet
     f5_route { '/Common/Default':
       ensure           => 'present',
@@ -1545,6 +1546,13 @@ Valid options: a string.
       network          => "0.0.0.0/0",
     }
 ~~~
+
+##### Delete default route
+~~~puppet
+    f5_route { '/Common/Default':
+      ensure           => 'absent',
+~~~
+
 
 ### f5_root
 
@@ -1617,7 +1625,7 @@ The registration key to use to license the BIG-IP.
 
 ### f5_selfdevice
 
-Change device name from default bigip1 under 'Device Management > Devices'. This is achieved by using tmsh `mv`command.
+Change device name from default bigip1 under 'Device Management > Devices'. This is achieved by using tmsh `mv`command, and hence has no `ensure => absent` functionality.
 
 NOTE: This does not impact the hostname
 
@@ -1695,7 +1703,7 @@ Specifies the primary IP address for the system to use to mirror connections.
 
 ### f5_addtotrust
 
-Manage the trust relationships between BIG-IPs. In this task we will add BIG-IP-B as a trusted peer of BIG-IP-A.
+Manage the trust relationships between BIG-IPs. In this task we will add BIG-IP-B as a trusted peer of BIG-IP-A. This is achieved by using tmsh command, and hence has no `ensure => absent` functionality.
 
 #### Parameters
 
@@ -1780,6 +1788,7 @@ An array of devices to be added to the device group.
 
 #### Example
 
+##### Create a device group
 ~~~puppet
     f5_devicegroup{ '/Common/DeviceGroup1':
       ensure              => 'present',
@@ -1789,9 +1798,17 @@ An array of devices to be added to the device group.
     }
 ~~~
 
+##### Delete a device group
+~~~puppet
+    f5_devicegroup{ '/Common/DeviceGroup1':
+      ensure              => 'absent',
+    }
+~~~
+
+
 ### f5_configsync
 
-Perform initial sync of the Device Group. This is achieved by using tmsh `run` command.
+Perform initial sync of the Device Group. This is achieved by using tmsh `run` command, and hence has no `ensure => absent` functionality.
 
 #### Parameters
 
@@ -1823,7 +1840,7 @@ Specifies the 'to-group' device group to run a config-sync
 
 ### f5_command
 
-Sends an arbitrary command to an BIG-IP node
+Sends an arbitrary command to an BIG-IP node. TMSH command has no `ensure => absent` functionality.
 
 #### Parameters
 
