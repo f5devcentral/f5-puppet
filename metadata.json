@@ -1,25 +1,26 @@
 {
-  "name": "puppetlabs-f5",
-  "version": "1.5.4",
-  "author": "puppetlabs",
+  "name": "f5-bigip",
+  "version": "1.6.0",
+  "author": "F5",
   "summary": "Manages F5 BIG-IP Application Delivery Controllers",
-  "license": "PuppetLabs-Enterprise",
-  "source": "https://forge.puppetlabs.com/puppetlabs/f5",
-  "project_page": "https://forge.puppetlabs.com/puppetlabs/f5",
-  "issues_url": "https://tickets.puppetlabs.com/browse/MODULES",
+  "license": "Apache-2.0",
+  "source": "https://github.com/f5devcentral/f5-puppet",
+  "project_page": "https://github.com/f5devcentral/f5-puppet",
+  "issues_url": "https://github.com/f5devcentral/f5-puppet/issues",
   "tags": [
     "f5",
     "bigip",
     "network",
     "Application Delivery Controllers",
     "ADC",
+    "LTM",
     "loadbalancer"
   ],
   "operatingsystem_support": [
     {
       "operatingsystem": "BigIp",
       "operatingsystemrelease": [
-        "11.6"
+        "12.1"
       ]
     }
   ],
