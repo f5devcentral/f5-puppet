@@ -5,8 +5,6 @@ Puppet::Type.type(:f5_command).provide(:rest, parent: Puppet::Provider::F5) do
 
   def self.instances
     instances = []
-
-#    nodes = Puppet::Provider::F5.call_items('/mgmt/tm/sys/ntp')
     return []
   end
 
@@ -37,10 +35,7 @@ Puppet::Type.type(:f5_command).provide(:rest, parent: Puppet::Provider::F5) do
     message = create_message(basename, message)
     message = string_to_integer(message)
 
-puts message
    message = message[:tmsh]
-#    message = {:command=>"mv", :name=>"bigip1", :target=>"bigip-a.f5.local"}
-#    message = {"command"=>"mv", "name"=>"bigip1", "target"=>"bigip-a.f5.local"}
 
   message.to_json
   end
@@ -49,15 +44,13 @@ puts message
     if @property_hash != {}
       # You can only pass address to create, not modifications.
       flush_message = @property_hash.reject { |k, _| k == :address }
-      result = Puppet::Provider::F5.put("/mgmt/tm/sys/ntp/", message(flush_message))
+      result = Puppet::Provider::F5.put("/mgmt/tm/cm/device", message(flush_message))
     end
     return result
   end
 
   def exists?
     @property_hash[:ensure] == :present
-    # return true as NTP reource always exists
-#    return false
   end
 
   def create
@@ -69,7 +62,7 @@ puts message
   end
 
   def destroy
-    result = Puppet::Provider::F5.delete("/mgmt/tm/sys/ntp")
+    result = Puppet::Provider::F5.delete("/mgmt/tm/cm/device")
     @property_hash.clear
 
     return result

@@ -5,8 +5,6 @@ Puppet::Type.type(:f5_addtotrust).provide(:rest, parent: Puppet::Provider::F5) d
 
   def self.instances
     instances = []
-
-    nodes = Puppet::Provider::F5.call_items('/mgmt/tm/cm/trust-domain')
     return [] #if nodes.nil?
 
   end
@@ -49,15 +47,13 @@ Puppet::Type.type(:f5_addtotrust).provide(:rest, parent: Puppet::Provider::F5) d
     if @property_hash != {}
       # You can only pass address to create, not modifications.
       flush_message = @property_hash.reject { |k, _| k == :address }
-      result = Puppet::Provider::F5.put("/mgmt/tm/sys/ntp/", message(flush_message))
+      result = Puppet::Provider::F5.put("/mgmt/tm/cm/add-to-trust", message(flush_message))
     end
     return result
   end
 
   def exists?
     @property_hash[:ensure] == :present
-    # return true as NTP reource always exists
-#    return false
   end
 
   def create
@@ -69,7 +65,7 @@ Puppet::Type.type(:f5_addtotrust).provide(:rest, parent: Puppet::Provider::F5) d
   end
 
   def destroy
-    result = Puppet::Provider::F5.delete("/mgmt/tm/sys/ntp")
+    result = Puppet::Provider::F5.delete("/mgmt/tm/cm/add-to-trust")
     @property_hash.clear
 
     return result

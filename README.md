@@ -75,21 +75,20 @@ See below for the detailed steps.
 In your site.pp, `<devicecertname>.pp` node manifest, or a `profiles::<profile_name>` manifest file, enter the below code in the relevant class statement or node declaration:
 
 ~~~puppet
-
   f5_node { '/Common/WWW_Server_1':
     ensure                   => 'present',
     address                  => '172.16.226.10',
     description              => 'WWW Server 1',
     availability_requirement => 'all',
     health_monitors          => ['/Common/icmp'],
-  }->
+  }
   f5_node { '/Common/WWW_Server_2':
     ensure                   => 'present',
     address                  => '172.16.226.11',
     description              => 'WWW Server 2',
     availability_requirement => 'all',
     health_monitors          => ['/Common/icmp'],
-  }->
+  }
   f5_pool { '/Common/puppet_pool':
     ensure                    => 'present',
     members                   => [
@@ -98,7 +97,11 @@ In your site.pp, `<devicecertname>.pp` node manifest, or a `profiles::<profile_n
     ],
     availability_requirement  => 'all',
     health_monitors           => ['/Common/http_head_f5'],
-  }->
+    require                   => [
+      F5_node['/Common/WWW_Server_1'],
+      F5_node['/Common/WWW_Server_2'],
+    ],
+  }
   f5_virtualserver { '/Common/puppet_vs':
     ensure                    => 'present',
     provider                  => 'standard',
@@ -110,6 +113,7 @@ In your site.pp, `<devicecertname>.pp` node manifest, or a `profiles::<profile_n
     protocol                  => 'tcp',
     source                    => '0.0.0.0/0',
     vlan_and_tunnel_traffic   => {'enabled' => ['/Common/Client']},
+    require                   => F5_pool['/Common/puppet_pool'],
   }
 ~~~
 
