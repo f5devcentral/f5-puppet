@@ -1620,7 +1620,7 @@ The registration key to use to license the BIG-IP.
 
 ~~~puppet
   f5_license { '/Common/license':
-    registration_key => "YJDCV-HJQKV-JUBHT-PGISW-MWUUDAC"
+    registration_key => "GKWPN-NDMLV-CXSTE-NWDEX-PCFPTLV"
   }
 ~~~
 

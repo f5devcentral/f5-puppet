@@ -11,7 +11,6 @@ Puppet::Type.type(:f5_device).provide(:rest, parent: Puppet::Provider::F5) do
     devices.each do |device|
       full_path_uri = device['fullPath'].gsub('/','~')
 
-
       instances << new(
         ensure:                   :present,
         name:                     device['fullPath'],
@@ -57,7 +56,6 @@ Puppet::Type.type(:f5_device).provide(:rest, parent: Puppet::Provider::F5) do
     message = rename_keys(map, message)
     message = create_message(basename, message)
     message = string_to_integer(message)
-
 
   message.to_json
   end
