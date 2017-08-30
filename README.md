@@ -1353,14 +1353,13 @@ Specifies the domains that the system searches for local domain lookups, to reso
 Correct format example is: ["localhost","f5.local”]
 
 #### Example
-
 ~~~puppet
-f5_dns { '/Common/dns':
-      name_servers         => ["4.2.2.2", "8.8.8.8"],
-      search               => ["localhost","f5.local"],
- }
-}
-~~~ 
+  f5_dns { '/Common/dns':
+    name_servers         => ["4.2.2.2", "8.8.8.8"],
+    search               => ["localhost","f5.local"],
+   }
+~~~
+
 
 ### f5_ntp
 
@@ -1392,11 +1391,10 @@ Specifies the timezone
 #### Example
 
 ~~~puppet
-f5_ntp { '/Common/ntp':
-      servers               => ['0.pool.ntp.org', '1.pool.ntp.org'],
-      timezone              => 'UTC',
- }
-}
+  f5_ntp { '/Common/ntp':
+    servers  => ['0.pool.ntp.org', '1.pool.ntp.org'],
+    timezone => 'UTC',
+   }
 ~~~
 
 ### f5_globalsetting
@@ -1431,11 +1429,10 @@ The default value is enabled.
 #### Example
 
 ~~~puppet
-f5_globalsetting { '/Common/globalsetting':
-      hostname               => "bigip-a.f5.local",
-      gui_setup              => "disabled",
- }
-}
+  f5_globalsetting { '/Common/globalsetting':
+    hostname  => "bigip-a.f5.local",
+    gui_setup => "disabled",
+   }
 ~~~
 
 ### f5_user
@@ -1472,19 +1469,19 @@ Set the user password during creation or modification without prompting or confi
 
 ##### Add a user
 ~~~puppet
-    f5_user { '/Common/joe':
-      name                   => 'joe',
-      ensure                 => 'present',
-      password               => 'joe',
-    }
+  f5_user { '/Common/joe':
+    name     => 'joe',
+    ensure   => 'present',
+    password => 'joe',
+  }
 ~~~
 
 ##### Delete a user
 ~~~puppet
-    f5_user { '/Common/joe':
-      name                   => 'joe',
-      ensure                 => 'absent',
-    }
+  f5_user { '/Common/joe':
+    name   => 'joe',
+    ensure => 'absent',
+  }
 ~~~
 
 ### f5_route
@@ -1539,18 +1536,18 @@ Valid options: a string.
 
 ##### Create default route
 ~~~puppet
-    f5_route { '/Common/Default':
-      ensure           => 'present',
-      gw               => "10.1.20.253",
-      mtu              => '0',
-      network          => "0.0.0.0/0",
-    }
+  f5_route { '/Common/Default':
+    ensure  => 'present',
+    gw      => "10.1.20.253",
+    mtu     => '0',
+    network => "0.0.0.0/0",
+  }
 ~~~
 
 ##### Delete default route
 ~~~puppet
-    f5_route { '/Common/Default':
-      ensure           => 'absent',
+  f5_route { '/Common/Default':
+    ensure => 'absent',
 ~~~
 
 
@@ -1587,10 +1584,10 @@ Valid options: a string.
 #### Example
 
 ~~~puppet
-    f5_root { '/Common/root':
-      old_password               => 'default',
-      new_password               => 'default',
-    }
+  f5_root { '/Common/root':
+    old_password => 'default',
+    new_password => 'default',
+  }
 ~~~
 
 ### f5_license
@@ -1618,9 +1615,9 @@ The registration key to use to license the BIG-IP.
 #### Example
 
 ~~~puppet
-    f5_license { '/Common/license':
-      registration_key => "YJDCV-HJQKV-JUBHT-PGISW-MWUUDAC"
-    }
+  f5_license { '/Common/license':
+    registration_key => "YJDCV-HJQKV-JUBHT-PGISW-MWUUDAC"
+  }
 ~~~
 
 ### f5_selfdevice
@@ -1653,16 +1650,16 @@ Valid options: a string
 
 rename the self device:
 ~~~puppet
-    f5_selfdevice { '/Common/bigip-a.f5.local':
-      target          =>"bigip-a.f5.local",
-    }
+  f5_selfdevice { '/Common/bigip-a.f5.local':
+    target =>"bigip-a.f5.local",
+  }
 ~~~
 
 reset the device name: 
 ~~~puppet
-    f5_selfdevice { '/Common/bigip1':
-      target          =>"bigip1",
-    }
+  f5_selfdevice { '/Common/bigip1':
+    target =>"bigip1",
+  }
 ~~~
 
 ### f5_device
@@ -1694,11 +1691,11 @@ Specifies the primary IP address for the system to use to mirror connections.
 #### Example
 
 ~~~puppet
-    f5_device{ '/Common/bigip-a.f5.local':
-      ensure                           => 'present',
-      configsync_ip                    => '10.1.30.1',
-      mirror_ip                        => '10.1.30.1',
-    }
+  f5_device{ '/Common/bigip-a.f5.local':
+    ensure        => 'present',
+    configsync_ip => '10.1.30.1',
+    mirror_ip     => '10.1.30.1',
+  }
 ~~~
 
 ### f5_addtotrust
@@ -1738,12 +1735,12 @@ Specify the password when adding the new device.
 #### Example
 
 ~~~puppet
-    f5_addtotrust { '/Common/addtotrust':
-      device       => "10.192.74.112",
-      deviceName   => "bigip-b.f5.local",
-      username     => "admin",
-      password     => "admin",
-    }
+  f5_addtotrust { '/Common/addtotrust':
+    device     => "10.192.74.112",
+    deviceName => "bigip-b.f5.local",
+    username   => "admin",
+    password   => "admin",
+  }
 ~~~
 
 ### f5_devicegroup
@@ -1790,19 +1787,19 @@ An array of devices to be added to the device group.
 
 ##### Create a device group
 ~~~puppet
-    f5_devicegroup{ '/Common/DeviceGroup1':
-      ensure              => 'present',
-      type                => 'sync-failover',
-      auto_sync           => 'enabled',
-      devices             => [ "bigip-a.f5.local","bigip-b.f5.local" ],
-    }
+  f5_devicegroup{ '/Common/DeviceGroup1':
+    ensure    => 'present',
+    type      => 'sync-failover',
+    auto_sync => 'enabled',
+    devices   => [ "bigip-a.f5.local","bigip-b.f5.local" ],
+  }
 ~~~
 
 ##### Delete a device group
 ~~~puppet
-    f5_devicegroup{ '/Common/DeviceGroup1':
-      ensure              => 'absent',
-    }
+  f5_devicegroup{ '/Common/DeviceGroup1':
+    ensure => 'absent',
+  }
 ~~~
 
 
@@ -1831,10 +1828,9 @@ Specifies the 'to-group' device group to run a config-sync
 #### Example
 
 ~~~puppet
-    f5_configsync { '/Common/config-sync':
-      to_group => "DeviceGroup1",
-    }
-
+  f5_configsync { '/Common/config-sync':
+    to_group => "DeviceGroup1",
+  }
 ~~~
 
 
@@ -1863,13 +1859,13 @@ Specifies the command to send to the remote BIG-IP device over the configured pr
 #### Example
 
 ~~~puppet
-    f5_command { '/Common/tmsh':
+  f5_command { '/Common/tmsh':
     tmsh => {
-        command         =>"mv",
-        name            =>"bigip1",
-        target          =>"bigip-a.f5.local",
+      command =>"mv",
+      name    =>"bigip1",
+      target  =>"bigip-a.f5.local",
     }
-    }
+  }
 ~~~
 
 
