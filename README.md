@@ -1875,13 +1875,13 @@ Specifies the command to send to the remote BIG-IP device over the configured pr
 
 ## Limitations
 
-F5 version v11.5 or greater.
-Puppet Enterprise: v3.3 or greater.
+F5 version v12.1 or greater.
+Puppet Enterprise: 2016.4.x or greater.
 
 ## Development
 
-This is a proprietary module only available to Puppet Enterprise users. As
-such, we have no formal way for users to contribute towards development.
-However, if you've fixed a bug or have another contribution to this module, please
-generate a diff and file a support ticket. They'll be sure we get it.
+Puppet modules on the Puppet Forge are open projects, and community contributions are essential for keeping them great. Please follow our guidelines when contributing changes.
+For more information, see our [module contribution guide.](https://docs.puppetlabs.com/forge/contributing.html)
+
+
 
