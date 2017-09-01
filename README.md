@@ -3,19 +3,25 @@
 #### Table of Contents
 
 1. [Overview](#overview)
-2. [Module Description - What the module does and why it is useful](#module-description)
-3. [Setup - The basics of getting started with f5](#setup)
+2. [Warning](#warning)
+3. [Module Description - What the module does and why it is useful](#module-description)
+4. [Setup - The basics of getting started with f5](#setup)
     * [Beginning with f5](#beginning-with-f5)
-4. [Usage - Configuration options and additional functionality](#usage)
+5. [Usage - Configuration options and additional functionality](#usage)
 	* [Set up two load-balanced web servers](#set-up-two-load-balanced-web-servers)
 	* [Tips and Tricks](#tips-and-tricks)
-5. [Reference - An under-the-hood peek at what the module is doing and how](#reference)
-5. [Limitations - OS compatibility, etc.](#limitations)
-6. [Development - Guide for contributing to the module](#development)
+6. [Reference - An under-the-hood peek at what the module is doing and how](#reference)
+7. [Limitations - OS compatibility, etc.](#limitations)
+8. [Development - Guide for contributing to the module](#development)
+9. [Support](#support)
 
 ## Overview
 
-The f5 module enables Puppet management of LTM F5 load balancers by providing types and REST-based providers. 
+The f5 module enables Puppet management of LTM F5 load balancers by providing types and REST-based providers.  The Puppet, Inc. versions (<= v1.5.4) of this module are no longer in development.  That module has been merged with the development efforts of F5.  Starting with v1.6.0, BIG-IP module development will be handled by F5.
+
+## Warning
+
+Per the information in the [Overview](#overview), this module cannot be used in conjunction with the former module under the namespace of [puppetlabs/f5](https://forge.puppet.com/puppetlabs/f5).  The [puppetlabs/f5](https://forge.puppet.com/puppetlabs/f5) module must be removed before you installing this module.
 
 ## Module Description
 
@@ -48,7 +54,7 @@ Additionally, you must install the faraday gem into the Puppet Ruby environment 
 
 #### Before you begin
 
-This example assumes the following pre-existing infrastructure: 
+This example assumes the following pre-existing infrastructure:
 
 1. A server running as a Puppet master.
 2. A Puppet agent running as a proxy or controller to the f5 device.
@@ -117,11 +123,11 @@ In your site.pp, `<devicecertname>.pp` node manifest, or a `profiles::<profile_n
   }
 ~~~
 
-**The order of your resources is extremely important.** You must first establish your two web servers. In the code above, they are `f5_node { '/Common/WWW_Server_1'...` and `f5_node { '/Common/WWW_Server_2'...`. Each has the minimum number of parameters possible and is set up with a health monitor that pings each server directly to make sure it is still responsive. 
+**The order of your resources is extremely important.** You must first establish your two web servers. In the code above, they are `f5_node { '/Common/WWW_Server_1'...` and `f5_node { '/Common/WWW_Server_2'...`. Each has the minimum number of parameters possible and is set up with a health monitor that pings each server directly to make sure it is still responsive.
 
 Next, establish the pool of servers. The pool is also set up with the minimum number of parameters. The health monitor for the pool runs an https request to see that a webpage is returned.
 
-Finally, the virtual server brings your setup together. Your virtual server **must** have a `provider` assigned. 
+Finally, the virtual server brings your setup together. Your virtual server **must** have a `provider` assigned.
 
 If you're using a profile, remember to apply the profile to the node with either the console, your ENC, or site.pp.
 
@@ -167,7 +173,7 @@ If you have a '/Common/http_monitor' (which is available by default), then when 
 
 ## Reference
 
-#### Notes 
+#### Notes
 
 * The defaults for any given type's parameters are determined by your F5, which varies based on your environment and version. Please consult [F5's documentation](https://support.f5.com/kb/en-us/products/big-ip_ltm.html) to discover the defaults pertinent to your setup.
 * All resource type titles are required to be in the format of `/Partition/title`, such as `/Common/my_virtualserver`.
@@ -194,11 +200,11 @@ If you have a '/Common/http_monitor' (which is available by default), then when 
 * [f5_route](#f5_route): Configure route on the Big-IP system.
 * [f5_root](#f5_root): Modify the password of the root user on the Big-IP system.
 * [f5_license](#f5_license): Manage license installation and activation on BIG-IP devices
-* [f5_selfdevice](#f5_selfdevice): Change device name from default bigip1 
+* [f5_selfdevice](#f5_selfdevice): Change device name from default bigip1
 * [f5_device](#f5_device): Manages device IP configuration settings for HA on a BIG-IP.
 * [f5_addtotrust](#f5_addtotrust): Manage the trust relationships between BIG-IPs.
-* [f5_devicegroup](#f5_devicegroup): Manage device groups on a BIG-IP. 
-* [f5_configsync](#f5_configsync): Perform initial sync of the Device Group. 
+* [f5_devicegroup](#f5_devicegroup): Manage device groups on a BIG-IP.
+* [f5_configsync](#f5_configsync): Perform initial sync of the Device Group.
 * [f5_command](#f5_command): Run arbitrary TMSH command on the Big-IP system.
 
 
@@ -326,7 +332,7 @@ Valid options: true or false
 
 ##### allow_snat
 
-Specifies whether to enable secure network address translations (SNAT) for the pool. 
+Specifies whether to enable secure network address translations (SNAT) for the pool.
 
 Valid options: true or false
 
@@ -456,7 +462,7 @@ Valid options: 'disabled' or integers
 
 ### f5_irule
 
-Creates and manages iRule objects on your F5 device. See [F5 documentation](https://devcentral.f5.com/articles/irules-101-01-introduction-to-irules) to learn more about iRules. 
+Creates and manages iRule objects on your F5 device. See [F5 documentation](https://devcentral.f5.com/articles/irules-101-01-introduction-to-irules) to learn more about iRules.
 
 #### Parameters
 
@@ -474,7 +480,7 @@ Valid options: 'present' or 'absent'
 
 ##### name
 
-Sets the name of the iRule object. 
+Sets the name of the iRule object.
 
 Valid options: a string.
 
@@ -482,7 +488,7 @@ Valid options: a string.
 
 Verifies the signature contained in the `definition`.
 
-Valid options: true or false 
+Valid options: true or false
 
 ### f5_monitor
 
@@ -491,7 +497,7 @@ Creates and manages monitor objects, which determine the health or performance o
 #### Providers
 
 **Note:** Not all features are available with all providers. The providers below are based on [F5 monitor options](https://support.f5.com/kb/en-us/products/big-ip_ltm/manuals/product/ltm-monitors-reference-11-1-0/3.html).
-					
+
 * `external` - Create your own monitor type. (Contains features: `external`.)
 * `gateway_icmp` - Make a simple resource check using ICMP. (Contains features: `transparent`.)
 * `http` - Check the status of HTTP traffic. (Contains features: `auth`, `dscp`, `reverse`, `strings`, and `transparent`.)
@@ -529,13 +535,13 @@ Valid options: '*', 'any', or an integer between 100 and 999
 
 ##### additional_rejected_status_codes
 
-Sets any additional rejected status codes for SIP monitors. (Requires `sip` feature.) 
+Sets any additional rejected status codes for SIP monitors. (Requires `sip` feature.)
 
 Valid options: '*', 'any', or an integer between 100 and 999
 
 ##### alias_address
 
-Specifies the destination IP address for the monitor to check. 
+Specifies the destination IP address for the monitor to check.
 
 Valid options: 'ipv4' or 'ipv6'
 
@@ -593,13 +599,13 @@ Sets the debug option for LDAP, SIP, and UDP monitors. (Requires `debug` feature
 
 Valid options: 'enabled', 'disabled', true, false, 'yes', or 'no'
 
-##### description 
+##### description
 
 Sets the description of the monitor.
 
 Valid options: a string.
 
-##### ensure 
+##### ensure
 
 Determines whether or not the resource should be present.
 
@@ -625,7 +631,7 @@ Valid options: Array
 
 ##### interval
 
-Specifies how often to send a request. Determined in seconds. 
+Specifies how often to send a request. Determined in seconds.
 
 Valid options: an integer.
 
@@ -643,7 +649,7 @@ Valid options: 'enabled', 'disabled', true, false, 'yes', or 'no'
 
 ##### manual_resume
 
-Enables the manual resume of a monitor, associates the monitor with a resource, disables the resource so it becomes unavailable, and leaves the resource offline until you manually re-enable it. 
+Enables the manual resume of a monitor, associates the monitor with a resource, disables the resource so it becomes unavailable, and leaves the resource offline until you manually re-enable it.
 
 Valid options: 'enabled', 'disabled', true, false, 'yes', or 'no'
 
@@ -653,9 +659,9 @@ Specifies the SIP mode for the SIP monitor. (Requires `sip` feature.)
 
 Valid options: 'tcp', 'udp', 'tls', and 'sips'
 
-##### name 
+##### name
 
-Sets the name of the monitor. 
+Sets the name of the monitor.
 
 Valid options: a string.
 
@@ -735,7 +741,7 @@ Valid options:  'enabled', 'disabled', true, false, 'yes', or 'no'
 
 ##### up_interval
 
-Sets how often the monitor should check the health of a resource. 
+Sets how often the monitor should check the health of a resource.
 
 Valid options: an integer, 'disabled', false, or 'no'
 
@@ -788,7 +794,7 @@ Creates and manages virtual node objects on your F5 device.
 
 ##### address_status
 
-Determines whether the virtual server's IP should respond to pings based on pool member availability. 
+Determines whether the virtual server's IP should respond to pings based on pool member availability.
 
 Valid options: 'enabled', 'disabled', true, false, 'yes', or 'no'
 
@@ -806,7 +812,7 @@ Valid options: 'none' or '/< PARTITION >/< VIRTUAL SERVER NAME >'
 
 ##### auto_last_hop
 
-Allows the BIG-IP system to track the source MAC address of incoming connections and return traffic from pools to the source MAC address, regardless of the routing table. 
+Allows the BIG-IP system to track the source MAC address of incoming connections and return traffic from pools to the source MAC address, regardless of the routing table.
 
 Valid options: 'default', 'enabled', or 'disabled'
 
@@ -818,7 +824,7 @@ Valid options: 'none' or '/< PARTITION >/< VIRTUAL SERVER NAME >'
 
 ##### clone_pool_client
 
-Copies traffic to IDS's prior to address translation. 
+Copies traffic to IDS's prior to address translation.
 
 Valid options: 'none' or '/< PARTITION >/< VIRTUAL SERVER NAME >'
 
@@ -842,7 +848,7 @@ Valid options: 'enabled', 'disabled', true, false, 'yes', or 'no'
 
 ##### connection_rate_limit
 
-Sets the connection rate limit of the object. 
+Sets the connection rate limit of the object.
 
 Valid options: An integer or 'disabled'.
 
@@ -868,7 +874,7 @@ Valid options:
 
 ##### connection_rate_limit_source_mask
 
-Specifies the CIDR mask of connection sources with rate limiting. 
+Specifies the CIDR mask of connection sources with rate limiting.
 
 Valid options: An integer between 0 and 32.
 
@@ -902,13 +908,13 @@ Specifies the netmask for a network virtual server, which clarifies whether the 
 
 Valid options: Netmask
 
-##### diameter_profile 
+##### diameter_profile
 
 Enables you to use a Diameter profile, which allows the BIG-IP system to send client-initiated Diameter messages to load balancing servers and ensure that those messages persist on the servers. (Requires `standard_profiles` feature.)
 
 Valid options: 'none' or '/< PARTITION >/< VIRTUAL SERVER NAME >'
 
-##### dns_profile 
+##### dns_profile
 
 Enables you to use a custom DNS profile to enable features such as: converting IPv6-formatted addresses to IPv4 format, DNS Express, and DNSSEC. (Requires `standard_profiles` feature.)
 
@@ -932,7 +938,7 @@ Enables you to use Financial Information eXchange (FIX) protocol messages in rou
 
 Valid options: 'none' or '/< PARTITION >/< VIRTUAL SERVER NAME >'
 
-##### ftp_profile 
+##### ftp_profile
 
 Defines the behavior of File Transfer Protocol (FTP) traffic. (Requires `standard_profiles` feature.)
 
@@ -976,7 +982,7 @@ Valid options: a string.
 
 ##### nat64
 
-Maps IPv6 subscriber private addresses to IPv4 Internet public addresses. 
+Maps IPv6 subscriber private addresses to IPv4 Internet public addresses.
 
 Valid options: 'enabled', 'disabled', true, false, 'yes', or 'no'
 
@@ -1006,7 +1012,7 @@ Valid options: 'enabled', 'disabled', true, false, 'yes', or 'no'
 
 ##### protocol
 
-Sets the network protocol name for which you want the virtual server to direct traffic. 
+Sets the network protocol name for which you want the virtual server to direct traffic.
 
 Valid options: 'all', 'tcp', 'udp', or 'sctp'
 
@@ -1046,31 +1052,31 @@ Valid options: 'none' or '/< PARTITION >/< VIRTUAL SERVER NAME >'
 
 ##### request_logging_profile
 
-Enables you to configure data within a log file for requests and responses in accordance with specified parameters. (Requires `standard_profiles` feature.) 
+Enables you to configure data within a log file for requests and responses in accordance with specified parameters. (Requires `standard_profiles` feature.)
 
 Valid options: 'none' or '/< PARTITION >/< VIRTUAL SERVER NAME >'
 
 ##### response_adapt_profile
 
-Instructs an HTTP virtual server to send a response to a named virtual server of type Internal for possible modification by an Internet Content Adaptation Protocol (ICAP) server. (Requires `standard_profiles` feature.) 
+Instructs an HTTP virtual server to send a response to a named virtual server of type Internal for possible modification by an Internet Content Adaptation Protocol (ICAP) server. (Requires `standard_profiles` feature.)
 
 Valid options: 'none' or '/< PARTITION >/< VIRTUAL SERVER NAME >'
 
 ##### rewrite_profile
 
-Specifies the TCL expression that the system uses to rewrite the request URI that is forwarded to the server without sending an HTTP redirect to the client. **Note:** If you use static text rather than a TCL expression, the system maps the specified URI for every incoming request. (Requires `standard_profiles` feature.) 
+Specifies the TCL expression that the system uses to rewrite the request URI that is forwarded to the server without sending an HTTP redirect to the client. **Note:** If you use static text rather than a TCL expression, the system maps the specified URI for every incoming request. (Requires `standard_profiles` feature.)
 
 Valid options: 'none' or '/< PARTITION >/< VIRTUAL SERVER NAME >'
 
 ##### rtsp_profile
 
-Enables a client system to control a remote streaming-media server and allow time-based access to files on a server. (Requires `standard_profiles` feature.) 
+Enables a client system to control a remote streaming-media server and allow time-based access to files on a server. (Requires 'standard_profiles' feature.)
 
 Valid options: 'none' or '/< PARTITION >/< VIRTUAL SERVER NAME >'
 
 ##### service_port
 
-Specifies a service name or port number for which you want to direct traffic. **This parameter is required.** (Requires `service_port` feature.)
+Specifies a service name or port number for which you want to direct traffic. **This parameter is required.** (Requires 'service_port' feature.)
 
 Valid options: '*' or integers
 
@@ -1082,7 +1088,7 @@ Valid options: 'none' or '/< PARTITION >/< VIRTUAL SERVER NAME >'
 
 ##### socks_profile
 
-Configures the BIG-IP system to handle proxy requests and function as a gateway. Configuring browser traffic to use the proxy allows you to control whether to allow or deny a requested connection. (Requires `standard_profiles` feature.) 
+Configures the BIG-IP system to handle proxy requests and function as a gateway. Configuring browser traffic to use the proxy allows you to control whether to allow or deny a requested connection. (Requires `standard_profiles` feature.)
 
 Valid options: 'none' or '/< PARTITION >/< VIRTUAL SERVER NAME >'
 
@@ -1100,7 +1106,7 @@ Valid options: 'none', 'automap', { 'snat' => '/Partition/pool_name'}, or { 'lsn
 
 ##### source_port
 
-Specifies whether the system preserves the source port of the connection. (Requires `source_port` feature.) 
+Specifies whether the system preserves the source port of the connection. (Requires `source_port` feature.)
 
 Valid options: 'preserve', 'preserve_strict', or 'change'
 
@@ -1112,37 +1118,37 @@ Valid options: 'none' or '/< PARTITION >/< VIRTUAL SERVER NAME >'
 
 ##### ssl_profile_client
 
-Enables the the BIG-IP system to handle authentication and encryption tasks for any SSL connection coming into a BIG-IP system from a client system. (Requires `standard_profiles` feature.) 
+Enables the the BIG-IP system to handle authentication and encryption tasks for any SSL connection coming into a BIG-IP system from a client system. (Requires `standard_profiles` feature.)
 
 Valid options: 'none' or '/< PARTITION >/< VIRTUAL SERVER NAME >'
 
 ##### ssl_profile_server
 
-Enables the BIG-IP system to handle encryption tasks for any SSL connection being sent from a BIG-IP system to a target server. A server SSL profile is able to act as a client by presenting certificate credentials to a server when authentication of the BIG-IP system is required. (Requires `standard_profiles` feature.) 
+Enables the BIG-IP system to handle encryption tasks for any SSL connection being sent from a BIG-IP system to a target server. A server SSL profile is able to act as a client by presenting certificate credentials to a server when authentication of the BIG-IP system is required. (Requires `standard_profiles` feature.)
 
 Valid options: 'none' or '/< PARTITION >/< VIRTUAL SERVER NAME >'
 
 ##### state
 
-Sets the state of the virtual server. 
+Sets the state of the virtual server.
 
 Valid options: 'enabled', 'disabled', or 'forced_offline'
 
 ##### statistics_profile
 
-Provides user-defined statistical counters. 
+Provides user-defined statistical counters.
 
 Valid options: 'none' or '/< PARTITION >/< VIRTUAL SERVER NAME >'
 
 ##### stream_profile
 
-Searches for and replaces strings within a data stream. (Requires `standard_profiles` feature.) 
+Searches for and replaces strings within a data stream. (Requires `standard_profiles` feature.)
 
 Valid options: 'none' or '/< PARTITION >/< VIRTUAL SERVER NAME >'
 
 ##### traffic_class
 
-Allows you to classify traffic according to a set of criteria that you define, such as source and destination IP addresses, for the virtual server. 
+Allows you to classify traffic according to a set of criteria that you define, such as source and destination IP addresses, for the virtual server.
 
 Valid options: An array of /Partition/traffic_class_name objects
 
@@ -1154,19 +1160,19 @@ Valid options: '< 'all','enabled', or 'disabled' > => [ '/Partition/object' ]}'
 
 ##### vs_score
 
-Weight taken into account by the Global Traffic Manager. 
+Weight taken into account by the Global Traffic Manager.
 
 Valid options: an integer between 0 and 100  (Note: value is a percentage.)
 
 ##### web_acceleration_profile
 
-Allows the BIG-IP system to store HTTP objects in memory and reuse these objects for subsequent connections. (Requires `standard_profiles` feature.) 
+Allows the BIG-IP system to store HTTP objects in memory and reuse these objects for subsequent connections. (Requires `standard_profiles` feature.)
 
 Valid options: 'none' or '/< PARTITION >/< VIRTUAL SERVER NAME >'
 
 ##### xml_profile
 
-Defines the formatting and attack pattern checks for the security policy. (Requires `standard_profiles` feature.) 
+Defines the formatting and attack pattern checks for the security policy. (Requires `standard_profiles` feature.)
 
 Valid options: 'none' or '/< PARTITION >/< VIRTUAL SERVER NAME >'.
 
@@ -1208,13 +1214,13 @@ Valid options: a string.
 
 #### vlan_tag
 
-Specifies the VLAN ID. If you do not specify a VLAN ID, the BIG-IP system assigns an ID automatically. 
+Specifies the VLAN ID. If you do not specify a VLAN ID, the BIG-IP system assigns an ID automatically.
 
 Valid range: 1 - 4094.
 
 ##### source_check
 
-Causes the BIG-IP system to verify that the return path of an initial packet is through the same VLAN from which the packet originated. 
+Causes the BIG-IP system to verify that the return path of an initial packet is through the same VLAN from which the packet originated.
 
 Valid options: 'enabled' or 'disabled'.
 
@@ -1226,7 +1232,7 @@ Valid range: 576 - 65535.
 
 ##### fail_safe
 
-Triggers fail-over in a redundant system when certain VLAN-related events occur. 
+Triggers fail-over in a redundant system when certain VLAN-related events occur.
 
 Valid options: 'enabled' or 'disabled'.
 
@@ -1245,7 +1251,7 @@ Specifies the action that the system takes when it does not detect any traffic o
 
 ##### auto_last_hop
 
-Allows the BIG-IP system to track the source MAC address of incoming connections and return traffic from pools to the source MAC address, regardless of the routing table. 
+Allows the BIG-IP system to track the source MAC address of incoming connections and return traffic from pools to the source MAC address, regardless of the routing table.
 
 Valid options: 'default', 'enabled', or 'disabled'.
 
@@ -1275,7 +1281,7 @@ Valid range: 0 - 102400.
 
 ##### interface
 
-An array of interfaces that this vlan resource is bound to. 
+An array of interfaces that this vlan resource is bound to.
 
 Correct format example is:
 
@@ -1390,7 +1396,7 @@ Correct format example is: ['0.pool.ntp.org', '1.pool.ntp.org']
 
 ##### timezone
 
-Specifies the timezone 
+Specifies the timezone
 
 #### Example
 
@@ -1420,13 +1426,13 @@ Valid options: a string.
 
 ##### hostname
 
-Specifies a local name for the system. 
+Specifies a local name for the system.
 
 The default value is bigip1.
 
 ##### gui_setup
 
-Enables or disables the Setup utility in the browser-based Configuration utility. 
+Enables or disables the Setup utility in the browser-based Configuration utility.
 
 The default value is enabled.
 
@@ -1447,7 +1453,7 @@ Manages the user account on the F5 device. See [F5 documentation](https://suppor
 
 ###### name
 
-Specifies the name of the user account to manage. 
+Specifies the name of the user account to manage.
 
 $name is mandatory for all users in the format of `my_user`. Without $name specification, the  $name defaults to the value of $title, which is in the format of `/Partition/title`, such as `/Common/my_user`.
 
@@ -1563,7 +1569,7 @@ Changes the password of the root user on the Big-IP system. The root user can be
 
 ###### name
 
-Specifies the name of the root user to manage. 
+Specifies the name of the root user to manage.
 
 Valid options: a string.
 
@@ -1602,7 +1608,7 @@ Manage license installation and activation on BIG-IP devices. f5_license has no 
 
 ###### name
 
-Specifies the name. 
+Specifies the name.
 
 Valid options: a string.
 
@@ -1614,7 +1620,7 @@ Valid options: a string.
 
 ##### registration_key
 
-The registration key to use to license the BIG-IP. 
+The registration key to use to license the BIG-IP.
 
 #### Example
 
@@ -1659,7 +1665,7 @@ rename the self device:
   }
 ~~~
 
-reset the device name: 
+reset the device name:
 ~~~puppet
   f5_selfdevice { '/Common/bigip1':
     target =>"bigip1",
@@ -1883,5 +1889,6 @@ Puppet Enterprise: 2016.4.x or greater.
 Puppet modules on the Puppet Forge are open projects, and community contributions are essential for keeping them great. Please follow our guidelines when contributing changes.
 For more information, see our [module contribution guide.](https://docs.puppetlabs.com/forge/contributing.html)
 
+## Support
 
-
+Support for this module is provided by F5.  To file an issue, please visit this [link](https://github.com/f5devcentral/f5-puppet/issues/new)
