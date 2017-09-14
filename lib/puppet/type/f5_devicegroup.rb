@@ -32,32 +32,18 @@ Puppet::Type.newtype(:f5_devicegroup) do
 
   newproperty(:description, :parent => Puppet::Property::F5Description)
 
-  newproperty(:type) do
+  newproperty(:devicegroup_type) do
     desc "Group type. Valid values are 'sync-only' or 'sync-failover'."
     newvalues(:'sync-only', :'sync-failover')
   end
 
-  #newproperty(:auto_sync) do
-  #  desc "Auto sync. Valid values are 'default', 'enabled' or 'disabled'."
-  #  newvalues(:default, :enabled, :disabled)
-  #end
-
   newproperty(:auto_sync, :parent => Puppet::Property::F5truthy) do
     desc "auto_sync. Valid values are 'enabled' or 'disabled'."
-    truthy_property('Fail Safe')
+    truthy_property('Auto Sync')
   end
 
   newproperty(:devices, :array_matching => :all) do
     desc "Devices that this dg resource is bound to. "
   end
-
-  #newproperty(:servers, :array_matching => :all) do
-  #  desc "Server list. Accepts an array of values."
-  #  # TODO: Should we validate this?
-  #end
-
-  #newproperty(:timezone) do
-  #  desc "timezone"
-  #  # TODO: Should we validate this?
-  #end
+  
 end

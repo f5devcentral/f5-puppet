@@ -30,12 +30,8 @@ Puppet::Type.newtype(:f5_command) do
 
   newproperty(:description, :parent => Puppet::Property::F5Description)
 
-  newproperty(:test) do
-    desc "test"
-  end
-
-  newproperty(:tmsh) do
-    desc "tmsh"
+  newparam(:tmsh) do
+    desc "tmsh command line"
   end
 
 end

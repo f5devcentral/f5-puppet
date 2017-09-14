@@ -9,7 +9,7 @@ require File.expand_path(File.join(File.dirname(__FILE__),'..','..','puppet/prop
 require File.expand_path(File.join(File.dirname(__FILE__),'..','..','puppet/property/f5_state.rb'))
 
 Puppet::Type.newtype(:f5_ntp) do
-  @doc = 'Manage ntp objects'
+  @doc = 'Sets the system NTP on the BIG-IP system.'
 
   apply_to_device
   ensurable
@@ -36,6 +36,5 @@ Puppet::Type.newtype(:f5_ntp) do
 
   newproperty(:timezone) do
     desc "timezone"
-    # TODO: Should we validate this?
   end
 end
