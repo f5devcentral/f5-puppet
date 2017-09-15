@@ -49,9 +49,9 @@ Puppet::Type.type(:f5_command).provide(:rest, parent: Puppet::Provider::F5) do
   #   return result
   # end
 
-  # def exists?
-  #   @property_hash[:ensure] == :present
-  # end
+   def exists?
+     @property_hash[:ensure] == :present
+   end
 
   def create
     result = Puppet::Provider::F5.post("/mgmt/tm/cm/device", message(resource))

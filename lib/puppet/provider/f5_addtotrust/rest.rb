@@ -51,9 +51,9 @@ Puppet::Type.type(:f5_addtotrust).provide(:rest, parent: Puppet::Provider::F5) d
   #   return result
   # end
 
-  # def exists?
-  #   @property_hash[:ensure] == :present
-  # end
+   def exists?
+     @property_hash[:ensure] == :present
+   end
 
   def create
     result = Puppet::Provider::F5.post("/mgmt/tm/cm/add-to-trust", message(resource))
