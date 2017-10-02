@@ -14,19 +14,7 @@ Puppet::Type.newtype(:f5_command) do
   apply_to_device
   ensurable
 
-  newparam(:name) do
-    def self.postinit
-      @doc ||= "The name of the object.
-      Valid options: <String>"
-    end
-
-    validate do |value|
-      fail ArgumentError, "#{name} must be a String" unless value.is_a?(String)
-    end
-
-    isnamevar
-
-  end
+  newparam(:name, :parent => Puppet::Parameter::F5Name, :namevar => true)
 
   newproperty(:description, :parent => Puppet::Property::F5Description)
 
