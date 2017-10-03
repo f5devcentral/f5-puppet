@@ -17,7 +17,7 @@ Puppet::Type.type(:f5_devicegroup).provide(:rest, parent: Puppet::Provider::F5) 
         ensure:                   :present,
         name:                     dgroup['fullPath'],
         description:              dgroup['description'],
-        type:                     dgroup['type'],
+        devicegroup_type:         dgroup['type'],
         auto_sync:                dgroup['autoSync'],
         devices:                  devices,
       )
@@ -51,12 +51,12 @@ Puppet::Type.type(:f5_devicegroup).provide(:rest, parent: Puppet::Provider::F5) 
 
     # Map for conversion in the message.
     map = {
-      :'auto-sync'     => :autoSync,
+      :'auto-sync'        => :autoSync,
+      :'devicegroup-type' => :type,
     }
 
     message = strip_nil_values(message)
     message = convert_underscores(message)
-    #message = gen_sflow(message)
     message = create_message(basename, message)
     message = rename_keys(map, message)
     message = string_to_integer(message)

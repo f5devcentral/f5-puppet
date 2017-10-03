@@ -78,7 +78,7 @@ Puppet::Type.type(:f5_root).provide(:rest, parent: Puppet::Provider::F5) do
   end
 
   def destroy
-    result = Puppet::Provider::F5.delete("/mgmt/tm/sys/ntp")
+    result = Puppet::Provider::F5.delete("/mgmt/shared/authn/root")
     @property_hash.clear
 
     return result

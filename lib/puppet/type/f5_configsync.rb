@@ -9,7 +9,7 @@ require File.expand_path(File.join(File.dirname(__FILE__),'..','..','puppet/prop
 require File.expand_path(File.join(File.dirname(__FILE__),'..','..','puppet/property/f5_state.rb'))
 
 Puppet::Type.newtype(:f5_configsync) do
-  @doc = 'Run tmsh command'
+  @doc = 'Perform initial sync of the Device Group.'
 
   apply_to_device
   ensurable
@@ -32,11 +32,6 @@ Puppet::Type.newtype(:f5_configsync) do
 
   newproperty(:to_group) do
     desc "to_group"
-  end
-
-  newproperty(:tmsh) do
-    desc "tmsh"
-    # TODO: Should we validate this?
   end
 
 end

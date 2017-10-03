@@ -1518,7 +1518,7 @@ Specifies a gateway address for the route.
 
 Valid options: IPv4 or IPv6 addresses.
 
-##### MTU
+##### mtu
 
 Sets a specific maximum transmission unit (MTU).
 
@@ -1690,7 +1690,7 @@ Sets the description of the device IP configuration settings
 
 Valid options: a string.
 
-##### config_sync_ip
+##### configsync_ip
 
 Local IP address that the system uses for ConfigSync operations.
 
@@ -1730,7 +1730,7 @@ Valid options: a string.
 
 Specify the FQDN or management-ip of the new device.
 
-##### deviceName
+##### device_name
 
 Specify the name of the peer device to add.
 
@@ -1747,7 +1747,7 @@ Specify the password when adding the new device.
 ~~~puppet
   f5_addtotrust { '/Common/addtotrust':
     device     => "10.192.74.112",
-    deviceName => "bigip-b.f5.local",
+    device_name => "bigip-b.f5.local",
     username   => "admin",
     password   => "admin",
   }

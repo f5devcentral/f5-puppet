@@ -3,16 +3,6 @@ require 'json'
 
 Puppet::Type.type(:f5_configsync).provide(:rest, parent: Puppet::Provider::F5) do
 
-  def self.instances
-    instances = []
-    return []
-
-  end
-
-  def self.prefetch(resources)
-    nodes = instances
-  end
-
   def create_message(basename, hash)
     # Create the message by stripping :present.
     new_hash            = hash.reject { |k, _| [:ensure,:name, :provider, Puppet::Type.metaparams].flatten.include?(k) }
@@ -36,31 +26,13 @@ Puppet::Type.type(:f5_configsync).provide(:rest, parent: Puppet::Provider::F5) d
    message.to_json
   end
 
-  def flush
-    if @property_hash != {}
-      # You can only pass address to create, not modifications.
-      flush_message = @property_hash.reject { |k, _| k == :address }
-      result = Puppet::Provider::F5.put("/mgmt/tm/sys/ntp/", message(flush_message))
-    end
-    return result
-  end
-
   def exists?
     @property_hash[:ensure] == :present
-    # return true as NTP reource always exists
-#    return false
   end
 
   def create
     result = Puppet::Provider::F5.post("/mgmt/tm/cm/config-sync", message(resource))
     # We clear the hash here to stop flush from triggering.
-    @property_hash.clear
-
-    return result
-  end
-
-  def destroy
-    result = Puppet::Provider::F5.delete("/mgmt/tm/sys/ntp")
     @property_hash.clear
 
     return result

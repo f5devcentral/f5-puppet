@@ -71,9 +71,8 @@ Puppet::Type.type(:f5_device).provide(:rest, parent: Puppet::Provider::F5) do
   end
 
   def exists?
-    @property_hash[:ensure] == :present
+    #@property_hash[:ensure] == :present
     return true
-
   end
 
   def create

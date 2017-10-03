@@ -9,35 +9,21 @@ require File.expand_path(File.join(File.dirname(__FILE__),'..','..','puppet/prop
 require File.expand_path(File.join(File.dirname(__FILE__),'..','..','puppet/property/f5_state.rb'))
 
 Puppet::Type.newtype(:f5_globalsetting) do
-  @doc = 'Manage f5_globalsetting objects'
+  @doc = 'Sets the gener system global setting on the BIG-IP system.'
 
   apply_to_device
   ensurable
 
-  newparam(:name) do
-    def self.postinit
-      @doc ||= "The name of the object.
-      Valid options: <String>"
-    end
-
-    validate do |value|
-      fail ArgumentError, "#{name} must be a String" unless value.is_a?(String)
-    end
-
-    isnamevar
-
-  end
+  newparam(:name, :parent => Puppet::Parameter::F5Name, :namevar => true)
 
   newproperty(:description, :parent => Puppet::Property::F5Description)
 
   newproperty(:hostname) do
     desc "hostname"
-    # TODO: Should we validate this?
   end
 
   newproperty(:gui_setup) do
     desc "gui_setup"
-    # TODO: Should we validate this?
   end
 
 end

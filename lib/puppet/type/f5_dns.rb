@@ -9,7 +9,7 @@ require File.expand_path(File.join(File.dirname(__FILE__),'..','..','puppet/prop
 require File.expand_path(File.join(File.dirname(__FILE__),'..','..','puppet/property/f5_state.rb'))
 
 Puppet::Type.newtype(:f5_dns) do
-  @doc = 'Manage dns objects'
+  @doc = 'Sets the system DNS on the BIG-IP system'
 
   apply_to_device
   ensurable
