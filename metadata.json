@@ -1,5 +1,5 @@
 {
-  "name": "f5-puppet",
+  "name": "f5-bigip",
   "version": "1.6.0",
   "author": "F5",
   "summary": "Manages F5 BIG-IP Application Delivery Controllers",
