@@ -1,3 +1,20 @@
+## Release 1.6.0
+### Summary
+This release adds new providers for BIG-IP on-boarding, HA clustering:
+f5_dns
+f5_ntp
+f5_globalsetting
+f5_user
+f5_route
+f5_root
+f5_license
+f5_selfdevice
+f5_device
+f5_addtotrust
+f5_devicegroup
+f5_configsync
+f5_command
+
 ## Release 1.5.4
 ### Summary
 This release fixes the `f5_iapp` type to cause changes in the variables of an F5 iApp to trigger a re-deploy of the dependent F5 resources.
