@@ -28,9 +28,6 @@ describe 'f5_persistencehash' do
        match_across_services           => 'disabled',
        match_across_virtuals           => 'disabled',
        hash_algorithm                  => 'default',
-       hash_offset                     => '0',
-       hash_length                     => '0',
-       hash_buffer_limit               => '0',
        timeout                         => '100',
        override_connection_limit       => 'disabled',
     }
