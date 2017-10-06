@@ -21,7 +21,7 @@ The f5 module enables Puppet management of LTM F5 load balancers by providing ty
 
 ## Warning
 
-Per the information in the [Overview](#overview), this module cannot be used in conjunction with the former module under the namespace of [puppetlabs/f5](https://forge.puppet.com/puppetlabs/f5).  The [puppetlabs/f5](https://forge.puppet.com/puppetlabs/f5) module must be removed before you installing this module.
+Per the information in the [Overview](#overview), this module cannot be used in conjunction with the former, deprecated module under the namespace of [puppetlabs/f5](https://forge.puppet.com/puppetlabs/f5).  The [puppetlabs/f5](https://forge.puppet.com/puppetlabs/f5) module must be removed before you installing this module.  This is recommended as this module will be the only actively maintained module in the future.
 
 ## Module Description
 

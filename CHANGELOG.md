@@ -1,4 +1,4 @@
-## Release 1.6.0
+## Release 1.7.0
 ### Summary
 This release adds new providers for BIG-IP on-boarding, HA clustering:
 - f5_dns
