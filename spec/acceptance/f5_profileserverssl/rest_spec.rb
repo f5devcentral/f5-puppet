@@ -1,6 +1,6 @@
 require 'spec_helper_acceptance'
 
-describe 'serverssl-profile1' do
+describe 'f5_profileserverssl' do
   it 'creates and updates serverssl-profile1' do
     pp=<<-EOS
     f5_profileserverssl {'/Common/serverssl-profile1':
