@@ -20,11 +20,24 @@ Puppet::Type.newtype(:f5_profileclientssl) do
 
   newproperty(:description, :parent => Puppet::Property::F5Description)
 
- newproperty(:cert) do
+  newproperty(:cert) do
+    desc "cert"
   end
 
- newproperty(:key) do
+  newproperty(:key) do
+    desc "key"
   end
+
+  newproperty(:proxy_ssl, :parent => Puppet::Property::F5truthy) do
+    desc "Valid values are 'enabled' or 'disabled'."
+    truthy_property('Fail Safe')
+  end
+
+  newproperty(:proxy_ssl_passthrough, :parent => Puppet::Property::F5truthy) do
+    desc "Valid values are 'enabled' or 'disabled'."
+    truthy_property('Fail Safe')
+  end
+
 
   newproperty(:ssl_forward_proxy, :parent => Puppet::Property::F5truthy) do
     desc "Valid values are 'enabled' or 'disabled'."
