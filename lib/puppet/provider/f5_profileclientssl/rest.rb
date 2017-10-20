@@ -6,7 +6,6 @@ Puppet::Type.type(:f5_profileclientssl).provide(:rest, parent: Puppet::Provider:
   def self.instances
     instances = []
     profiles = Puppet::Provider::F5.call_items('/mgmt/tm/ltm/profile/client-ssl')
-puts profiles
     return [] if profiles.nil?
 
     profiles.each do |profile|
@@ -18,6 +17,8 @@ puts profiles
         description:                 profile['description'],
         cert:                        profile['cert'],
         key:                         profile['key'],
+        proxy_ssl:                  profile['proxySsl'],
+        proxy_ssl_passthrough:      profile['proxySslPassthrough'],
         ssl_forward_proxy:           profile['sslForwardProxy'],
         ssl_forward_proxy_bypass:    profile['sslForwardProxyBypass'],
         peer_cert_mode:              profile['peerCertMode'],
@@ -55,12 +56,13 @@ puts profiles
 
     # Map for conversion in the message.
     map = {
-      :'peer_cert_mode'          => :peerCertMode,
-      :'ssl-forward-proxy'         => :sslForwardProxy,
-      :'ssl-forward-proxy-bypass'  => :sslForwardProxyBypass,
-      :'peer_cert_mode'            => :peerCertMode,
-      :'retain_certificate'          => :retainCertificate,
-      :'authenticate_depth'          => :authenticateDepth,
+      :'proxy-ssl'               => :proxySsl,
+      :'proxy-ssl-passthrough'               => :proxySslPassthrough,
+      :'peer-cert-mode'          => :peerCertMode,
+      :'expire-cert-response_control'          => :expireCertResponseControl,
+      :'untrusted-cert-response-control'          => :untrustedCertResponseControl,
+      :'retain-certificate'          => :retainCertificate,
+      :'authenticate-depth'          => :authenticateDepth,
     }
 
     message = strip_nil_values(message)
@@ -70,8 +72,6 @@ puts profiles
     message = rename_keys(map, message)
     message = string_to_integer(message)
 
-puts "1111111111111111"
-puts message
     message.to_json
   end
 
