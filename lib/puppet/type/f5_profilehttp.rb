@@ -22,7 +22,7 @@ Puppet::Type.newtype(:f5_profilehttp) do
     desc "fallbackHost"
   end
 
-  newproperty(:fallback_status_codes, array_matching => :all) do
+  newproperty(:fallback_status_codes, :array_matching => :all) do
     desc "fallback_status_codes"
   end
 
