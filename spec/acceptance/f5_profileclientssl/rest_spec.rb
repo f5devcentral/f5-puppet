@@ -1,9 +1,9 @@
 require 'spec_helper_acceptance'
 
-describe 'f5_profileserverssl' do
+describe 'f5_profileclientssl' do
   it 'creates and updates serverssl-profile1' do
     pp=<<-EOS
-    f5_profileserverssl {'/Common/serverssl-profile1':
+    f5_profileclientssl {'/Common/clientssl-profile1':
        ensure                          => 'present',
        cert                            =>"/Common/default.crt",
        key                             =>"/Common/default.key",
@@ -31,9 +31,9 @@ describe 'f5_profileserverssl' do
     # run_device(:allow_changes => false)    
   end
 
-  it 'deletes f5_profileserverssl' do
+  it 'deletes f5_profileclientssl' do
     pp=<<-EOS
-    f5_profileserverssl {'/Common/serverssl-profile1':
+    f5_profileclientssl {'/Common/clientssl-profile1':
       ensure => 'absent',
     }    
     EOS
