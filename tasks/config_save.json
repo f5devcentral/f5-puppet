@@ -1,0 +1,11 @@
+{
+  "description": "Save the running configuration of an F5 device",
+  "input_method": "stdin",
+  "supports_noop": true,
+  "parameters": {
+    "target": {
+      "description": "The name of a device in device.conf on the (proxy) Puppet agent",
+      "type": "String[1]"
+    }
+  }
+}
