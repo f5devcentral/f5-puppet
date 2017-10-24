@@ -244,7 +244,9 @@ Puppet::Type.newtype(:f5_pool) do
       end
     end
     munge do |value|
-      value['port'] = value['port'].to_s
+      if value.is_a?(Hash)
+        value['port'] = value['port'].to_s
+      end
       value
     end
   end
