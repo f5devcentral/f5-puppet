@@ -6,6 +6,7 @@ group :development, :unit_tests do
   gem 'rspec-puppet',                  :require => false
   gem 'puppetlabs_spec_helper',        :require => false
   gem 'puppet-lint',                   :require => false
+  gem 'metadata-json-lint',            :require => false
   gem 'pry',                           :require => false
   gem 'parallel_tests', '< 2.10.0',    :require => false if Gem::Version.new(RUBY_VERSION.dup) < Gem::Version.new('2.0.0')
   gem 'parallel_tests',                :require => false if Gem::Version.new(RUBY_VERSION.dup) >= Gem::Version.new('2.0.0')
