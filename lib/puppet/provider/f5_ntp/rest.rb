@@ -1,4 +1,4 @@
-require 'puppet/provider/f5'
+require File.join(File.dirname(__FILE__), '../f5')
 require 'json'
 
 Puppet::Type.type(:f5_ntp).provide(:rest, parent: Puppet::Provider::F5) do
