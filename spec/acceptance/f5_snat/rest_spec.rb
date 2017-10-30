@@ -11,6 +11,7 @@ describe 'f5_snat' do
        ensure   => 'present',
        snatpool => ['/Common/snat-pool1'],
        origins  => [{"name"=>"10.0.0.0/8"}],
+    }
     EOS
     make_site_pp(pp)
     run_device(:allow_changes => true)
@@ -20,6 +21,7 @@ describe 'f5_snat' do
        ensure   => 'present',
        snatpool => ['/Common/snat-pool1'],
        origins  => [{"name"=> "10.0.0.0/8"}, {"name"=> "11.0.0.0/8"}],
+    }
     EOS
     make_site_pp(pp2)
     run_device(:allow_changes => true)
