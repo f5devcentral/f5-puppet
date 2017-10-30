@@ -9,7 +9,7 @@ describe 'f5_snat' do
     }
     f5_snat { '/Common/snat_list1':
        ensure   => 'present',
-       snatpool => ['/Common/snat-pool1'],
+       snatpool => ['/Common/snat_pool1'],
        origins  => [{"name"=>"10.0.0.0/8"}],
     }
     EOS
@@ -19,7 +19,7 @@ describe 'f5_snat' do
     pp2=<<-EOS
     f5_snat { '/Common/snat_list1':
        ensure   => 'present',
-       snatpool => ['/Common/snat-pool1'],
+       snatpool => ['/Common/snat_pool1'],
        origins  => [{"name"=> "10.0.0.0/8"}, {"name"=> "11.0.0.0/8"}],
     }
     EOS
