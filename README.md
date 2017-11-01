@@ -206,6 +206,21 @@ If you have a '/Common/http_monitor' (which is available by default), then when 
 * [f5_devicegroup](#f5_devicegroup): Manage device groups on a BIG-IP.
 * [f5_configsync](#f5_configsync): Perform initial sync of the Device Group.
 * [f5_command](#f5_command): Run arbitrary TMSH command on the Big-IP system.
+* [f5_persistencecookie](#f5_persistencecookie): 
+* [f5_persistencedestaddr](#f5_persistencedestaddr):
+* [f5_persistencehash](#f5_persistencehash):
+* [f5_persistencesourceaddr](#f5_persistencesourceaddr):
+* [f5_persistencessl](#f5_persistencessl):
+* [f5_persistenceuniversal](#f5_persistenceuniversal):
+* [f5_profilehttp](#f5_profilehttp):
+* [f5_profileclientssl](#f5_profileclientssl):
+* [f5_profileserverssl](#f5_profileserverssl):
+* [f5_sslkey](#f5_sslkey):
+* [f5_sslcertificate](#f5_sslcertificate):
+* [f5_snat](#f5_snat):
+* [f5_snatpool](#f5_snatpool):
+* [f5_datagroup](#f5_datagroup):
+* [f5_datagroupexternal](#f5_datagroupexternal):
 
 
 ### Type: f5_iapp
