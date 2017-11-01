@@ -1893,7 +1893,889 @@ Specifies the command to send to the remote BIG-IP device over the configured pr
   }
 ~~~
 
+### f5_persistencecookie
 
+Manage device groups on a BIG-IP. Managing device groups allows you to create HA pairs and clusters of BIG-IP devices.
+
+#### Parameters
+
+###### name
+
+Specifies the name of device group to manage.
+
+Valid options: a string.
+
+##### description
+
+Sets the description of the device group.
+
+Valid options: a string.
+
+##### ensure
+
+Determines whether the device group resource is present or absent.
+
+Valid options: 'present' or 'absent'.
+
+##### type
+
+Specifies if the device-group will be used for failover or resource syncing
+
+Valid options: a string.
+
+##### auto_sync
+
+Specifies if the device-group will automatically sync configuration data to its members
+
+Valid options: a string.
+
+##### devices
+
+An array of devices to be added to the device group.
+
+#### Example
+
+##### Create a device group
+~~puppet
+  f5_devicegroup{ '/Common/DeviceGroup1':
+    ensure    => 'present',
+    type      => 'sync-failover',
+    auto_sync => 'enabled',
+    devices   => [ "bigip-a.f5.local","bigip-b.f5.local" ],
+  }
+~~
+
+##### Delete a device group
+~~puppet
+  f5_devicegroup{ '/Common/DeviceGroup1':
+    ensure => 'absent',
+  }
+~~
+
+### f5_persistencedestaddr
+
+Manage device groups on a BIG-IP. Managing device groups allows you to create HA pairs and clusters of BIG-IP devices.
+
+#### Parameters
+
+###### name
+
+Specifies the name of device group to manage.
+
+Valid options: a string.
+
+##### description
+
+Sets the description of the device group.
+
+Valid options: a string.
+
+##### ensure
+
+Determines whether the device group resource is present or absent.
+
+Valid options: 'present' or 'absent'.
+
+##### type
+
+Specifies if the device-group will be used for failover or resource syncing
+
+Valid options: a string.
+
+##### auto_sync
+
+Specifies if the device-group will automatically sync configuration data to its members
+
+Valid options: a string.
+
+##### devices
+
+An array of devices to be added to the device group.
+
+#### Example
+
+##### Create a device group
+~puppet
+  f5_devicegroup{ '/Common/DeviceGroup1':
+    ensure    => 'present',
+    type      => 'sync-failover',
+    auto_sync => 'enabled',
+    devices   => [ "bigip-a.f5.local","bigip-b.f5.local" ],
+  }
+~
+
+##### Delete a device group
+~puppet
+  f5_devicegroup{ '/Common/DeviceGroup1':
+    ensure => 'absent',
+  }
+~
+
+### f5_persistencehash
+
+Manage device groups on a BIG-IP. Managing device groups allows you to create HA pairs and clusters of BIG-IP devices.
+
+#### Parameters
+
+###### name
+
+Specifies the name of device group to manage.
+
+Valid options: a string.
+
+##### description
+
+Sets the description of the device group.
+
+Valid options: a string.
+
+##### ensure
+
+Determines whether the device group resource is present or absent.
+
+Valid options: 'present' or 'absent'.
+
+##### type
+
+Specifies if the device-group will be used for failover or resource syncing
+
+Valid options: a string.
+
+##### auto_sync
+
+Specifies if the device-group will automatically sync configuration data to its members
+
+Valid options: a string.
+
+##### devices
+
+An array of devices to be added to the device group.
+
+#### Example
+
+##### Create a device group
+~puppet
+  f5_devicegroup{ '/Common/DeviceGroup1':
+    ensure    => 'present',
+    type      => 'sync-failover',
+    auto_sync => 'enabled',
+    devices   => [ "bigip-a.f5.local","bigip-b.f5.local" ],
+  }
+~
+
+##### Delete a device group
+~puppet
+  f5_devicegroup{ '/Common/DeviceGroup1':
+    ensure => 'absent',
+  }
+~
+
+### f5_persistencesourceaddr
+
+Manage device groups on a BIG-IP. Managing device groups allows you to create HA pairs and clusters of BIG-IP devices.
+
+#### Parameters
+
+###### name
+
+Specifies the name of device group to manage.
+
+Valid options: a string.
+
+##### description
+
+Sets the description of the device group.
+
+Valid options: a string.
+
+##### ensure
+
+Determines whether the device group resource is present or absent.
+
+Valid options: 'present' or 'absent'.
+
+##### type
+
+Specifies if the device-group will be used for failover or resource syncing
+
+Valid options: a string.
+
+##### auto_sync
+
+Specifies if the device-group will automatically sync configuration data to its members
+
+Valid options: a string.
+
+##### devices
+
+An array of devices to be added to the device group.
+
+#### Example
+
+##### Create a device group
+~puppet
+  f5_devicegroup{ '/Common/DeviceGroup1':
+    ensure    => 'present',
+    type      => 'sync-failover',
+    auto_sync => 'enabled',
+    devices   => [ "bigip-a.f5.local","bigip-b.f5.local" ],
+  }
+~
+
+##### Delete a device group
+~puppet
+  f5_devicegroup{ '/Common/DeviceGroup1':
+    ensure => 'absent',
+  }
+~
+
+### f5_persistencessl
+
+Manage device groups on a BIG-IP. Managing device groups allows you to create HA pairs and clusters of BIG-IP devices.
+
+#### Parameters
+
+###### name
+
+Specifies the name of device group to manage.
+
+Valid options: a string.
+
+##### description
+
+Sets the description of the device group.
+
+Valid options: a string.
+
+##### ensure
+
+Determines whether the device group resource is present or absent.
+
+Valid options: 'present' or 'absent'.
+
+##### type
+
+Specifies if the device-group will be used for failover or resource syncing
+
+Valid options: a string.
+
+##### auto_sync
+
+Specifies if the device-group will automatically sync configuration data to its members
+
+Valid options: a string.
+
+##### devices
+
+An array of devices to be added to the device group.
+
+#### Example
+
+##### Create a device group
+~puppet
+  f5_devicegroup{ '/Common/DeviceGroup1':
+    ensure    => 'present',
+    type      => 'sync-failover',
+    auto_sync => 'enabled',
+    devices   => [ "bigip-a.f5.local","bigip-b.f5.local" ],
+  }
+~
+
+##### Delete a device group
+~puppet
+  f5_devicegroup{ '/Common/DeviceGroup1':
+    ensure => 'absent',
+  }
+~
+
+### f5_persistenceuniversal
+
+Manage device groups on a BIG-IP. Managing device groups allows you to create HA pairs and clusters of BIG-IP devices.
+
+#### Parameters
+
+###### name
+
+Specifies the name of device group to manage.
+
+Valid options: a string.
+
+##### description
+
+Sets the description of the device group.
+
+Valid options: a string.
+
+##### ensure
+
+Determines whether the device group resource is present or absent.
+
+Valid options: 'present' or 'absent'.
+
+##### type
+
+Specifies if the device-group will be used for failover or resource syncing
+
+Valid options: a string.
+
+##### auto_sync
+
+Specifies if the device-group will automatically sync configuration data to its members
+
+Valid options: a string.
+
+##### devices
+
+An array of devices to be added to the device group.
+
+#### Example
+
+##### Create a device group
+~puppet
+  f5_devicegroup{ '/Common/DeviceGroup1':
+    ensure    => 'present',
+    type      => 'sync-failover',
+    auto_sync => 'enabled',
+    devices   => [ "bigip-a.f5.local","bigip-b.f5.local" ],
+  }
+~
+
+##### Delete a device group
+~puppet
+  f5_devicegroup{ '/Common/DeviceGroup1':
+    ensure => 'absent',
+  }
+~
+
+### f5_profilehttp
+
+Manage device groups on a BIG-IP. Managing device groups allows you to create HA pairs and clusters of BIG-IP devices.
+
+#### Parameters
+
+###### name
+
+Specifies the name of device group to manage.
+
+Valid options: a string.
+
+##### description
+
+Sets the description of the device group.
+
+Valid options: a string.
+
+##### ensure
+
+Determines whether the device group resource is present or absent.
+
+Valid options: 'present' or 'absent'.
+
+##### type
+
+Specifies if the device-group will be used for failover or resource syncing
+
+Valid options: a string.
+
+##### auto_sync
+
+Specifies if the device-group will automatically sync configuration data to its members
+
+Valid options: a string.
+
+##### devices
+
+An array of devices to be added to the device group.
+
+#### Example
+
+##### Create a device group
+~puppet
+  f5_devicegroup{ '/Common/DeviceGroup1':
+    ensure    => 'present',
+    type      => 'sync-failover',
+    auto_sync => 'enabled',
+    devices   => [ "bigip-a.f5.local","bigip-b.f5.local" ],
+  }
+~
+
+##### Delete a device group
+~puppet
+  f5_devicegroup{ '/Common/DeviceGroup1':
+    ensure => 'absent',
+  }
+~
+
+### f5_profileclientssl
+
+Manage device groups on a BIG-IP. Managing device groups allows you to create HA pairs and clusters of BIG-IP devices.
+
+#### Parameters
+
+###### name
+
+Specifies the name of device group to manage.
+
+Valid options: a string.
+
+##### description
+
+Sets the description of the device group.
+
+Valid options: a string.
+
+##### ensure
+
+Determines whether the device group resource is present or absent.
+
+Valid options: 'present' or 'absent'.
+
+##### type
+
+Specifies if the device-group will be used for failover or resource syncing
+
+Valid options: a string.
+
+##### auto_sync
+
+Specifies if the device-group will automatically sync configuration data to its members
+
+Valid options: a string.
+
+##### devices
+
+An array of devices to be added to the device group.
+
+#### Example
+
+##### Create a device group
+~puppet
+  f5_devicegroup{ '/Common/DeviceGroup1':
+    ensure    => 'present',
+    type      => 'sync-failover',
+    auto_sync => 'enabled',
+    devices   => [ "bigip-a.f5.local","bigip-b.f5.local" ],
+  }
+~
+
+##### Delete a device group
+~puppet
+  f5_devicegroup{ '/Common/DeviceGroup1':
+    ensure => 'absent',
+  }
+~
+
+### f5_profileserverssl
+
+Manage device groups on a BIG-IP. Managing device groups allows you to create HA pairs and clusters of BIG-IP devices.
+
+#### Parameters
+
+###### name
+
+Specifies the name of device group to manage.
+
+Valid options: a string.
+
+##### description
+
+Sets the description of the device group.
+
+Valid options: a string.
+
+##### ensure
+
+Determines whether the device group resource is present or absent.
+
+Valid options: 'present' or 'absent'.
+
+##### type
+
+Specifies if the device-group will be used for failover or resource syncing
+
+Valid options: a string.
+
+##### auto_sync
+
+Specifies if the device-group will automatically sync configuration data to its members
+
+Valid options: a string.
+
+##### devices
+
+An array of devices to be added to the device group.
+
+#### Example
+
+##### Create a device group
+~puppet
+  f5_devicegroup{ '/Common/DeviceGroup1':
+    ensure    => 'present',
+    type      => 'sync-failover',
+    auto_sync => 'enabled',
+    devices   => [ "bigip-a.f5.local","bigip-b.f5.local" ],
+  }
+~
+
+##### Delete a device group
+~puppet
+  f5_devicegroup{ '/Common/DeviceGroup1':
+    ensure => 'absent',
+  }
+~
+
+### f5_sslkey
+
+Manage device groups on a BIG-IP. Managing device groups allows you to create HA pairs and clusters of BIG-IP devices.
+
+#### Parameters
+
+###### name
+
+Specifies the name of device group to manage.
+
+Valid options: a string.
+
+##### description
+
+Sets the description of the device group.
+
+Valid options: a string.
+
+##### ensure
+
+Determines whether the device group resource is present or absent.
+
+Valid options: 'present' or 'absent'.
+
+##### type
+
+Specifies if the device-group will be used for failover or resource syncing
+
+Valid options: a string.
+
+##### auto_sync
+
+Specifies if the device-group will automatically sync configuration data to its members
+
+Valid options: a string.
+
+##### devices
+
+An array of devices to be added to the device group.
+
+#### Example
+
+##### Create a device group
+~puppet
+  f5_devicegroup{ '/Common/DeviceGroup1':
+    ensure    => 'present',
+    type      => 'sync-failover',
+    auto_sync => 'enabled',
+    devices   => [ "bigip-a.f5.local","bigip-b.f5.local" ],
+  }
+~
+
+##### Delete a device group
+~puppet
+  f5_devicegroup{ '/Common/DeviceGroup1':
+    ensure => 'absent',
+  }
+~
+
+### f5_sslcertificate
+
+Manage device groups on a BIG-IP. Managing device groups allows you to create HA pairs and clusters of BIG-IP devices.
+
+#### Parameters
+
+###### name
+
+Specifies the name of device group to manage.
+
+Valid options: a string.
+
+##### description
+
+Sets the description of the device group.
+
+Valid options: a string.
+
+##### ensure
+
+Determines whether the device group resource is present or absent.
+
+Valid options: 'present' or 'absent'.
+
+##### type
+
+Specifies if the device-group will be used for failover or resource syncing
+
+Valid options: a string.
+
+##### auto_sync
+
+Specifies if the device-group will automatically sync configuration data to its members
+
+Valid options: a string.
+
+##### devices
+
+An array of devices to be added to the device group.
+
+#### Example
+
+##### Create a device group
+~puppet
+  f5_devicegroup{ '/Common/DeviceGroup1':
+    ensure    => 'present',
+    type      => 'sync-failover',
+    auto_sync => 'enabled',
+    devices   => [ "bigip-a.f5.local","bigip-b.f5.local" ],
+  }
+~
+
+##### Delete a device group
+~puppet
+  f5_devicegroup{ '/Common/DeviceGroup1':
+    ensure => 'absent',
+  }
+~
+
+### f5_snat
+
+Manage device groups on a BIG-IP. Managing device groups allows you to create HA pairs and clusters of BIG-IP devices.
+
+#### Parameters
+
+###### name
+
+Specifies the name of device group to manage.
+
+Valid options: a string.
+
+##### description
+
+Sets the description of the device group.
+
+Valid options: a string.
+
+##### ensure
+
+Determines whether the device group resource is present or absent.
+
+Valid options: 'present' or 'absent'.
+
+##### type
+
+Specifies if the device-group will be used for failover or resource syncing
+
+Valid options: a string.
+
+##### auto_sync
+
+Specifies if the device-group will automatically sync configuration data to its members
+
+Valid options: a string.
+
+##### devices
+
+An array of devices to be added to the device group.
+
+#### Example
+
+##### Create a device group
+~puppet
+  f5_devicegroup{ '/Common/DeviceGroup1':
+    ensure    => 'present',
+    type      => 'sync-failover',
+    auto_sync => 'enabled',
+    devices   => [ "bigip-a.f5.local","bigip-b.f5.local" ],
+  }
+~
+
+##### Delete a device group
+~puppet
+  f5_devicegroup{ '/Common/DeviceGroup1':
+    ensure => 'absent',
+  }
+~
+### f5_snatpool
+
+Manage device groups on a BIG-IP. Managing device groups allows you to create HA pairs and clusters of BIG-IP devices.
+
+#### Parameters
+
+###### name
+
+Specifies the name of device group to manage.
+
+Valid options: a string.
+
+##### description
+
+Sets the description of the device group.
+
+Valid options: a string.
+
+##### ensure
+
+Determines whether the device group resource is present or absent.
+
+Valid options: 'present' or 'absent'.
+
+##### type
+
+Specifies if the device-group will be used for failover or resource syncing
+
+Valid options: a string.
+
+##### auto_sync
+
+Specifies if the device-group will automatically sync configuration data to its members
+
+Valid options: a string.
+
+##### devices
+
+An array of devices to be added to the device group.
+
+#### Example
+
+##### Create a device group
+~puppet
+  f5_devicegroup{ '/Common/DeviceGroup1':
+    ensure    => 'present',
+    type      => 'sync-failover',
+    auto_sync => 'enabled',
+    devices   => [ "bigip-a.f5.local","bigip-b.f5.local" ],
+  }
+~
+
+##### Delete a device group
+~puppet
+  f5_devicegroup{ '/Common/DeviceGroup1':
+    ensure => 'absent',
+  }
+~
+
+### f5_datagroup
+
+Manage device groups on a BIG-IP. Managing device groups allows you to create HA pairs and clusters of BIG-IP devices.
+
+#### Parameters
+
+###### name
+
+Specifies the name of device group to manage.
+
+Valid options: a string.
+
+##### description
+
+Sets the description of the device group.
+
+Valid options: a string.
+
+##### ensure
+
+Determines whether the device group resource is present or absent.
+
+Valid options: 'present' or 'absent'.
+
+##### type
+
+Specifies if the device-group will be used for failover or resource syncing
+
+Valid options: a string.
+
+##### auto_sync
+
+Specifies if the device-group will automatically sync configuration data to its members
+
+Valid options: a string.
+
+##### devices
+
+An array of devices to be added to the device group.
+
+#### Example
+
+##### Create a device group
+~puppet
+  f5_devicegroup{ '/Common/DeviceGroup1':
+    ensure    => 'present',
+    type      => 'sync-failover',
+    auto_sync => 'enabled',
+    devices   => [ "bigip-a.f5.local","bigip-b.f5.local" ],
+  }
+~
+
+##### Delete a device group
+~puppet
+  f5_devicegroup{ '/Common/DeviceGroup1':
+    ensure => 'absent',
+  }
+~
+
+### f5_datagroupexternal
+
+Manage device groups on a BIG-IP. Managing device groups allows you to create HA pairs and clusters of BIG-IP devices.
+
+#### Parameters
+
+###### name
+
+Specifies the name of device group to manage.
+
+Valid options: a string.
+
+##### description
+
+Sets the description of the device group.
+
+Valid options: a string.
+
+##### ensure
+
+Determines whether the device group resource is present or absent.
+
+Valid options: 'present' or 'absent'.
+
+##### type
+
+Specifies if the device-group will be used for failover or resource syncing
+
+Valid options: a string.
+
+##### auto_sync
+
+Specifies if the device-group will automatically sync configuration data to its members
+
+Valid options: a string.
+
+##### devices
+
+An array of devices to be added to the device group.
+
+#### Example
+
+##### Create a device group
+~puppet
+  f5_devicegroup{ '/Common/DeviceGroup1':
+    ensure    => 'present',
+    type      => 'sync-failover',
+    auto_sync => 'enabled',
+    devices   => [ "bigip-a.f5.local","bigip-b.f5.local" ],
+  }
+~
+
+##### Delete a device group
+~puppet
+  f5_devicegroup{ '/Common/DeviceGroup1':
+    ensure => 'absent',
+  }
+~
 ## Limitations
 
 F5 version v12.1 or greater.
