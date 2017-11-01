@@ -218,7 +218,7 @@ If you have a '/Common/http_monitor' (which is available by default), then when 
 * [f5_sslkey](#f5_sslkey):
 * [f5_sslcertificate](#f5_sslcertificate):
 * [f5_snat](#f5_snat):
-* [f5_snatpool](#f5_snatpool):
+* [f5_snatpool](#f5_snatpool): Manage SNAT pools on a BIG-IP
 * [f5_datagroup](#f5_datagroup):
 * [f5_datagroupexternal](#f5_datagroupexternal):
 
@@ -2602,62 +2602,48 @@ An array of devices to be added to the device group.
 ~
 ### f5_snatpool
 
-Manage device groups on a BIG-IP. Managing device groups allows you to create HA pairs and clusters of BIG-IP devices.
+Manage SNAT pools on a BIG-IP
 
 #### Parameters
 
 ###### name
 
-Specifies the name of device group to manage.
+Specifies the name of the SNAT pool member.
 
 Valid options: a string.
 
 ##### description
 
-Sets the description of the device group.
+Sets the description of the SNAT pool.
 
 Valid options: a string.
 
 ##### ensure
 
-Determines whether the device group resource is present or absent.
+Determines whether the SNAT pool resource is present or absent.
 
 Valid options: 'present' or 'absent'.
 
-##### type
+##### members
 
-Specifies if the device-group will be used for failover or resource syncing
-
-Valid options: a string.
-
-##### auto_sync
-
-Specifies if the device-group will automatically sync configuration data to its members
-
-Valid options: a string.
-
-##### devices
-
-An array of devices to be added to the device group.
+An array of SNAT pool members that belong to this SNAT pool.
 
 #### Example
 
 ##### Create a device group
-~puppet
-  f5_devicegroup{ '/Common/DeviceGroup1':
-    ensure    => 'present',
-    type      => 'sync-failover',
-    auto_sync => 'enabled',
-    devices   => [ "bigip-a.f5.local","bigip-b.f5.local" ],
+~~~puppet
+  f5_snatpool { '/Common/snat_pool1':
+    ensure  => 'present',
+    members => ["/Common/1.1.1.1", "/Common/1.1.1.2", "/Common/1.1.1.3"],
   }
-~
+~~~
 
 ##### Delete a device group
-~puppet
-  f5_devicegroup{ '/Common/DeviceGroup1':
+~~~puppet
+  f5_snatpool { '/Common/snat_pool1':
     ensure => 'absent',
   }
-~
+~~~
 
 ### f5_datagroup
 
