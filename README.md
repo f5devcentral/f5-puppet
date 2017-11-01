@@ -206,12 +206,12 @@ If you have a '/Common/http_monitor' (which is available by default), then when 
 * [f5_devicegroup](#f5_devicegroup): Manage device groups on a BIG-IP.
 * [f5_configsync](#f5_configsync): Perform initial sync of the Device Group.
 * [f5_command](#f5_command): Run arbitrary TMSH command on the Big-IP system.
-* [f5_persistencecookie](#f5_persistencecookie): 
-* [f5_persistencedestaddr](#f5_persistencedestaddr):
-* [f5_persistencehash](#f5_persistencehash):
-* [f5_persistencesourceaddr](#f5_persistencesourceaddr):
-* [f5_persistencessl](#f5_persistencessl):
-* [f5_persistenceuniversal](#f5_persistenceuniversal):
+* [f5_persistencecookie](#f5_persistencecookie): Manage Virtual server Cookie persistence profile on a BIG-IP
+* [f5_persistencedestaddr](#f5_persistencedestaddr): Manage Virtual server Destination Address Affinity persistence profile on a BIG-IP
+* [f5_persistencehash](#f5_persistencehash): Manage Virtual server Hash persistence profile on a BIG-IP
+* [f5_persistencesourceaddr](#f5_persistencesourceaddr): Manage Virtual server Source Address persistence profile on a BIG-IP
+* [f5_persistencessl](#f5_persistencessl): Manaage Virtual server SSL persistence profile on a BIG-IP
+* [f5_persistenceuniversal](#f5_persistenceuniversal): Manage Virtual server Universal persistence profile on a BIG-IP
 * [f5_profilehttp](#f5_profilehttp):
 * [f5_profileclientssl](#f5_profileclientssl):
 * [f5_profileserverssl](#f5_profileserverssl):
@@ -1895,55 +1895,83 @@ Specifies the command to send to the remote BIG-IP device over the configured pr
 
 ### f5_persistencecookie
 
-Manage device groups on a BIG-IP. Managing device groups allows you to create HA pairs and clusters of BIG-IP devices.
+Manage Virtual server Cookie persistence profile
 
 #### Parameters
 
 ###### name
 
-Specifies the name of device group to manage.
+Specifies the name of Cookie persistence profile to manage.
 
 Valid options: a string.
 
 ##### description
 
-Sets the description of the device group.
+Sets the description of the Cookie persistence profile.
 
 Valid options: a string.
 
 ##### ensure
 
-Determines whether the device group resource is present or absent.
+Determines whether the Cookie persistence profile resource is present or absent.
 
 Valid options: 'present' or 'absent'.
 
-##### type
+##### method
 
-Specifies if the device-group will be used for failover or resource syncing
-
-Valid options: a string.
-
-##### auto_sync
-
-Specifies if the device-group will automatically sync configuration data to its members
+Specifies the type of cookie processing that the system uses. The default value is insert.
 
 Valid options: a string.
 
-##### devices
+##### cookie_name
 
-An array of devices to be added to the device group.
+Specifies a unique name for the profile.
+
+Valid options: a string.
+
+##### httponly
+
+Specifies whether the httponly attribute should be enabled or disabled for the inserted cookies. The default value is enabled.
+
+Valid options: 'enabled', 'disabled'
+
+##### secure
+
+Specifies whether the secure attribute should be enabled or disabled for the inserted cookies
+
+Valid options: 'enabled', 'disabled'
+
+##### always_send
+
+Specifies, when enabled, that the cookie persistence entry will be sent to the client on every response, rather than only on the first response. 
+
+Valid options: 'enabled', 'disabled'
+
+##### expiration
+
+Specifies the cookie expiration date in the format d:h:m:s, h:m:s, m:s or seconds. Hours 0-23, minutes 0-59, seconds 0-59. The time period must be less than 24856 days. You can use "session-cookie" (0 seconds) to indicate that the cookie expires when the browser closes.
+
+##### cookie_encryption
+
+Specifies the way in which cookie format will be used: "disabled": generate old format,unencrypted, "preferred": generate encrypted cookie but accept both encrypted and old format, and "required": cookie format must be encrypted. Default is required.
+
+Valid options: 'enabled', 'disabled'
 
 #### Example
 
 ##### Create a device group
-~~puppet
-  f5_devicegroup{ '/Common/DeviceGroup1':
-    ensure    => 'present',
-    type      => 'sync-failover',
-    auto_sync => 'enabled',
-    devices   => [ "bigip-a.f5.local","bigip-b.f5.local" ],
-  }
-~~
+~~~puppet
+  f5_persistencecookie { '/Common/cookie1':
+    ensure            => 'present',
+    method            => 'insert',
+    cookie_name       => 'name1',
+    httponly          => 'enabled',
+    secure            => 'enabled',
+    always_send       => 'disabled',
+    expiration        => '0',
+    cookie_encryption => 'disabled',
+}
+~~~
 
 ##### Delete a device group
 ~~puppet
