@@ -1921,7 +1921,7 @@ Valid options: 'present' or 'absent'.
 
 Specifies the type of cookie processing that the system uses. The default value is insert.
 
-Valid options: a string.
+Valid options: 'insert', 'passive', 'rewrite'
 
 ##### cookie_name
 
@@ -1959,7 +1959,7 @@ Valid options: 'enabled', 'disabled'
 
 #### Example
 
-##### Create a device group
+##### Create a Cookie persistence profile
 ~~~puppet
   f5_persistencecookie { '/Common/cookie1':
     ensure            => 'present',
@@ -1973,71 +1973,102 @@ Valid options: 'enabled', 'disabled'
 }
 ~~~
 
-##### Delete a device group
-~~puppet
-  f5_devicegroup{ '/Common/DeviceGroup1':
+##### Delete a Cookie persistence profile
+~~~puppet
+  f5_persistencecookie { '/Common/cookie1':
     ensure => 'absent',
   }
-~~
+~~~
 
 ### f5_persistencedestaddr
 
-Manage device groups on a BIG-IP. Managing device groups allows you to create HA pairs and clusters of BIG-IP devices.
+Manage Virtual server Destination Address Affinity persistence profile on a BIG-IP
 
 #### Parameters
 
 ###### name
 
-Specifies the name of device group to manage.
+Specifies the name of Destination Address Affinity persistence profile to manage
 
 Valid options: a string.
 
 ##### description
 
-Sets the description of the device group.
+Sets the description of the Destination Address Affinity persistence profile
 
 Valid options: a string.
 
 ##### ensure
 
-Determines whether the device group resource is present or absent.
+Determines whether the persistence profile resource is present or absent.
 
 Valid options: 'present' or 'absent'.
 
-##### type
+##### match_across_pools
 
-Specifies if the device-group will be used for failover or resource syncing
+Specifies, when enabled, that the system can use any pool that contains this persistence record. The default value is disabled.
 
-Valid options: a string.
+Valid options: 'enabled', 'disabled'
 
-##### auto_sync
+##### match_across_services
 
-Specifies if the device-group will automatically sync configuration data to its members
+Specifies, when enabled, that all persistent connections from a client IP address, which go to the same virtual IP address, also go to the same node. The default value is disabled.
 
-Valid options: a string.
+Valid options: 'enabled', 'disabled'
 
-##### devices
+##### match_across_virtuals
 
-An array of devices to be added to the device group.
+Specifies, when enabled, that all persistent connections from the same client IP address go to the same node. The default value is disabled.
+
+Valid options: 'enabled', 'disabled'
+
+##### hash_algorithm
+
+Specifies whether the system uses the hash algorithm defined by the Cache Array Routing Protocol (CARP) to select a pool member.
+
+Valid options: default, 'carp'.
+
+##### mask
+
+Specifies an IP mask. This is the mask used by simple persistence for connections.
+
+Valid options: Netmask
+
+##### timeout
+
+Specifies the duration of the persistence entries. The default value is 180 seconds.
+
+Valid options: an integer.
+
+##### override_connection_limit
+
+Specifies, when enabled, that the pool member connection limits are not enforced for persisted clients. Per-virtual connection limits remain hard limits and are not disabled. The default value is disabled.
+
+Valid options: 'enabled', 'disabled'
+
 
 #### Example
 
-##### Create a device group
-~puppet
-  f5_devicegroup{ '/Common/DeviceGroup1':
-    ensure    => 'present',
-    type      => 'sync-failover',
-    auto_sync => 'enabled',
-    devices   => [ "bigip-a.f5.local","bigip-b.f5.local" ],
+##### Create Destination Address Affinity persistence profile
+~~~puppet
+  f5_persistencedestaddr { '/Common/dest_addr1':
+     ensure                    => 'present',
+     match_across_pools        => 'enabled',
+     match_across_services     => 'enabled',
+     match_across_virtuals     => 'enabled',
+     hash_algorithm            => 'carp',
+     mask                      => '255.255.0.0',
+     timeout                   => '180',
+     override_connection_limit => 'enabled',
   }
-~
+~~~
 
-##### Delete a device group
-~puppet
-  f5_devicegroup{ '/Common/DeviceGroup1':
+##### Delete a Destination Address Affinity persistence profile
+~~~puppet
+  f5_persistencedestaddr { '/Common/dest_addr1':
     ensure => 'absent',
   }
-~
+~~~
 
 ### f5_persistencehash
 
