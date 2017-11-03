@@ -109,17 +109,18 @@ In your site.pp, `<devicecertname>.pp` node manifest, or a `profiles::<profile_n
     ],
   }
   f5_virtualserver { '/Common/puppet_vs':
-    ensure                    => 'present',
-    provider                  => 'standard',
-    default_pool              => '/Common/puppet_pool',
-    destination_address       => '192.168.80.100',
-    destination_mask          => '255.255.255.255',
-    http_profile              => '/Common/http',
-    service_port              => '80',
-    protocol                  => 'tcp',
-    source                    => '0.0.0.0/0',
-    vlan_and_tunnel_traffic   => {'enabled' => ['/Common/Client']},
-    require                   => F5_pool['/Common/puppet_pool'],
+    ensure                     => 'present',
+    provider                   => 'standard',
+    default_pool               => '/Common/puppet_pool',
+    destination_address        => '192.168.80.100',
+    destination_mask           => '255.255.255.255',
+    http_profile               => '/Common/http',
+    service_port               => '80',
+    protocol                   => 'tcp',
+    source_address_translation => 'automap',
+    source                     => '0.0.0.0/0',
+    vlan_and_tunnel_traffic    => {'enabled' => ['/Common/Client']},
+    require                    => F5_pool['/Common/puppet_pool'],
   }
 ~~~
 
