@@ -212,7 +212,7 @@ If you have a '/Common/http_monitor' (which is available by default), then when 
 * [f5_persistencesourceaddr](#f5_persistencesourceaddr): Manage Virtual server Source Address persistence profile on a BIG-IP
 * [f5_persistencessl](#f5_persistencessl): Manaage Virtual server SSL persistence profile on a BIG-IP
 * [f5_persistenceuniversal](#f5_persistenceuniversal): Manage Virtual server Universal persistence profile on a BIG-IP
-* [f5_profilehttp](#f5_profilehttp): Manage 
+* [f5_profilehttp](#f5_profilehttp): Manage Virtual server HTTP traffic profile
 * [f5_profileclientssl](#f5_profileclientssl): Manage Virtual server client-side proxy SSL profile
 * [f5_profileserverssl](#f5_profileserverssl): Manage Virtual server server-side proxy SSL profile
 * [f5_sslkey](#f5_sslkey):
@@ -2308,62 +2308,57 @@ An array of devices to be added to the device group.
 
 ### f5_profilehttp
 
-Manage device groups on a BIG-IP. Managing device groups allows you to create HA pairs and clusters of BIG-IP devices.
+Manage Virtual server HTTP traffic profile
 
 #### Parameters
 
 ###### name
 
-Specifies the name of device group to manage.
+Specifies the name of HTTP traffic profile to manage.
 
 Valid options: a string.
 
 ##### description
 
-Sets the description of the device group.
+Sets the description of the HTTP traffic profile
 
 Valid options: a string.
 
 ##### ensure
 
-Determines whether the device group resource is present or absent.
+Determines whether the HTTP traffic profile resource is present or absent.
 
 Valid options: 'present' or 'absent'.
 
-##### type
+##### fallback_host
 
-Specifies if the device-group will be used for failover or resource syncing
-
-Valid options: a string.
-
-##### auto_sync
-
-Specifies if the device-group will automatically sync configuration data to its members
+Specifies an HTTP fallback host. HTTP redirection allows you to redirect HTTP traffic to another protocol identifier, host name, port number, or URI path. For example, if all members of the targeted pool are unavailable (that is, the members are disabled, marked as down, or have exceeded their connection limit), the system can redirect the HTTP request to the fallback host, with the HTTP reply Status Code 302 Found.
 
 Valid options: a string.
 
-##### devices
+##### fallback_status_codes
 
-An array of devices to be added to the device group.
+Specifies one or more three-digit status codes that can be returned by an HTTP server.
+
+Valid options: a string.
 
 #### Example
 
-##### Create a device group
-~puppet
-  f5_devicegroup{ '/Common/DeviceGroup1':
-    ensure    => 'present',
-    type      => 'sync-failover',
-    auto_sync => 'enabled',
-    devices   => [ "bigip-a.f5.local","bigip-b.f5.local" ],
-  }
-~
+##### Create a HTTP traffic profile
+~~~puppet
+    f5_profilehttp { '/Common/http-profile_1':
+       ensure                          => 'present',
+       fallback_host                   => "redirector.siterequest.com",
+       fallback_status_codes           => ['500'],
+    }
+~~~
 
-##### Delete a device group
-~puppet
-  f5_devicegroup{ '/Common/DeviceGroup1':
-    ensure => 'absent',
-  }
-~
+##### Delete a HTTP traffic profile
+~~~puppet
+    f5_profilehttp { '/Common/http-profile_1':
+      ensure => 'absent',
+    }
+~~~
 
 ### f5_profileclientssl
 
