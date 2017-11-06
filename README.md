@@ -214,7 +214,7 @@ If you have a '/Common/http_monitor' (which is available by default), then when 
 * [f5_persistenceuniversal](#f5_persistenceuniversal): Manage Virtual server Universal persistence profile on a BIG-IP
 * [f5_profilehttp](#f5_profilehttp): Manage 
 * [f5_profileclientssl](#f5_profileclientssl): Manage Virtual server client-side proxy SSL profile
-* [f5_profileserverssl](#f5_profileserverssl):
+* [f5_profileserverssl](#f5_profileserverssl): Manage Virtual server server-side proxy SSL profile
 * [f5_sslkey](#f5_sslkey):
 * [f5_sslcertificate](#f5_sslcertificate):
 * [f5_snat](#f5_snat):
@@ -2435,62 +2435,71 @@ Valid options: 'enabled', 'disabled'
 
 ### f5_profileserverssl
 
-Manage device groups on a BIG-IP. Managing device groups allows you to create HA pairs and clusters of BIG-IP devices.
+Manage Virtual server server-side proxy SSL profile
 
 #### Parameters
 
 ###### name
 
-Specifies the name of device group to manage.
+Specifies the name of Virtual server server-side proxy SSL profile to manage.
 
 Valid options: a string.
 
 ##### description
 
-Sets the description of the device group.
+Sets the description of the Virtual server server-side proxy SSL profile
 
 Valid options: a string.
 
 ##### ensure
 
-Determines whether the device group resource is present or absent.
+Determines whether the Virtual server server-side proxy SSL profile resource is present or absent.
 
 Valid options: 'present' or 'absent'.
 
-##### type
+##### cert
 
-Specifies if the device-group will be used for failover or resource syncing
-
-Valid options: a string.
-
-##### auto_sync
-
-Specifies if the device-group will automatically sync configuration data to its members
+Specifies the name of the certificate installed on the traffic management system for the purpose of terminating or initiating an SSL connection. The default value is none.
 
 Valid options: a string.
 
-##### devices
+##### key
 
-An array of devices to be added to the device group.
+Specifies the name of the key installed on the traffic management system for the purpose of terminating or initiating an SSL connection. The default value is none.
+
+Valid options: a string.
+
+##### proxy_ssl
+
+Enables proxy SSL mode, which requires a corresponding client SSL profile with proxy-ssl enabled to allow for modification of application data within an SSL tunnel.
+
+Valid options: 'enabled', 'disabled'
+
+##### proxy_ssl_passthrough
+
+Enables proxy SSL passthrough mode, which requires a corresponding client SSL profile with proxy-ssl-passthrough enabled to allow for modification of application data within an SSL tunnel.
+
+Valid options: 'enabled', 'disabled'
 
 #### Example
 
-##### Create a device group
-~puppet
-  f5_devicegroup{ '/Common/DeviceGroup1':
-    ensure    => 'present',
-    type      => 'sync-failover',
-    auto_sync => 'enabled',
-    devices   => [ "bigip-a.f5.local","bigip-b.f5.local" ],
-  }
-~
+##### Create a server-side proxy SSL profile
+~~~puppet
+    f5_profileserverssl {'/Common/serverssl-profile1':
+       ensure                          => 'present',
+       cert                            =>"/Common/default.crt",
+       key                             =>"/Common/default.key",
+       proxy_ssl                       => 'enabled',
+       proxy_ssl_passthrough           => 'enabled',
+    }
+~~~
 
-##### Delete a device group
-~puppet
-  f5_devicegroup{ '/Common/DeviceGroup1':
-    ensure => 'absent',
-  }
-~
+##### Delete a server-side proxy SSL profile
+~~~puppet
+    f5_profileserverssl {'/Common/serverssl-profile1':
+      ensure => 'absent',
+    }
+~~~
 
 ### f5_sslkey
 
