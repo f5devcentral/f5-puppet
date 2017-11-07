@@ -215,7 +215,7 @@ If you have a '/Common/http_monitor' (which is available by default), then when 
 * [f5_profilehttp](#f5_profilehttp): Manage Virtual server HTTP traffic profile
 * [f5_profileclientssl](#f5_profileclientssl): Manage Virtual server client-side proxy SSL profile
 * [f5_profileserverssl](#f5_profileserverssl): Manage Virtual server server-side proxy SSL profile
-* [f5_sslkey](#f5_sslkey):
+* [f5_sslkey](#f5_sslkey): Import SSL keys from BIG-IP
 * [f5_sslcertificate](#f5_sslcertificate):
 * [f5_snat](#f5_snat):
 * [f5_snatpool](#f5_snatpool): Manage SNAT pools on a BIG-IP
@@ -2498,121 +2498,85 @@ Valid options: 'enabled', 'disabled'
 
 ### f5_sslkey
 
-Manage device groups on a BIG-IP. Managing device groups allows you to create HA pairs and clusters of BIG-IP devices.
+Import SSL keys from BIG-IP. This is achieved by using tmsh mvcommand, and hence has no ensure => absent functionality.
 
 #### Parameters
 
 ###### name
 
-Specifies the name of device group to manage.
+Specifies the name of SSL key to manage.
 
 Valid options: a string.
 
 ##### description
 
-Sets the description of the device group.
+Sets the description of the SSL key. 
 
 Valid options: a string.
 
-##### ensure
+##### keyname
 
-Determines whether the device group resource is present or absent.
-
-Valid options: 'present' or 'absent'.
-
-##### type
-
-Specifies if the device-group will be used for failover or resource syncing
+Specifies name of the key
 
 Valid options: a string.
 
-##### auto_sync
+##### from_local_file
 
-Specifies if the device-group will automatically sync configuration data to its members
+Specifies the exiting key file with full path that the system extracts the key text from.
 
 Valid options: a string.
-
-##### devices
-
-An array of devices to be added to the device group.
 
 #### Example
 
-##### Create a device group
-~puppet
-  f5_devicegroup{ '/Common/DeviceGroup1':
-    ensure    => 'present',
-    type      => 'sync-failover',
-    auto_sync => 'enabled',
-    devices   => [ "bigip-a.f5.local","bigip-b.f5.local" ],
-  }
-~
+##### Create an SSL key
+~~~puppet
+f5_sslkey { '/Common/sslkey':
+    keyname  => "test",
+    from_local_file => "/var/tmp/test.key",
+}
+~~~
 
-##### Delete a device group
-~puppet
-  f5_devicegroup{ '/Common/DeviceGroup1':
-    ensure => 'absent',
-  }
-~
 
 ### f5_sslcertificate
 
-Manage device groups on a BIG-IP. Managing device groups allows you to create HA pairs and clusters of BIG-IP devices.
+Import SSL certificate from BIG-IP. This is achieved by using tmsh mvcommand, and hence has no ensure => absent functionality.
 
 #### Parameters
 
 ###### name
 
-Specifies the name of device group to manage.
+Specifies the name of SSL certificate to manage.
 
 Valid options: a string.
 
 ##### description
 
-Sets the description of the device group.
+Sets the description of the SSL certificate.
 
 Valid options: a string.
 
-##### ensure
+##### certificate_name
 
-Determines whether the device group resource is present or absent.
-
-Valid options: 'present' or 'absent'.
-
-##### type
-
-Specifies if the device-group will be used for failover or resource syncing
+Specifies the name of the certificate
 
 Valid options: a string.
 
-##### auto_sync
+##### rom_local_file
 
-Specifies if the device-group will automatically sync configuration data to its members
+Specifies the exiting certificate file with full path that the system extracts the certificate text from.
 
 Valid options: a string.
 
-##### devices
-
-An array of devices to be added to the device group.
 
 #### Example
 
-##### Create a device group
-~puppet
-  f5_devicegroup{ '/Common/DeviceGroup1':
-    ensure    => 'present',
-    type      => 'sync-failover',
-    auto_sync => 'enabled',
-    devices   => [ "bigip-a.f5.local","bigip-b.f5.local" ],
-  }
-~
-
-##### Delete a device group
-~puppet
-  f5_devicegroup{ '/Common/DeviceGroup1':
-    ensure => 'absent',
-  }
-~
+##### Create an SSL certificate
+~~~puppet
+f5_sslcertificate { '/Common/sslcertificate':
+    certificate_name  => "test",
+    from_local_file => "/var/tmp/test.crt",
+}
+~~~
 
 ### f5_snat
 
