@@ -2781,10 +2781,10 @@ Valid options: a string.
 
 ##### Create an external data group
 ~~~puppet
-f5_datagroupexternal { '/Common/datagroupext1':
-   ensure             => 'present',
-   external_file_name => '/Common/add_dg1',
-}
+    f5_datagroupexternal { '/Common/datagroupext1':
+      ensure             => 'present',
+      external_file_name => '/Common/add_dg1',
+    }
 ~~~
 
 ##### Delete an external data group
