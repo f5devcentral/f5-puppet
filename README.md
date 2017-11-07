@@ -219,8 +219,8 @@ If you have a '/Common/http_monitor' (which is available by default), then when 
 * [f5_sslcertificate](#f5_sslcertificate): Import SSL certificate from BIG-IP
 * [f5_snat](#f5_snat): Manage Secure network address translation (SNAT) 
 * [f5_snatpool](#f5_snatpool): Manage SNAT pools on a BIG-IP
-* [f5_datagroup](#f5_datagroup):
-* [f5_datagroupexternal](#f5_datagroupexternal):
+* [f5_datagroup](#f5_datagroup): Manage Internal data group
+* [f5_datagroupexternal](#f5_datagroupexternal): Manage External data group 
 
 
 ### Type: f5_iapp
@@ -2679,78 +2679,89 @@ An array of SNAT pool members that belong to this SNAT pool.
 
 ### f5_datagroup
 
-Manage device groups on a BIG-IP. Managing device groups allows you to create HA pairs and clusters of BIG-IP devices.
+Manage Internal data group
 
 #### Parameters
 
 ###### name
 
-Specifies the name of device group to manage.
+Specifies the name of Internal data group to manage.
 
 Valid options: a string.
 
 ##### description
 
-Sets the description of the device group.
+Sets the description of the Internal data group 
 
 Valid options: a string.
 
 ##### ensure
 
-Determines whether the device group resource is present or absent.
+Determines whether the Internal data group resource is present or absent.
 
 Valid options: 'present' or 'absent'.
 
 ##### type
 
-Specifies if the device-group will be used for failover or resource syncing
+Specifies the type of data group.
 
-Valid options: a string.
+Valid options: 'ip','string', 'integer'
 
-##### auto_sync
+##### records
 
-Specifies if the device-group will automatically sync configuration data to its members
-
-Valid options: a string.
-
-##### devices
-
-An array of devices to be added to the device group.
+Specifies an IP address, or string  of the string record, or  integer value for the integer record to add to the data group.
 
 #### Example
 
-##### Create a device group
-~puppet
-  f5_devicegroup{ '/Common/DeviceGroup1':
-    ensure    => 'present',
-    type      => 'sync-failover',
-    auto_sync => 'enabled',
-    devices   => [ "bigip-a.f5.local","bigip-b.f5.local" ],
-  }
-~
+##### Create Internal data group
+~~~puppet
+    f5_datagroup { '/Common/datagroup1':
+       ensure                          => 'present',
+       type                            => 'ip',
+       records                         => [{'data' => '', 'name' => '64.12.96.0/19'}, {'data' => '', 'name' => '195.93.16.0/20'}],
+    }
 
-##### Delete a device group
-~puppet
-  f5_devicegroup{ '/Common/DeviceGroup1':
-    ensure => 'absent',
-  }
-~
+    f5_datagroup { '/Common/datagroup2':
+       ensure                          => 'present',
+       type                            => 'string',
+       records                         => [{'data' => '', 'name' => '.gif'}, {'data' => '', 'name' => '.jpg'}],
+    }
+
+    f5_datagroup { '/Common/datagroup3':
+       ensure                          => 'present',
+       type                            => 'integer',
+       records                         => [{'data' => '', 'name' => '1'}, {'data' => '', 'name' => '2'}],
+    }
+~~~
+
+##### Delete Internal data group
+~~~puppet
+    f5_datagroup { '/Common/datagroup1':
+      ensure => 'absent',
+    }    
+    f5_datagroup { '/Common/datagroup2':
+      ensure => 'absent',
+    }  
+    f5_datagroup { '/Common/datagroup3':
+      ensure => 'absent',
+    } 
+~~~
 
 ### f5_datagroupexternal
 
-Manage device groups on a BIG-IP. Managing device groups allows you to create HA pairs and clusters of BIG-IP devices.
+Manage External data group 
 
 #### Parameters
 
 ###### name
 
-Specifies the name of device group to manage.
+Specifies the name of External data group  to manage.
 
 Valid options: a string.
 
 ##### description
 
-Sets the description of the device group.
+Sets the description of the External data group 
 
 Valid options: a string.
 
@@ -2760,40 +2771,29 @@ Determines whether the device group resource is present or absent.
 
 Valid options: 'present' or 'absent'.
 
-##### type
+##### external_file_name
 
-Specifies if the device-group will be used for failover or resource syncing
-
-Valid options: a string.
-
-##### auto_sync
-
-Specifies if the device-group will automatically sync configuration data to its members
+Specifies an external data group file.
 
 Valid options: a string.
-
-##### devices
-
-An array of devices to be added to the device group.
 
 #### Example
 
-##### Create a device group
-~puppet
-  f5_devicegroup{ '/Common/DeviceGroup1':
-    ensure    => 'present',
-    type      => 'sync-failover',
-    auto_sync => 'enabled',
-    devices   => [ "bigip-a.f5.local","bigip-b.f5.local" ],
-  }
-~
+##### Create an external data group
+~~~puppet
+f5_datagroupexternal { '/Common/datagroupext1':
+   ensure             => 'present',
+   external_file_name => '/Common/add_dg1',
+}
+~~~
 
-##### Delete a device group
-~puppet
-  f5_devicegroup{ '/Common/DeviceGroup1':
-    ensure => 'absent',
-  }
-~
+##### Delete an external data group
+~~~puppet
+    f5_datagroupexternal { '/Common/datagroupext1':
+      ensure => 'absent',
+    }
+~~~
+
 ## Limitations
 
 F5 version v12.1 or greater.
