@@ -19,13 +19,9 @@ Puppet::Type.type(:f5_command).provide(:rest, parent: Puppet::Provider::F5) do
     map = {
     }
 
-    message = strip_nil_values(message)
-    message = convert_underscores(message)
-    message = rename_keys(map, message)
-    message = create_message(basename, message)
-    message = string_to_integer(message)
-
-   message = message[:tmsh]
+   command = message[:tmsh]
+   command ="-c " + "\"" + command +"\""
+   message = {"command"=> "run", "utilCmdArgs"=> command }
 
   message.to_json
   end
@@ -35,7 +31,7 @@ Puppet::Type.type(:f5_command).provide(:rest, parent: Puppet::Provider::F5) do
   end
 
   def create
-    result = Puppet::Provider::F5.post("/mgmt/tm/cm/device", message(resource))
+    result = Puppet::Provider::F5.post("/mgmt/tm/util/bash", message(resource))
     # We clear the hash here to stop flush from triggering.
     @property_hash.clear
 

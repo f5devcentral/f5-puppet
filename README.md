@@ -1847,7 +1847,7 @@ Specifies the 'to-group' device group to run a config-sync
 
 ### f5_command
 
-Sends an arbitrary command to an BIG-IP node. TMSH command has no `ensure => absent` functionality.
+Sends an arbitrary command to an BIG-IP node. TMSH command has no `ensure => absent` functionality.It provides a way to execute native tmsh or bash commands ( using the REST API (/mgmt/tm/util/bash)
 
 #### Parameters
 
@@ -1871,11 +1871,7 @@ Specifies the command to send to the remote BIG-IP device over the configured pr
 
 ~~~puppet
   f5_command { '/Common/tmsh':
-    tmsh => {
-      command =>"mv",
-      name    =>"bigip1",
-      target  =>"bigip-a.f5.local",
-    }
+    tmsh  => "tmsh create ltm node 2.2.2.2",
   }
 ~~~
 
