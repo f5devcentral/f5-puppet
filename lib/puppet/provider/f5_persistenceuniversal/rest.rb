@@ -12,15 +12,15 @@ Puppet::Type.type(:f5_persistenceuniversal).provide(:rest, parent: Puppet::Provi
       full_path_uri = universal['fullPath'].gsub('/','~')
 
       instances << new(
-        ensure:                   :present,
-        name:                     universal['fullPath'],
-        description:              universal['description'],
-        mirror:                   universal['mirror'],
-        match_across_pools:       universal['matchAcrossPools'],
-        match_across_services:    universal['matchAcrossServices'],
-        match_across_virtuals:    universal['matchAcrossVirtuals'],
-        timeout:                  universal['timeout'],
-        override_connection_limit: universal['overrideConnectionLimit'],
+        ensure:                     :present,
+        name:                       universal['fullPath'],
+        description:                universal['description'],
+        mirror:                     universal['mirror'],
+        match_across_pools:         universal['matchAcrossPools'],
+        match_across_services:      universal['matchAcrossServices'],
+        match_across_virtuals:      universal['matchAcrossVirtuals'],
+        timeout:                    universal['timeout'],
+        override_connection_limit:  universal['overrideConnectionLimit'],
       )
     end
 

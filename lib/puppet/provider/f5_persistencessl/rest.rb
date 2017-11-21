@@ -12,15 +12,15 @@ Puppet::Type.type(:f5_persistencessl).provide(:rest, parent: Puppet::Provider::F
       full_path_uri = ssl['fullPath'].gsub('/','~')
 
       instances << new(
-        ensure:                   :present,
-        name:                     ssl['fullPath'],
-        description:              ssl['description'],
-        mirror:                   ssl['mirror'],
-        match_across_pools:       ssl['matchAcrossPools'],
-        match_across_services:    ssl['matchAcrossServices'],
-        match_across_virtuals:    ssl['matchAcrossVirtuals'],
-        timeout:                  ssl['timeout'],
-        override_connection_limit: ssl['overrideConnectionLimit'],
+        ensure:                     :present,
+        name:                       ssl['fullPath'],
+        description:                ssl['description'],
+        mirror:                     ssl['mirror'],
+        match_across_pools:         ssl['matchAcrossPools'],
+        match_across_services:      ssl['matchAcrossServices'],
+        match_across_virtuals:      ssl['matchAcrossVirtuals'],
+        timeout:                    ssl['timeout'],
+        override_connection_limit:  ssl['overrideConnectionLimit'],
       )
     end
 

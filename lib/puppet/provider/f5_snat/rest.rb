@@ -15,8 +15,8 @@ Puppet::Type.type(:f5_snat).provide(:rest, parent: Puppet::Provider::F5) do
         ensure:                   :present,
         name:                     profile['fullPath'],
         description:              profile['description'],
-        snatpool:             profile['snatpool'],
-        origins:              profile['origins'],
+        snatpool:                 profile['snatpool'],
+        origins:                  profile['origins'],
       )
     end
 

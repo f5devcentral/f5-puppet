@@ -12,10 +12,10 @@ Puppet::Type.type(:f5_profilehttp).provide(:rest, parent: Puppet::Provider::F5) 
       full_path_uri = profile['fullPath'].gsub('/','~')
 
       instances << new(
-        ensure:                   :present,
-        name:                     profile['fullPath'],
-        description:              profile['description'],
-        fallback_host:             profile['fallbackHost'],
+        ensure:                     :present,
+        name:                       profile['fullPath'],
+        description:                profile['description'],
+        fallback_host:              profile['fallbackHost'],
         fallback_status_codes:      profile['fallbackStatusCodes'],
       )
     end

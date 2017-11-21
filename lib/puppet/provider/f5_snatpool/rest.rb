@@ -15,7 +15,7 @@ Puppet::Type.type(:f5_snatpool).provide(:rest, parent: Puppet::Provider::F5) do
         ensure:                   :present,
         name:                     profile['fullPath'],
         description:              profile['description'],
-        members:              profile['members'],
+        members:                  profile['members'],
       )
     end
 
