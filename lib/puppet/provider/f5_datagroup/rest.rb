@@ -71,7 +71,6 @@ Puppet::Type.type(:f5_datagroup).provide(:rest, parent: Puppet::Provider::F5) do
       message = message.to_json
 
       result = Puppet::Provider::F5.put("/mgmt/tm/ltm/data-group/internal/#{full_path_uri}", message)
-#      result = Puppet::Provider::F5.put("/mgmt/tm/ltm/data-group/internal/#{full_path_uri}", message(resource))
     end
     return result
   end
