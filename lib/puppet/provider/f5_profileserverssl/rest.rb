@@ -69,12 +69,10 @@ Puppet::Type.type(:f5_profileserverssl).provide(:rest, parent: Puppet::Provider:
 
     message = strip_nil_values(message)
     message = convert_underscores(message)
-    #message = gen_sflow(message)
     message = create_message(basename, message)
     message = rename_keys(map, message)
     message = string_to_integer(message)
 
-    # message = {:name=>"serverssl-profile1", "cert"=>"/Common/default.crt", "key"=>"/Common/default.key", "proxySsl"=>"enabled","proxySslPassthrough"=>"enabled"}
     message.to_json
   end
 

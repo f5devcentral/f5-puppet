@@ -62,7 +62,6 @@ Puppet::Type.type(:f5_persistencedestaddr).provide(:rest, parent: Puppet::Provid
 
     message = strip_nil_values(message)
     message = convert_underscores(message)
-    #message = gen_sflow(message)
     message = create_message(basename, message)
     message = rename_keys(map, message)
     message = string_to_integer(message)

@@ -11,22 +11,22 @@ Puppet::Type.type(:f5_persistencehash).provide(:rest, parent: Puppet::Provider::
     hashs.each do |hash|
       full_path_uri = hash['fullPath'].gsub('/','~')
 
-      instances << new(
-        ensure:                    :present,
-        name:                      hash['fullPath'],
-        description:               hash['description'],
-        mirror:                    hash['mirror'],
-        match_across_pools:        hash['matchAcrossPools'],
-        match_across_services:     hash['matchAcrossServices'],
-        match_across_virtuals:     hash['matchAcrossVirtuals'],
-        hash_algorithm:            hash['hashAlgorithm'],
-        hash_offset:               hash['hashOffset'],
-        hash_length:               hash['hashLength'],
-        hash_buffer_limit:         hash['hashBufferLimit'], 
-        rule:                      hash['rule'],
-        timeout:                   hash['timeout'],
-        override_connection_limit: hash['overrideConnectionLimit'],
-      )
+    instances << new(
+      ensure:                    :present,
+      name:                      hash['fullPath'],
+      description:               hash['description'],
+      mirror:                    hash['mirror'],
+      match_across_pools:        hash['matchAcrossPools'],
+      match_across_services:     hash['matchAcrossServices'],
+      match_across_virtuals:     hash['matchAcrossVirtuals'],
+      hash_algorithm:            hash['hashAlgorithm'],
+      hash_offset:               hash['hashOffset'],
+      hash_length:               hash['hashLength'],
+      hash_buffer_limit:         hash['hashBufferLimit'], 
+      rule:                      hash['rule'],
+      timeout:                   hash['timeout'],
+      override_connection_limit: hash['overrideConnectionLimit'],
+    )
     end
 
     instances
@@ -69,7 +69,6 @@ Puppet::Type.type(:f5_persistencehash).provide(:rest, parent: Puppet::Provider::
 
     message = strip_nil_values(message)
     message = convert_underscores(message)
-    #message = gen_sflow(message)
     message = create_message(basename, message)
     message = rename_keys(map, message)
     message = string_to_integer(message)

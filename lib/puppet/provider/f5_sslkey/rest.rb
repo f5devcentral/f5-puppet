@@ -25,7 +25,7 @@ Puppet::Type.type(:f5_sslkey).provide(:rest, parent: Puppet::Provider::F5) do
   end
 
   def exists?
-    @property_hash[:ensure] == :present
+     false
   end
 
   def create

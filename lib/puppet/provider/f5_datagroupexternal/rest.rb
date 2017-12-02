@@ -11,11 +11,11 @@ Puppet::Type.type(:f5_datagroupexternal).provide(:rest, parent: Puppet::Provider
     dgroups.each do |dgroup|
       full_path_uri = dgroup['fullPath'].gsub('/','~')
 
-      instances << new(
-        ensure:                   :present,
-        name:                     dgroup['fullPath'],
-        external_file_name:       dgroup['externalFileName'],
-      )
+    instances << new(
+      ensure:                   :present,
+      name:                     dgroup['fullPath'],
+      external_file_name:       dgroup['externalFileName'],
+    )
     end
 
     instances
@@ -51,7 +51,6 @@ Puppet::Type.type(:f5_datagroupexternal).provide(:rest, parent: Puppet::Provider
 
     message = strip_nil_values(message)
     message = convert_underscores(message)
-    #message = gen_sflow(message)
     message = create_message(basename, message)
     message = rename_keys(map, message)
     message = string_to_integer(message)

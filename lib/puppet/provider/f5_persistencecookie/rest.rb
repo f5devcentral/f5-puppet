@@ -11,18 +11,18 @@ Puppet::Type.type(:f5_persistencecookie).provide(:rest, parent: Puppet::Provider
     cookies.each do |cookie|
       full_path_uri = cookie['fullPath'].gsub('/','~')
 
-      instances << new(
-        ensure:                   :present,
-        name:                     cookie['fullPath'],
-        description:              cookie['description'],
-        method:                   cookie['method'],
-        cookie_name:              cookie['cookieName'],
-        httponly:                 cookie['httponly'],
-        secure:                   cookie['secure'],
-        always_send:              cookie['alwaysSend'],
-        expiration:               cookie['expiration'],
-        cookie_encryption:        cookie['cookieEncryption'],
-      )
+    instances << new(
+      ensure:                   :present,
+      name:                     cookie['fullPath'],
+      description:              cookie['description'],
+      method:                   cookie['method'],
+      cookie_name:              cookie['cookieName'],
+      httponly:                 cookie['httponly'],
+      secure:                   cookie['secure'],
+      always_send:              cookie['alwaysSend'],
+      expiration:               cookie['expiration'],
+      cookie_encryption:        cookie['cookieEncryption'],
+    )
     end
 
     instances
@@ -60,7 +60,6 @@ Puppet::Type.type(:f5_persistencecookie).provide(:rest, parent: Puppet::Provider
 
     message = strip_nil_values(message)
     message = convert_underscores(message)
-    #message = gen_sflow(message)
     message = create_message(basename, message)
     message = rename_keys(map, message)
     message = string_to_integer(message)

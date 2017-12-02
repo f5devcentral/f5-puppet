@@ -16,12 +16,8 @@ Puppet::Type.type(:f5_sslcertificate).provide(:rest, parent: Puppet::Provider::F
     # in the form of a hash.
     message = object.to_hash
 
-    # Map for conversion in the message.
-    map = {
-    }
-
-   message = { "command"=>"install", "name"=> message[:certificate_name], "from-local-file"=> message[:from_local_file] }
-   message.to_json
+    message = { "command"=>"install", "name"=> message[:certificate_name], "from-local-file"=> message[:from_local_file] }
+    message.to_json
   end
 
   def exists?

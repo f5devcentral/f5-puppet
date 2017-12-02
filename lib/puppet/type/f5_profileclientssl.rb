@@ -30,23 +30,23 @@ Puppet::Type.newtype(:f5_profileclientssl) do
 
   newproperty(:proxy_ssl, :parent => Puppet::Property::F5truthy) do
     desc "Valid values are 'enabled' or 'disabled'."
-    truthy_property('Fail Safe')
+    truthy_property("Valid values are 'enabled' or 'disabled'.")
   end
 
   newproperty(:proxy_ssl_passthrough, :parent => Puppet::Property::F5truthy) do
     desc "Valid values are 'enabled' or 'disabled'."
-    truthy_property('Fail Safe')
+    truthy_property("Valid values are 'enabled' or 'disabled'.")
   end
 
 
   newproperty(:ssl_forward_proxy, :parent => Puppet::Property::F5truthy) do
     desc "Valid values are 'enabled' or 'disabled'."
-    truthy_property('Fail Safe')
+    truthy_property("Valid values are 'enabled' or 'disabled'.")
   end
 
   newproperty(:ssl_forward_proxy_bypass, :parent => Puppet::Property::F5truthy) do
     desc "Valid values are 'enabled' or 'disabled'."
-    truthy_property('Fail Safe')
+    truthy_property("Valid values are 'enabled' or 'disabled'.")
   end
 
   newproperty(:peer_cert_mode) do
@@ -61,7 +61,7 @@ Puppet::Type.newtype(:f5_profileclientssl) do
 
   newproperty(:retain_certificate, :parent => Puppet::Property::F5truthy) do
     desc "Valid values are 'enabled' or 'disabled'."
-    truthy_property('Fail Safe')
+    truthy_property("Valid values are 'enabled' or 'disabled'.")
   end
 
   newproperty(:authenticate_depth) do

@@ -11,13 +11,13 @@ Puppet::Type.type(:f5_datagroup).provide(:rest, parent: Puppet::Provider::F5) do
     dgroups.each do |dgroup|
       full_path_uri = dgroup['fullPath'].gsub('/','~')
 
-      instances << new(
-        ensure:                   :present,
-        name:                     dgroup['fullPath'],
-        description:              dgroup['description'],
-        type:                     dgroup['type'],
-        records:                  dgroup['records'],
-      )
+    instances << new(
+      ensure:                   :present,
+      name:                     dgroup['fullPath'],
+      description:              dgroup['description'],
+      type:                     dgroup['type'],
+      records:                  dgroup['records'],
+    )
     end
 
     instances
@@ -52,7 +52,6 @@ Puppet::Type.type(:f5_datagroup).provide(:rest, parent: Puppet::Provider::F5) do
 
     message = strip_nil_values(message)
     message = convert_underscores(message)
-    #message = gen_sflow(message)
     message = create_message(basename, message)
     message = rename_keys(map, message)
     message = string_to_integer(message)

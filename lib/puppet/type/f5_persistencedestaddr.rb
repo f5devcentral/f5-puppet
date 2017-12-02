@@ -35,7 +35,7 @@ Puppet::Type.newtype(:f5_persistencedestaddr) do
 
   newproperty(:hash_algorithm) do
     desc "hash_algorithm."
-    newvalues(:default, :'carp')
+    newvalues(:default, :carp)
   end
 
   newproperty(:mask) do
