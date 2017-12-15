@@ -12,7 +12,6 @@ Puppet::Type.newtype(:f5_sslcertificate) do
   @doc = 'Import SSL Certificates'
 
   apply_to_device
-  ensurable
 
   newparam(:name, :parent => Puppet::Parameter::F5Name, :namevar => true)
 
