@@ -1,24 +1,24 @@
 ## Release 1.8.0
 ### Summary
 This release includes new F5 features for:
-f5_persistencecookie
-f5_persistencedestaddr
-f5_persistencehash
-f5_persistencesourceaddr
-f5_persistencessl
-f5_persistenceuniversal
-f5_profilehttp
-f5_profileclientssl
-f5_profileserverssl
-f5_sslkey
-f5_sslcertificate
-f5_snat
-f5_snatpool
-f5_datagroup
-f5_datagroupexternal
+- f5_persistencecookie
+- f5_persistencedestaddr
+- f5_persistencehash
+- f5_persistencesourceaddr
+- f5_persistencessl
+- f5_persistenceuniversal
+- f5_profilehttp
+- f5_profileclientssl
+- f5_profileserverssl
+- f5_sslkey
+- f5_sslcertificate
+- f5_snat
+- f5_snatpool
+- f5_datagroup
+- f5_datagroupexternal
 
 Updated the design for:
-f5_command
+- f5_command
 
 ## Release 1.7.0
 ### Summary
