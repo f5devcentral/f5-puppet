@@ -207,6 +207,21 @@ If you have a '/Common/http_monitor' (which is available by default), then when 
 * [f5_devicegroup](#f5_devicegroup): Manage device groups on a BIG-IP.
 * [f5_configsync](#f5_configsync): Perform initial sync of the Device Group.
 * [f5_command](#f5_command): Run arbitrary TMSH command on the Big-IP system.
+* [f5_persistencecookie](#f5_persistencecookie): Manage Virtual server Cookie persistence profile on a BIG-IP
+* [f5_persistencedestaddr](#f5_persistencedestaddr): Manage Virtual server Destination Address Affinity persistence profile on a BIG-IP
+* [f5_persistencehash](#f5_persistencehash): Manage Virtual server Hash persistence profile on a BIG-IP
+* [f5_persistencesourceaddr](#f5_persistencesourceaddr): Manage Virtual server Source Address persistence profile on a BIG-IP
+* [f5_persistencessl](#f5_persistencessl): Manaage Virtual server SSL persistence profile on a BIG-IP
+* [f5_persistenceuniversal](#f5_persistenceuniversal): Manage Virtual server Universal persistence profile on a BIG-IP
+* [f5_profilehttp](#f5_profilehttp): Manage Virtual server HTTP traffic profile
+* [f5_profileclientssl](#f5_profileclientssl): Manage Virtual server client-side proxy SSL profile
+* [f5_profileserverssl](#f5_profileserverssl): Manage Virtual server server-side proxy SSL profile
+* [f5_sslkey](#f5_sslkey): Import SSL keys from BIG-IP
+* [f5_sslcertificate](#f5_sslcertificate): Import SSL certificate from BIG-IP
+* [f5_snat](#f5_snat): Manage Secure network address translation (SNAT) 
+* [f5_snatpool](#f5_snatpool): Manage SNAT pools on a BIG-IP
+* [f5_datagroup](#f5_datagroup): Manage Internal data group
+* [f5_datagroupexternal](#f5_datagroupexternal): Manage External data group 
 
 
 ### Type: f5_iapp
@@ -1875,6 +1890,906 @@ Specifies the command to send to the remote BIG-IP device over the configured pr
   }
 ~~~
 
+### f5_persistencecookie
+
+Manage Virtual server Cookie persistence profile
+
+#### Parameters
+
+###### name
+
+Specifies the name of Cookie persistence profile to manage.
+
+Valid options: a string.
+
+##### description
+
+Sets the description of the Cookie persistence profile.
+
+Valid options: a string.
+
+##### ensure
+
+Determines whether the Cookie persistence profile resource is present or absent.
+
+Valid options: 'present' or 'absent'.
+
+##### method
+
+Specifies the type of cookie processing that the system uses. The default value is insert.
+
+Valid options: 'insert', 'passive', 'rewrite'
+
+##### cookie_name
+
+Specifies a unique name for the profile.
+
+Valid options: a string.
+
+##### httponly
+
+Specifies whether the httponly attribute should be enabled or disabled for the inserted cookies. The default value is enabled.
+
+Valid options: 'enabled', 'disabled'
+
+##### secure
+
+Specifies whether the secure attribute should be enabled or disabled for the inserted cookies
+
+Valid options: 'enabled', 'disabled'
+
+##### always_send
+
+Specifies, when enabled, that the cookie persistence entry will be sent to the client on every response, rather than only on the first response. 
+
+Valid options: 'enabled', 'disabled'
+
+##### expiration
+
+Specifies the cookie expiration date in the format d:h:m:s, h:m:s, m:s or seconds. Hours 0-23, minutes 0-59, seconds 0-59. The time period must be less than 24856 days. You can use "session-cookie" (0 seconds) to indicate that the cookie expires when the browser closes.
+
+##### cookie_encryption
+
+Specifies the way in which cookie format will be used: "disabled": generate old format,unencrypted, "preferred": generate encrypted cookie but accept both encrypted and old format, and "required": cookie format must be encrypted. Default is required.
+
+Valid options: 'enabled', 'disabled'
+
+#### Example
+
+##### Create a Cookie persistence profile
+~~~puppet
+  f5_persistencecookie { '/Common/cookie1':
+    ensure            => 'present',
+    method            => 'insert',
+    cookie_name       => 'name1',
+    httponly          => 'enabled',
+    secure            => 'enabled',
+    always_send       => 'disabled',
+    expiration        => '0',
+    cookie_encryption => 'disabled',
+}
+~~~
+
+##### Delete a Cookie persistence profile
+~~~puppet
+  f5_persistencecookie { '/Common/cookie1':
+    ensure => 'absent',
+  }
+~~~
+
+### f5_persistencedestaddr
+
+Manage Virtual server Destination Address Affinity persistence profile on a BIG-IP
+
+#### Parameters
+
+###### name
+
+Specifies the name of Destination Address Affinity persistence profile to manage
+
+Valid options: a string.
+
+##### description
+
+Sets the description of the Destination Address Affinity persistence profile
+
+Valid options: a string.
+
+##### ensure
+
+Determines whether the persistence profile resource is present or absent.
+
+Valid options: 'present' or 'absent'.
+
+##### match_across_pools
+
+Specifies, when enabled, that the system can use any pool that contains this persistence record. The default value is disabled.
+
+Valid options: 'enabled', 'disabled'
+
+##### match_across_services
+
+Specifies, when enabled, that all persistent connections from a client IP address, which go to the same virtual IP address, also go to the same node. The default value is disabled.
+
+Valid options: 'enabled', 'disabled'
+
+##### match_across_virtuals
+
+Specifies, when enabled, that all persistent connections from the same client IP address go to the same node. The default value is disabled.
+
+Valid options: 'enabled', 'disabled'
+
+##### hash_algorithm
+
+Specifies whether the system uses the hash algorithm defined by the Cache Array Routing Protocol (CARP) to select a pool member.
+
+Valid options: default, 'carp'.
+
+##### mask
+
+Specifies an IP mask. This is the mask used by simple persistence for connections.
+
+Valid options: Netmask
+
+##### timeout
+
+Specifies the duration of the persistence entries. The default value is 180 seconds.
+
+Valid options: an integer.
+
+##### override_connection_limit
+
+Specifies, when enabled, that the pool member connection limits are not enforced for persisted clients. Per-virtual connection limits remain hard limits and are not disabled. The default value is disabled.
+
+Valid options: 'enabled', 'disabled'
+
+
+#### Example
+
+##### Create Destination Address Affinity persistence profile
+~~~puppet
+  f5_persistencedestaddr { '/Common/dest_addr1':
+     ensure                    => 'present',
+     match_across_pools        => 'enabled',
+     match_across_services     => 'enabled',
+     match_across_virtuals     => 'enabled',
+     hash_algorithm            => 'carp',
+     mask                      => '255.255.0.0',
+     timeout                   => '180',
+     override_connection_limit => 'enabled',
+  }
+~~~
+
+##### Delete a Destination Address Affinity persistence profile
+~~~puppet
+  f5_persistencedestaddr { '/Common/dest_addr1':
+    ensure => 'absent',
+  }
+~~~
+
+### f5_persistencehash
+
+Manage device groups on a BIG-IP. Managing device groups allows you to create HA pairs and clusters of BIG-IP devices.
+
+#### Parameters
+
+###### name
+
+Specifies the name of device group to manage.
+
+Valid options: a string.
+
+##### description
+
+Sets the description of the device group.
+
+Valid options: a string.
+
+##### ensure
+
+Determines whether the device group resource is present or absent.
+
+Valid options: 'present' or 'absent'.
+
+##### type
+
+Specifies if the device-group will be used for failover or resource syncing
+
+Valid options: a string.
+
+##### auto_sync
+
+Specifies if the device-group will automatically sync configuration data to its members
+
+Valid options: a string.
+
+##### devices
+
+An array of devices to be added to the device group.
+
+#### Example
+
+##### Create a device group
+~puppet
+  f5_devicegroup{ '/Common/DeviceGroup1':
+    ensure    => 'present',
+    type      => 'sync-failover',
+    auto_sync => 'enabled',
+    devices   => [ "bigip-a.f5.local","bigip-b.f5.local" ],
+  }
+~
+
+##### Delete a device group
+~puppet
+  f5_devicegroup{ '/Common/DeviceGroup1':
+    ensure => 'absent',
+  }
+~
+
+### f5_persistencesourceaddr
+
+Manage device groups on a BIG-IP. Managing device groups allows you to create HA pairs and clusters of BIG-IP devices.
+
+#### Parameters
+
+###### name
+
+Specifies the name of device group to manage.
+
+Valid options: a string.
+
+##### description
+
+Sets the description of the device group.
+
+Valid options: a string.
+
+##### ensure
+
+Determines whether the device group resource is present or absent.
+
+Valid options: 'present' or 'absent'.
+
+##### type
+
+Specifies if the device-group will be used for failover or resource syncing
+
+Valid options: a string.
+
+##### auto_sync
+
+Specifies if the device-group will automatically sync configuration data to its members
+
+Valid options: a string.
+
+##### devices
+
+An array of devices to be added to the device group.
+
+#### Example
+
+##### Create a device group
+~puppet
+  f5_devicegroup{ '/Common/DeviceGroup1':
+    ensure    => 'present',
+    type      => 'sync-failover',
+    auto_sync => 'enabled',
+    devices   => [ "bigip-a.f5.local","bigip-b.f5.local" ],
+  }
+~
+
+##### Delete a device group
+~puppet
+  f5_devicegroup{ '/Common/DeviceGroup1':
+    ensure => 'absent',
+  }
+~
+
+### f5_persistencessl
+
+Manage device groups on a BIG-IP. Managing device groups allows you to create HA pairs and clusters of BIG-IP devices.
+
+#### Parameters
+
+###### name
+
+Specifies the name of device group to manage.
+
+Valid options: a string.
+
+##### description
+
+Sets the description of the device group.
+
+Valid options: a string.
+
+##### ensure
+
+Determines whether the device group resource is present or absent.
+
+Valid options: 'present' or 'absent'.
+
+##### type
+
+Specifies if the device-group will be used for failover or resource syncing
+
+Valid options: a string.
+
+##### auto_sync
+
+Specifies if the device-group will automatically sync configuration data to its members
+
+Valid options: a string.
+
+##### devices
+
+An array of devices to be added to the device group.
+
+#### Example
+
+##### Create a device group
+~puppet
+  f5_devicegroup{ '/Common/DeviceGroup1':
+    ensure    => 'present',
+    type      => 'sync-failover',
+    auto_sync => 'enabled',
+    devices   => [ "bigip-a.f5.local","bigip-b.f5.local" ],
+  }
+~
+
+##### Delete a device group
+~puppet
+  f5_devicegroup{ '/Common/DeviceGroup1':
+    ensure => 'absent',
+  }
+~
+
+### f5_persistenceuniversal
+
+Manage device groups on a BIG-IP. Managing device groups allows you to create HA pairs and clusters of BIG-IP devices.
+
+#### Parameters
+
+###### name
+
+Specifies the name of device group to manage.
+
+Valid options: a string.
+
+##### description
+
+Sets the description of the device group.
+
+Valid options: a string.
+
+##### ensure
+
+Determines whether the device group resource is present or absent.
+
+Valid options: 'present' or 'absent'.
+
+##### type
+
+Specifies if the device-group will be used for failover or resource syncing
+
+Valid options: a string.
+
+##### auto_sync
+
+Specifies if the device-group will automatically sync configuration data to its members
+
+Valid options: a string.
+
+##### devices
+
+An array of devices to be added to the device group.
+
+#### Example
+
+##### Create a device group
+~puppet
+  f5_devicegroup{ '/Common/DeviceGroup1':
+    ensure    => 'present',
+    type      => 'sync-failover',
+    auto_sync => 'enabled',
+    devices   => [ "bigip-a.f5.local","bigip-b.f5.local" ],
+  }
+~
+
+##### Delete a device group
+~puppet
+  f5_devicegroup{ '/Common/DeviceGroup1':
+    ensure => 'absent',
+  }
+~
+
+### f5_profilehttp
+
+Manage Virtual server HTTP traffic profile
+
+#### Parameters
+
+###### name
+
+Specifies the name of HTTP traffic profile to manage.
+
+Valid options: a string.
+
+##### description
+
+Sets the description of the HTTP traffic profile
+
+Valid options: a string.
+
+##### ensure
+
+Determines whether the HTTP traffic profile resource is present or absent.
+
+Valid options: 'present' or 'absent'.
+
+##### fallback_host
+
+Specifies an HTTP fallback host. HTTP redirection allows you to redirect HTTP traffic to another protocol identifier, host name, port number, or URI path. For example, if all members of the targeted pool are unavailable (that is, the members are disabled, marked as down, or have exceeded their connection limit), the system can redirect the HTTP request to the fallback host, with the HTTP reply Status Code 302 Found.
+
+Valid options: a string.
+
+##### fallback_status_codes
+
+Specifies one or more three-digit status codes that can be returned by an HTTP server.
+
+Valid options: a string.
+
+#### Example
+
+##### Create a HTTP traffic profile
+~~~puppet
+    f5_profilehttp { '/Common/http-profile_1':
+       ensure                          => 'present',
+       fallback_host                   => "redirector.siterequest.com",
+       fallback_status_codes           => ['500'],
+    }
+~~~
+
+##### Delete a HTTP traffic profile
+~~~puppet
+    f5_profilehttp { '/Common/http-profile_1':
+      ensure => 'absent',
+    }
+~~~
+
+### f5_profileclientssl
+
+Manage Virtual server client-side proxy SSL profile
+
+#### Parameters
+
+###### name
+
+Specifies the name of client-side proxy SSL profile to manage.
+
+Valid options: a string.
+
+##### description
+
+Sets the description of the client-side proxy SSL profile
+
+Valid options: a string.
+
+##### ensure
+
+Determines whether the client-side proxy SSL profile resource is present or absent.
+
+Valid options: 'present' or 'absent'.
+
+##### cert
+
+Specifies the name of the certificate installed on the traffic management system for the purpose of terminating or initiating an SSL connection.
+
+Valid options: a string.
+
+##### key 
+
+Specifies the name of a key file that you generated and installed on the system. The default key name is default.key.
+
+Valid options: a string.
+
+##### proxy_ssl
+
+Enables proxy SSL mode, which requires a corresponding server SSL profile with proxy-ssl enabled to allow for modification of application data within an SSL tunnel.o
+
+Valid options: 'enabled', 'disabled'
+
+##### proxy_ssl_passthrough
+
+Enables proxy SSL passthrough mode, which requires a corresponding server SSL profile with proxy-ssl-passthrough enabled to allow for modification of application data within an SSL tunnel.
+
+Valid options: 'enabled', 'disabled'
+
+#### Example
+
+##### Create a client-side proxy SSL profile
+~~~puppet
+    f5_profileclientssl {'/Common/clientssl-profile1':
+       ensure                          => 'present',
+       cert                            =>"/Common/default.crt",
+       key                             =>"/Common/default.key",
+       proxy_ssl                       => 'enabled',
+       proxy_ssl_passthrough           => 'enabled',
+    }
+~~~
+
+##### Delete a device group
+~~~puppet
+    f5_profileclientssl {'/Common/clientssl-profile1':
+      ensure => 'absent',
+    }
+~~~
+
+### f5_profileserverssl
+
+Manage Virtual server server-side proxy SSL profile
+
+#### Parameters
+
+###### name
+
+Specifies the name of Virtual server server-side proxy SSL profile to manage.
+
+Valid options: a string.
+
+##### description
+
+Sets the description of the Virtual server server-side proxy SSL profile
+
+Valid options: a string.
+
+##### ensure
+
+Determines whether the Virtual server server-side proxy SSL profile resource is present or absent.
+
+Valid options: 'present' or 'absent'.
+
+##### cert
+
+Specifies the name of the certificate installed on the traffic management system for the purpose of terminating or initiating an SSL connection. The default value is none.
+
+Valid options: a string.
+
+##### key
+
+Specifies the name of the key installed on the traffic management system for the purpose of terminating or initiating an SSL connection. The default value is none.
+
+Valid options: a string.
+
+##### proxy_ssl
+
+Enables proxy SSL mode, which requires a corresponding client SSL profile with proxy-ssl enabled to allow for modification of application data within an SSL tunnel.
+
+Valid options: 'enabled', 'disabled'
+
+##### proxy_ssl_passthrough
+
+Enables proxy SSL passthrough mode, which requires a corresponding client SSL profile with proxy-ssl-passthrough enabled to allow for modification of application data within an SSL tunnel.
+
+Valid options: 'enabled', 'disabled'
+
+#### Example
+
+##### Create a server-side proxy SSL profile
+~~~puppet
+    f5_profileserverssl {'/Common/serverssl-profile1':
+       ensure                          => 'present',
+       cert                            =>"/Common/default.crt",
+       key                             =>"/Common/default.key",
+       proxy_ssl                       => 'enabled',
+       proxy_ssl_passthrough           => 'enabled',
+    }
+~~~
+
+##### Delete a server-side proxy SSL profile
+~~~puppet
+    f5_profileserverssl {'/Common/serverssl-profile1':
+      ensure => 'absent',
+    }
+~~~
+
+### f5_sslkey
+
+Import SSL keys from BIG-IP. This is achieved by using tmsh mvcommand, and hence has no ensure => absent functionality.
+
+#### Parameters
+
+###### name
+
+Specifies the name of SSL key to manage.
+
+Valid options: a string.
+
+##### description
+
+Sets the description of the SSL key. 
+
+Valid options: a string.
+
+##### keyname
+
+Specifies name of the key
+
+Valid options: a string.
+
+##### from_local_file
+
+Specifies the exiting key file with full path that the system extracts the key text from.
+
+Valid options: a string.
+
+#### Example
+
+##### Create an SSL key
+~~~puppet
+f5_sslkey { '/Common/sslkey':
+    keyname  => "test",
+    from_local_file => "/var/tmp/test.key",
+}
+~~~
+
+
+### f5_sslcertificate
+
+Import SSL certificate from BIG-IP. This is achieved by using tmsh mvcommand, and hence has no ensure => absent functionality.
+
+#### Parameters
+
+###### name
+
+Specifies the name of SSL certificate to manage.
+
+Valid options: a string.
+
+##### description
+
+Sets the description of the SSL certificate.
+
+Valid options: a string.
+
+##### certificate_name
+
+Specifies the name of the certificate
+
+Valid options: a string.
+
+##### rom_local_file
+
+Specifies the exiting certificate file with full path that the system extracts the certificate text from.
+
+Valid options: a string.
+
+
+#### Example
+
+##### Create an SSL certificate
+~~~puppet
+f5_sslcertificate { '/Common/sslcertificate':
+    certificate_name  => "test",
+    from_local_file => "/var/tmp/test.crt",
+}
+~~~
+
+### f5_snat
+
+Manage Secure network address translation (SNAT) 
+
+#### Parameters
+
+###### name
+
+Specifies the name of SNAT
+
+Valid options: a string.
+
+##### description
+
+Sets the description of the SNAT.
+
+Valid options: a string.
+
+##### ensure
+
+Determines whether the SNAT resource is present or absent.
+
+Valid options: 'present' or 'absent'.
+
+##### snatpool
+
+Specifies the name of a SNAT pool. You can only use this option when automap and translation are not used.
+
+Valid options: a string.
+
+##### origins
+
+Specifies, for each SNAT that you create, the origin addresses that are to be members of that SNAT. 
+
+Valid options: an array
+
+#### Example
+
+##### Create SNAT
+~~~puppet
+    f5_snat { '/Common/snat_list1':
+       ensure   => 'present',
+       snatpool => ['/Common/snat_pool1'],
+       origins  => [{"name"=>"10.0.0.0/8"}],
+    }
+~~~
+
+##### Delete SNAT
+~~~puppet
+    f5_snatpool { '/Common/snat_pool1':
+      ensure => 'absent',
+    } 
+~~~
+
+### f5_snatpool
+
+Manage SNAT pools on a BIG-IP
+
+#### Parameters
+
+###### name
+
+Specifies the name of the SNAT pool member.
+
+Valid options: a string.
+
+##### description
+
+Sets the description of the SNAT pool.
+
+Valid options: a string.
+
+##### ensure
+
+Determines whether the SNAT pool resource is present or absent.
+
+Valid options: 'present' or 'absent'.
+
+##### members
+
+An array of SNAT pool members that belong to this SNAT pool.
+
+#### Example
+
+##### Create a device group
+~~~puppet
+  f5_snatpool { '/Common/snat_pool1':
+    ensure  => 'present',
+    members => ["/Common/1.1.1.1", "/Common/1.1.1.2", "/Common/1.1.1.3"],
+  }
+~~~
+
+##### Delete a device group
+~~~puppet
+  f5_snatpool { '/Common/snat_pool1':
+    ensure => 'absent',
+  }
+~~~
+
+### f5_datagroup
+
+Manage Internal data group
+
+#### Parameters
+
+###### name
+
+Specifies the name of Internal data group to manage.
+
+Valid options: a string.
+
+##### description
+
+Sets the description of the Internal data group 
+
+Valid options: a string.
+
+##### ensure
+
+Determines whether the Internal data group resource is present or absent.
+
+Valid options: 'present' or 'absent'.
+
+##### type
+
+Specifies the type of data group.
+
+Valid options: 'ip','string', 'integer'
+
+##### records
+
+Specifies an IP address, or string  of the string record, or  integer value for the integer record to add to the data group.
+
+#### Example
+
+##### Create Internal data group
+~~~puppet
+    f5_datagroup { '/Common/datagroup1':
+       ensure                          => 'present',
+       type                            => 'ip',
+       records                         => [{'data' => '', 'name' => '64.12.96.0/19'}, {'data' => '', 'name' => '195.93.16.0/20'}],
+    }
+
+    f5_datagroup { '/Common/datagroup2':
+       ensure                          => 'present',
+       type                            => 'string',
+       records                         => [{'data' => '', 'name' => '.gif'}, {'data' => '', 'name' => '.jpg'}],
+    }
+
+    f5_datagroup { '/Common/datagroup3':
+       ensure                          => 'present',
+       type                            => 'integer',
+       records                         => [{'data' => '', 'name' => '1'}, {'data' => '', 'name' => '2'}],
+    }
+~~~
+
+##### Delete Internal data group
+~~~puppet
+    f5_datagroup { '/Common/datagroup1':
+      ensure => 'absent',
+    }    
+    f5_datagroup { '/Common/datagroup2':
+      ensure => 'absent',
+    }  
+    f5_datagroup { '/Common/datagroup3':
+      ensure => 'absent',
+    } 
+~~~
+
+### f5_datagroupexternal
+
+Manage External data group 
+
+#### Parameters
+
+###### name
+
+Specifies the name of External data group  to manage.
+
+Valid options: a string.
+
+##### description
+
+Sets the description of the External data group 
+
+Valid options: a string.
+
+##### ensure
+
+Determines whether the device group resource is present or absent.
+
+Valid options: 'present' or 'absent'.
+
+##### external_file_name
+
+Specifies an external data group file.
+
+Valid options: a string.
+
+#### Example
+
+##### Create an external data group
+~~~puppet
+    f5_datagroupexternal { '/Common/datagroupext1':
+      ensure             => 'present',
+      external_file_name => '/Common/add_dg1',
+    }
+~~~
+
+##### Delete an external data group
+~~~puppet
+    f5_datagroupexternal { '/Common/datagroupext1':
+      ensure => 'absent',
+    }
+~~~
 
 ## Limitations
 

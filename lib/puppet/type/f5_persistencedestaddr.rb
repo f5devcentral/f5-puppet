@@ -8,17 +8,46 @@ require File.expand_path(File.join(File.dirname(__FILE__),'..','..','puppet/prop
 require File.expand_path(File.join(File.dirname(__FILE__),'..','..','puppet/property/f5_ratio.rb'))
 require File.expand_path(File.join(File.dirname(__FILE__),'..','..','puppet/property/f5_state.rb'))
 
-Puppet::Type.newtype(:f5_command) do
-  @doc = 'Run tmsh command'
+require File.expand_path(File.join(File.dirname(__FILE__),'..','..','puppet/property/f5_truthy.rb'))
+
+
+Puppet::Type.newtype(:f5_persistencedestaddr) do
+  @doc = 'Manage f5_persistencedestaddr persistence objects'
 
   apply_to_device
+  ensurable
 
   newparam(:name, :parent => Puppet::Parameter::F5Name, :namevar => true)
 
   newproperty(:description, :parent => Puppet::Property::F5Description)
 
-  newproperty(:tmsh) do
-    desc "tmsh command line"
+  newproperty(:match_across_services, :parent => Puppet::Property::F5truthy) do
+    truthy_property("Valid values are 'enabled' or 'disabled'.")
+  end
+
+  newproperty(:match_across_virtuals, :parent => Puppet::Property::F5truthy) do
+    truthy_property("Valid values are 'enabled' or 'disabled'.")
+  end
+
+  newproperty(:match_across_pools, :parent => Puppet::Property::F5truthy) do
+    truthy_property("Valid values are 'enabled' or 'disabled'.")
+  end
+
+  newproperty(:hash_algorithm) do
+    desc "hash_algorithm."
+    newvalues(:default, :carp)
+  end
+
+  newproperty(:mask) do
+    desc "mask."
+  end
+
+  newproperty(:timeout) do
+    desc "timeout."
+  end
+
+  newproperty(:override_connection_limit, :parent => Puppet::Property::F5truthy) do
+    truthy_property("Valid values are 'enabled' or 'disabled'.")
   end
 
 end

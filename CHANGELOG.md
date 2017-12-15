@@ -1,6 +1,6 @@
 ## Release 1.7.0
 ### Summary
-This release adds new providers for BIG-IP on-boarding, HA clustering:
+This release adds new resource providers for BIG-IP on-boarding, HA clustering:
 - f5_dns
 - f5_ntp
 - f5_globalsetting

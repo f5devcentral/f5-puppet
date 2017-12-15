@@ -8,17 +8,22 @@ require File.expand_path(File.join(File.dirname(__FILE__),'..','..','puppet/prop
 require File.expand_path(File.join(File.dirname(__FILE__),'..','..','puppet/property/f5_ratio.rb'))
 require File.expand_path(File.join(File.dirname(__FILE__),'..','..','puppet/property/f5_state.rb'))
 
-Puppet::Type.newtype(:f5_command) do
-  @doc = 'Run tmsh command'
+Puppet::Type.newtype(:f5_snat) do
+  @doc = 'Manage snat objects'
 
   apply_to_device
+  ensurable
 
   newparam(:name, :parent => Puppet::Parameter::F5Name, :namevar => true)
 
   newproperty(:description, :parent => Puppet::Property::F5Description)
 
-  newproperty(:tmsh) do
-    desc "tmsh command line"
+  newproperty(:snatpool) do
+    desc "snatpool"
+  end
+
+  newproperty(:origins, :array_matching => :all) do
+    desc "origins"
   end
 
 end
