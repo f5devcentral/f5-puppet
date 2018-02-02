@@ -12,6 +12,7 @@ Puppet::Type.newtype(:f5_sslkey) do
   @doc = ' Import SSL Keys'
 
   apply_to_device
+  ensurable
 
   newparam(:name, :parent => Puppet::Parameter::F5Name, :namevar => true)
 

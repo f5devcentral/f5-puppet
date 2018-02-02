@@ -12,6 +12,7 @@ Puppet::Type.newtype(:f5_command) do
   @doc = 'Run tmsh command'
 
   apply_to_device
+  ensurable
 
   newparam(:name, :parent => Puppet::Parameter::F5Name, :namevar => true)
 
