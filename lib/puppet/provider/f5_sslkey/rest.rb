@@ -3,12 +3,31 @@ require 'json'
 
 Puppet::Type.type(:f5_sslkey).provide(:rest, parent: Puppet::Provider::F5) do
 
-  def create_message(basename, hash)
-    # Create the message by stripping :present.
-    new_hash            = hash.reject { |k, _| [:ensure,:name, :provider, Puppet::Type.metaparams].flatten.include?(k) }
-  #  new_hash[:name]     = basename
+  def self.instances
+    Puppet.debug('Puppet::Provider::F5::F5_sslkey: Got to self.instances.')
+    instances = []
+    keys = Puppet::Provider::F5.call_items('/mgmt/tm/sys/crypto/key')
+    return [] if keys.nil?
 
-    return new_hash
+    keys.each do |key|
+
+      instances << new(
+        ensure: :present,
+        name:   key['fullPath'],
+      )
+
+    end
+
+    instances
+  end
+
+  def self.prefetch(resources)
+    Puppet.debug('Puppet::Provider::F5::F5_sslkey: Got to self.prefetch.')
+    resources.keys.each do |name|
+      if provider = instances.find { |instance| instance.name == name }
+        resources[name].provider = provider
+      end
+    end
   end
 
   def message(object)
@@ -20,17 +39,25 @@ Puppet::Type.type(:f5_sslkey).provide(:rest, parent: Puppet::Provider::F5) do
     map = {
     }
 
-   message = { "command"=>"install", "name"=> message[:keyname], "from-local-file"=> message[:from_local_file] }
-   message.to_json
+    message = { "command"=>"install", "name"=> message[:keyname], "from-local-file"=> message[:from_local_file] }
+    message.to_json
   end
 
   def exists?
-     false
+    Puppet.debug("Puppet::Provider::F5::F5_sslkey: Got to exists?. #{name}")
+    @property_hash[:ensure] == :present 
   end
 
   def create
+    Puppet.debug("Puppet::Provider::F5::F5_sslkey: Got to create. #{name}")
     result = Puppet::Provider::F5.post("/mgmt/tm/sys/crypto/key", message(resource))
-    # We clear the hash here to stop flush from triggering.
+
+    return result
+  end
+
+  def destroy
+    Puppet.debug("Puppet::Provider::F5::F5_sslkey: Got to destroy. #{name}")
+    result = Puppet::Provider::F5.delete("/mgmt/tm/sys/crypto/key/#{api_name}")
     @property_hash.clear
 
     return result
