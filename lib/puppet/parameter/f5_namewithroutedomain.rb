@@ -1,4 +1,5 @@
 require 'puppet/parameter'
+require File.join(File.dirname(__FILE__), 'f5_name.rb')
 
 class Puppet::Parameter::F5NameWithRouteDomain < Puppet::Parameter::F5Name
   validate do |value|
