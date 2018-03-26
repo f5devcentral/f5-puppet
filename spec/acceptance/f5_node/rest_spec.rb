@@ -12,6 +12,17 @@ describe 'f5_node' do
     run_device(:allow_changes => true)
     run_device(:allow_changes => false)
   end
+  it 'creates a node with a route domain' do
+    pp=<<-EOS
+    f5_node { '/Common/10.10.10.10%0':
+      ensure  => present,
+      address => '10.10.10.10',
+    }
+    EOS
+    make_site_pp(pp)
+    run_device(:allow_changes => true)
+    run_device(:allow_changes => false)
+  end
   it 'updates a basic monitor called my_node' do
     pp=<<-EOS
     f5_node { '/Common/my_node':
