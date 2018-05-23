@@ -40,6 +40,10 @@ class Puppet::Provider::F5 < Puppet::Provider
   def self.put(url, message)
     transport.put(url, message)
   end
+  
+  def self.patch(url, message)
+    transport.patch(url, message)
+  end
 
   def self.delete(url)
     transport.delete(url)

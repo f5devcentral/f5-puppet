@@ -52,6 +52,20 @@ class Puppet::Util::NetworkDevice::Transport::F5 < Puppet::Util::NetworkDevice::
     end
   end
 
+  def patch(url, json)
+    if valid_json?(json)
+      result = connection.patch do |req|
+        req.url url
+        req.headers['Content-Type'] = 'application/json'
+        req.body = json
+      end
+      failure?(result)
+      return result
+    else
+      fail('Invalid JSON detected.')
+    end
+  end
+
   def delete(url)
     result = connection.delete(url)
     failure?(result)
