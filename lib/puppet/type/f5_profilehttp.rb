@@ -67,5 +67,10 @@ Puppet::Type.newtype(:f5_profilehttp) do
 
   newproperty(:encrypt_cookie_secret) do
     desc "Specifies a passphrase for the cookie encryption."
+
+    # hide plain text secret value in puppet output
+    def should_to_s(requested)
+      "******"
+    end
   end
 end
