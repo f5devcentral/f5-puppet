@@ -13,16 +13,21 @@ Puppet::Type.newtype(:f5_sslcertificate) do
 
   apply_to_device
 
+  ensurable do
+    defaultvalues
+    defaultto :present
+  end
+
   newparam(:name, :parent => Puppet::Parameter::F5Name, :namevar => true)
 
   newproperty(:description, :parent => Puppet::Property::F5Description)
 
-  newproperty(:certificate_name) do
-    desc "keyname"
+  newparam(:certificate_name) do
+    desc "Name of the ssl certificate to import."
   end
 
-  newproperty(:from_local_file) do
-    desc "from_local_file"
+  newparam(:from_local_file) do
+    desc "Location of the local ssl certificate to import."
   end
 
 end

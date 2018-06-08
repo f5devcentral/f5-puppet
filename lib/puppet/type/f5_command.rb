@@ -13,6 +13,11 @@ Puppet::Type.newtype(:f5_command) do
 
   apply_to_device
 
+  ensurable do
+    defaultvalues
+    defaultto :present
+  end
+
   newparam(:name, :parent => Puppet::Parameter::F5Name, :namevar => true)
 
   newproperty(:description, :parent => Puppet::Property::F5Description)

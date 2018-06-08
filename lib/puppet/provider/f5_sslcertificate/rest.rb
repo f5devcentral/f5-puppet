@@ -3,12 +3,31 @@ require 'json'
 
 Puppet::Type.type(:f5_sslcertificate).provide(:rest, parent: Puppet::Provider::F5) do
 
-  def create_message(basename, hash)
-    # Create the message by stripping :present.
-    new_hash            = hash.reject { |k, _| [:ensure,:name, :provider, Puppet::Type.metaparams].flatten.include?(k) }
-  #  new_hash[:name]     = basename
+  def self.instances
+    Puppet.debug('Puppet::Provider::F5::F5_sslcertificate: Got to self.instances')
+    instances = []
+    certificates = Puppet::Provider::F5.call_items('/mgmt/tm/sys/crypto/cert')
+    return [] if certificates.nil?
 
-    return new_hash
+    certificates.each do |certificate|
+
+      instances << new(
+        ensure: :present,
+        name:   certificate['fullPath'],
+      )
+
+    end
+
+    instances
+  end
+
+  def self.prefetch(resources)
+    Puppet.debug('Puppet::Provider::F5::F5_sslcertificate: Got to self.prefetch')
+    resources.keys.each do |name|
+      if provider = instances.find { |instance| instance.name == name }
+        resources[name].provider = provider
+      end
+    end
   end
 
   def message(object)
@@ -21,12 +40,20 @@ Puppet::Type.type(:f5_sslcertificate).provide(:rest, parent: Puppet::Provider::F
   end
 
   def exists?
+    Puppet.debug("Puppet::Provider::F5::F5_sslcertificate: Got to exists?. #{name}")
     @property_hash[:ensure] == :present
   end
 
   def create
+    Puppet.debug("Puppet::Provider::F5::F5_sslcertificate: Got to create. #{name}")
     result = Puppet::Provider::F5.post("/mgmt/tm/sys/crypto/cert", message(resource))
-    # We clear the hash here to stop flush from triggering.
+
+    return result
+  end
+
+  def destroy
+    Puppet.debug("Puppet::Provider::F5::F5_sslcertificate: Got to destroy. #{name}")
+    result = Puppet::Provider::F5.delete("/mgmt/tm/sys/crypto/cert/#{api_name}")
     @property_hash.clear
 
     return result

@@ -9,20 +9,25 @@ require File.expand_path(File.join(File.dirname(__FILE__),'..','..','puppet/prop
 require File.expand_path(File.join(File.dirname(__FILE__),'..','..','puppet/property/f5_state.rb'))
 
 Puppet::Type.newtype(:f5_sslkey) do
-  @doc = ' Import SSL Keys'
+  @doc = 'Import SSL Keys'
 
   apply_to_device
+
+  ensurable do
+    defaultvalues
+    defaultto :present
+  end
 
   newparam(:name, :parent => Puppet::Parameter::F5Name, :namevar => true)
 
   newproperty(:description, :parent => Puppet::Property::F5Description)
 
-  newproperty(:keyname) do
-    desc "keyname"
+  newparam(:keyname) do
+    desc "The name of the ssl key to import."
   end
 
-  newproperty(:from_local_file) do
-    desc "from_local_file"
+  newparam(:from_local_file) do
+    desc "Location of the local ssl key to import."
   end
 
 end
