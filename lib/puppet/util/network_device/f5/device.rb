@@ -18,9 +18,18 @@ class Puppet::Util::NetworkDevice::F5::Device
   end
 
   def facts
+    custom_facts=Facter.to_hash['f5_custom_facts']
+
+    Puppet.debug _("###### '%{facts}'") % { facts: custom_facts.to_json }
     @facts ||= Puppet::Util::NetworkDevice::F5::Facts.new(@transport)
 
-    return @facts.retrieve
+    facts=@facts.retrieve
+
+    unless custom_facts.nil?
+      facts=custom_facts.merge(facts)
+    end
+
+    facts
   end
 
 end

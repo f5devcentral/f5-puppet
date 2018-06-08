@@ -40,19 +40,16 @@ Puppet::Type.type(:f5_sslcertificate).provide(:rest, parent: Puppet::Provider::F
   end
 
   def exists?
-    Puppet.debug("Puppet::Provider::F5::F5_sslcertificate: Got to exists?. #{name}")
     @property_hash[:ensure] == :present
   end
 
   def create
-    Puppet.debug("Puppet::Provider::F5::F5_sslcertificate: Got to create. #{name}")
     result = Puppet::Provider::F5.post("/mgmt/tm/sys/crypto/cert", message(resource))
 
     return result
   end
 
   def destroy
-    Puppet.debug("Puppet::Provider::F5::F5_sslcertificate: Got to destroy. #{name}")
     result = Puppet::Provider::F5.delete("/mgmt/tm/sys/crypto/cert/#{api_name}")
     @property_hash.clear
 
