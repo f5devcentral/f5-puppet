@@ -1,18 +1,12 @@
 {
-  "name": "f5-f5",
-  "version": "1.8.0",
-  "author": "F5",
+  "name": "parshipelite-f5",
+  "version": "1.9.0",
+  "author": "Parship Elite Gruop",
   "summary": "Manages F5 BIG-IP Application Delivery Controllers",
   "license": "Apache-2.0",
-  "source": "https://github.com/f5devcentral/f5-puppet",
-  "project_page": "https://github.com/f5devcentral/f5-puppet",
-  "issues_url": "https://github.com/f5devcentral/f5-puppet/issues",
-  "dependencies": [
-    {
-      "name": "puppetlabs-pe_gem",
-      "version_requirement": ">= 0.1.0 <1.0.0"
-    }
-  ],
+  "source": "https://github.com/parship/f5-puppet",
+  "project_page": "https://github.com/parship/f5-puppet",
+  "issues_url": "https://github.com/parship/f5-puppet/issues",
   "operatingsystem_support": [
     {
       "operatingsystem": "BigIp",
