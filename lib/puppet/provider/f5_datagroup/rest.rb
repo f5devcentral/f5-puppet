@@ -23,7 +23,7 @@ Puppet::Type.type(:f5_datagroup).provide(:rest, parent: Puppet::Provider::F5) do
       name:                     dgroup['fullPath'],
       description:              dgroup['description'],
       type:                     dgroup['type'],
-      records:                  dgroup['records'],
+      records:                  records,
     )
     end
 
