@@ -1,6 +1,6 @@
 {
   "name": "parshipelite-f5",
-  "version": "1.9.1",
+  "version": "1.9.2",
   "author": "Parship Elite Gruop",
   "summary": "Manages F5 BIG-IP Application Delivery Controllers",
   "license": "Apache-2.0",
