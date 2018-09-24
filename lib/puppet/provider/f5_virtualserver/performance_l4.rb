@@ -31,9 +31,8 @@ Puppet::Type.type(:f5_virtualserver).provide(:performance_l4, parent: Puppet::Pr
     end
 
     virtualservers.each do |vserver|
-      destination_address = vserver['destination'].match(%r{/([^/]+):})[1]
-      destination_port    = vserver['destination'].match(%r{:(\d+)$})[1]
-      destination_port    = "*" if destination_port == 0
+      destination_address, destination_port = address_and_port(vserver['destination'])
+
       if vserver["vlansEnabled"]
         vlan_and_tunnel_traffic = { "enabled" => vserver["vlans"], }
       elsif vserver["vlansDisabled"] and vserver["vlans"]

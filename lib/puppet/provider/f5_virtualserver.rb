@@ -222,4 +222,26 @@ class Puppet::Provider::F5Virtualserver < Puppet::Provider::F5
 
     message.to_json
   end
+
+  # destination may contain an IPV4 or IPV6 address
+
+  def self.address_and_port(destination)
+    if destination.split('/').count < 2
+      raise ArgumentError, "Unexpected format for destination address and port, got '#{destination}'"
+    end
+    address_and_port = destination.split('/')[-1]
+    if (matched = address_and_port.match(/(?<address>.*?)\:(?<port>\d+)$/))
+      # IPV4
+      address = matched[:address]
+      port    = matched[:port]
+    elsif (matched = address_and_port.match(/(?<address>.*?)\.(?<port>\d+)$/))
+      # IPV6
+      address = matched[:address]
+      port    = matched[:port]
+    else
+      raise ArgumentError, "Unexpected format for destination address and port, got '#{destination}'"
+    end
+    port = '*' if port.to_i.zero?
+    [address, port]
+  end
 end
