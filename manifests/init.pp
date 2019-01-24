@@ -1,3 +1,6 @@
 class f5 {
-  class { 'f5::install': }
+  package { 'faraday':
+    ensure   => present,
+    provider => 'puppet_gem',
+  }
 }
