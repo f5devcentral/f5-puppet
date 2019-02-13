@@ -53,7 +53,12 @@ def run_device(options={:allow_changes => true})
       expect(result.stdout).to_not match(%r{^Notice: /Stage\[main\]})
     end
     expect(result.stderr).to_not match(%r{^Error:})
-    expect(result.stderr).to_not match(%r{^Warning:})
+    # warnings will be expected due to the following:
+    # 10:32:20   Warning: Found multiple default providers for f5_monitor: dummy, \ 
+    # external, gateway_icmp, http, https, icmp, ldap, sip, tcp, tcp_half, udp; using dummy
+    # so instead we will match on the `Notice: /State\[main\] output being
+    # available
+    # expect(result.stderr).to_not match(%r{^Warning:})
   end
 end
 
