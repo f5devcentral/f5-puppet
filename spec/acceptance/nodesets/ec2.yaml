@@ -23,5 +23,5 @@ AMI:
     :region: "us-west-2"
   "f5-11.6.0-25mbps-good":
     :image:
-      :default: "ami-e57658d5"
+      :default: "ami-0000b82909b6bb56d"
     :region: "us-west-2"
