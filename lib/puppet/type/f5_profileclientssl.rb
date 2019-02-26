@@ -68,4 +68,8 @@ Puppet::Type.newtype(:f5_profileclientssl) do
     desc "authenticate_depth."
   end
 
+  newproperty(:partition) do
+    desc "partition to install profile to."
+  end
+
 end

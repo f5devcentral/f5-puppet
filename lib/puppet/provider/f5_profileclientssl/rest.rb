@@ -25,6 +25,7 @@ Puppet::Type.type(:f5_profileclientssl).provide(:rest, parent: Puppet::Provider:
         authenticate:                profile['authenticate'],
         retain_certificate:          profile['retainCertificate'],
         authenticate_depth:          profile['authenticateDepth'],
+        partition:                   profile['partition'],
       )
     end
 
