@@ -5,6 +5,7 @@ HOSTS:
       - "master"
       - "default"
     vmname: "centos-7-x86-64-west"
+    name: "centos-7-x86-64-west"
     hypervisor: "ec2"
     platform: "el-7-x86_64"  
     snapshot: "ebs"
@@ -13,12 +14,16 @@ HOSTS:
     roles:
       - "f5"
     vmname: "f5-11.6.0-25mbps-good"
+    name: "f5-11.6.0-25mbps-good"
     hypervisor: "ec2"
     platform: "f5-11.6.0-25mbps-good"
     snapshot: "default"
-    amisize: "m3.large"
+    amisize: "t2.medium"
     user: "admin"
-    additional_ports: 443
+    additional_ports:
+      - 443
+      - 80
+      - 8443
 CONFIG:
   type: "foss"
   ec2_yaml: "spec/acceptance/nodesets/ec2.yaml"
@@ -30,5 +35,6 @@ CONFIG:
   resourcepool: "delivery/Quality Assurance/Enterprise/Dynamic"
   pooling_api: "http://vcloud.delivery.puppetlabs.net/"
   use_beaker_hostnames: true
+  disable_updates: false
 :host_tags:
   :lifetime: "3h"
