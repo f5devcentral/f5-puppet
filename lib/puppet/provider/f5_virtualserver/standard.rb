@@ -41,8 +41,8 @@ Puppet::Type.type(:f5_virtualserver).provide(:standard, parent: Puppet::Provider
     end
 
     virtualservers.each do |vserver|
-      destination_address = vserver['destination'].match(%r{/([^/]+):})[1]
-      destination_port    = vserver['destination'].match(%r{:(\d+)$})[1]
+      destination_address, destination_port = address_and_port(vserver['destination'])
+
       if vserver["vlansEnabled"]
         vlan_and_tunnel_traffic = { "enabled" => vserver["vlans"], }
       elsif vserver["vlansDisabled"] and vserver["vlans"]
@@ -157,7 +157,7 @@ Puppet::Type.type(:f5_virtualserver).provide(:standard, parent: Puppet::Provider
         ssl_profile_client:                     ssl_profile_client.empty? ? ["none"] : ssl_profile_client,
         ssl_profile_server:                     ssl_profile_server.empty? ? ["none"] : ssl_profile_server,
         http_profile:                           ((applied_profiles["http"            ]||[]).first || {})["fullPath"] || "none",
-        ftp_profile:                            ((applied_profiles["ftp "            ]||[]).first || {})["fullPath"] || "none",
+        ftp_profile:                            ((applied_profiles["ftp"             ]||[]).first || {})["fullPath"] || "none",
         rtsp_profile:                           ((applied_profiles["rtsp"            ]||[]).first || {})["fullPath"] || "none",
         socks_profile:                          ((applied_profiles["socks"           ]||[]).first || {})["fullPath"] || "none",
         xml_profile:                            ((applied_profiles["xml"             ]||[]).first || {})["fullPath"] || "none",

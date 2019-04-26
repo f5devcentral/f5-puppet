@@ -13,7 +13,7 @@ class Puppet::Util::NetworkDevice::F5::Facts
 
   def parse_device_facts
     facts = {
-      :operatingsystem => :F5
+      'operatingsystem' => 'F5'
     }
 
     if response = @transport.call('/mgmt/tm/cm/device') and items = response['items']
@@ -26,30 +26,30 @@ class Puppet::Util::NetworkDevice::F5::Facts
       #'group_id',
       #'pva_version',
       #'uptime',
-    [ :baseMac,
-      :chassisId,
-      :fullPath,
-      :hostname,
-      :managementIp,
-      :marketingName,
-      :partition,
-      :platformId,
-      :timeZone,
-      :version
+    [ 'baseMac',
+      'chassisId',
+      'fullPath',
+      'hostname',
+      'managementIp',
+      'marketingName',
+      'partition',
+      'platformId',
+      'timeZone',
+      'version'
     ].each do |fact|
       facts[fact] = result[fact.to_s]
     end
 
     # Map F5 names to expected standard names.
-    facts[:fqdn]                   = facts[:hostname]
-    facts[:macaddress]             = facts[:baseMac]
-    facts[:operatingsystemrelease] = facts[:version]
-    facts[:ipaddress]              = facts[:managementIp]
-    facts[:productname]            = facts[:marketingName]
+    facts['fqdn']                   = facts['hostname']
+    facts['macaddress']             = facts['baseMac']
+    facts['operatingsystemrelease'] = facts['version']
+    facts['ipaddress']              = facts['managementIp']
+    facts['productname']            = facts['marketingName']
 
-    facts[:interfaces] = 'mgmt'
-    facts[:ipaddress_mgmt]  = facts[:ipaddress]
-    facts[:macaddress_mgmt] = facts[:macaddress]
+    facts['interfaces'] = 'mgmt'
+    facts['ipaddress_mgmt']  = facts['ipaddress']
+    facts['macaddress_mgmt'] = facts['macaddress']
     return facts
   end
 end

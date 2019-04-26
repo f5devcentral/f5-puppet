@@ -1,0 +1,20 @@
+---
+.travis.yml:
+  delete: true
+
+appveyor.yml:
+  delete: true
+
+.gitlab-ci.yml:
+  delete: true
+
+Gemfile:
+  optional:
+    ':system_tests':
+      - gem: 'puppet-module-posix-system-r#{minor_version}'
+        platforms: ruby
+      - gem: 'puppet-module-win-system-r#{minor_version}'
+        platforms:
+          - mswin
+          - mingw
+          - x64_mingw
