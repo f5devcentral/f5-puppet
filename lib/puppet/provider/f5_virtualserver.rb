@@ -155,7 +155,7 @@ class Puppet::Provider::F5Virtualserver < Puppet::Provider::F5
     message[:profiles] << { :name => message[:diameter_profile]         } if message[:diameter_profile]         and message[:diameter_profile]         != "none"
     message[:profiles] << { :name => message[:dns_profile]              } if message[:dns_profile]              and message[:dns_profile]              != "none"
     message[:profiles] << { :name => message[:fix_profile]              } if message[:fix_profile]              and message[:fix_profile]              != "none"
-    message[:profiles] << { :name => message[:ftp_profile]              } if message[:ftp_profile]              and message[:fix_profile]              != "none"
+    message[:profiles] << { :name => message[:ftp_profile]              } if message[:ftp_profile]              and message[:ftp_profile]              != "none"
     message[:profiles] << { :name => message[:html_profile]             } if message[:html_profile]             and message[:html_profile]             != "none"
     message[:profiles] << { :name => message[:http_compression_profile] } if message[:http_compression_profile] and message[:http_compression_profile] != "none"
     message[:profiles] << { :name => message[:http_profile]             } if message[:http_profile]             and message[:http_profile]             != "none"
@@ -221,5 +221,27 @@ class Puppet::Provider::F5Virtualserver < Puppet::Provider::F5
     message = create_message(basename, partition, message)
 
     message.to_json
+  end
+
+  # destination may contain an IPV4 or IPV6 address
+
+  def self.address_and_port(destination)
+    if destination.split('/').count < 2
+      raise ArgumentError, "Unexpected format for destination address and port, got '#{destination}'"
+    end
+    address_and_port = destination.split('/')[-1]
+    if (matched = address_and_port.match(/(?<address>.*?)\:(?<port>\d+)$/))
+      # IPV4
+      address = matched[:address]
+      port    = matched[:port]
+    elsif (matched = address_and_port.match(/(?<address>.*?)\.(?<port>\d+)$/))
+      # IPV6
+      address = matched[:address]
+      port    = matched[:port]
+    else
+      raise ArgumentError, "Unexpected format for destination address and port, got '#{destination}'"
+    end
+    port = '*' if port.to_i.zero?
+    [address, port]
   end
 end

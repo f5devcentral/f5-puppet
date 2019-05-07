@@ -53,14 +53,19 @@ def run_device(options={:allow_changes => true})
       expect(result.stdout).to_not match(%r{^Notice: /Stage\[main\]})
     end
     expect(result.stderr).to_not match(%r{^Error:})
-    expect(result.stderr).to_not match(%r{^Warning:})
+    # warnings will be expected due to the following:
+    # 10:32:20   Warning: Found multiple default providers for f5_monitor: dummy, \ 
+    # external, gateway_icmp, http, https, icmp, ldap, sip, tcp, tcp_half, udp; using dummy
+    # so instead we will match on the `Notice: /State\[main\] output being
+    # available
+    # expect(result.stderr).to_not match(%r{^Warning:})
   end
 end
 
 def run_resource(resource_type, resource_title=nil)
   f5_host = hosts_as('f5').first
   options = {:ENV => {
-    'FACTER_url' => "https://admin:#{f5_host[:ssh][:password]}@#{f5_host["ip"]}"
+    'FACTER_url' => "https://admin:#{f5_host[:ssh][:password]}@#{f5_host["ip"]}:8443"
   } }
   if resource_title
     on(master, puppet('resource', resource_type, resource_title, '--trace', options), { :acceptable_exit_codes => 0 }).stdout
@@ -71,7 +76,7 @@ end
 
 def wait_for_api(max_retries)
   1.upto(max_retries) do |retries|
-    on(default, "curl -skIL https://admin:#{hosts_as('f5').first[:ssh][:password]}@#{hosts_as('f5').first["ip"]}/mgmt/tm/cm/device", { :acceptable_exit_codes => [0,1] }) do |result|
+    on(default, "curl -skIL https://admin:#{hosts_as('f5').first[:ssh][:password]}@#{hosts_as('f5').first["ip"]}:8443/mgmt/tm/cm/device", { :acceptable_exit_codes => [0,1] }) do |result|
       return if result.stdout =~ /502 Bad Gateway/
 
       counter = 10 * retries
@@ -114,7 +119,7 @@ RSpec.configure do |c|
     device_conf=<<-EOS
 [f5-dut]
 type f5
-url https://admin:#{hosts_as('f5').first[:ssh][:password]}@#{hosts_as("f5").first["ip"]}/
+url https://admin:#{hosts_as('f5').first[:ssh][:password]}@#{hosts_as("f5").first["ip"]}:8443/
 EOS
     create_remote_file(default, "/etc/puppetlabs/puppet/device.conf", device_conf)
     make_site_pp("include f5")

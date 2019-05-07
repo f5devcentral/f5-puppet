@@ -12,7 +12,12 @@ class Puppet::Util::NetworkDevice::F5::Device
       self,
       "puppet/util/network_device/transport"
     )
-    if @autoloader.load("f5")
+    autoloader_params = ['f5']
+    # As of Puppet 6.0, environment is a required autoloader parameter: (PUP-8696)
+    if Gem::Version.new(Puppet.version) >= Gem::Version.new('6.0.0')
+      autoloader_params << Puppet.lookup(:current_environment)
+    end
+    if @autoloader.load(*autoloader_params)
       @transport = Puppet::Util::NetworkDevice::Transport::F5.new(url,options[:debug])
     end
   end
