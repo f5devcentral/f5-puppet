@@ -160,7 +160,6 @@ Puppet::Type.type(:f5_pool).provide(:rest, parent: Puppet::Provider::F5) do
           node = node.provider
           member[:name] = "#{member['name']}:#{member['port']}"
           member.delete('port')
-          member[:address] = node.address
 
           unless node.address == 'any6'
             member[:address] = node.address
