@@ -29,18 +29,18 @@ Puppet::Type.type(:f5_node).provide(:rest, parent: Puppet::Provider::F5) do
       end
 
       instances << new(
-        ensure:                   :present,
-        name:                     node['fullPath'],
-        address:                  address,
-        availability_requirement: find_availability(node['monitor']),
-        connection_limit:         node['connectionLimit'].to_s,
-        connection_rate_limit:    node['rateLimit'],
-        description:              node['description'],
-        logging:                  node['logging'],
-        health_monitors:          find_monitors(node['monitor']),
-        ratio:                    node['ratio'].to_s,
-        state:                    state,
-      )
+          ensure:                   :present,
+          name:                     node['fullPath'],
+          address:                  address,
+          availability_requirement: find_availability(node['monitor']),
+          connection_limit:         node['connectionLimit'].to_s,
+          connection_rate_limit:    node['rateLimit'],
+          description:              node['description'],
+          logging:                  node['logging'],
+          health_monitors:          find_monitors(node['monitor']),
+          ratio:                    node['ratio'].to_s,
+          state:                    state,
+          )
     end
 
     instances
@@ -62,9 +62,9 @@ Puppet::Type.type(:f5_node).provide(:rest, parent: Puppet::Provider::F5) do
 
     # Map for conversion in the message.
     map = {
-      :'connection-rate-limit'    => :rateLimit,
-      :'health-monitors'          => :monitor,
-      :'availability-requirement' => :availability,
+        :'connection-rate-limit'    => :rateLimit,
+        :'health-monitors'          => :monitor,
+        :'availability-requirement' => :availability,
     }
 
     #https://devcentral.f5.com/questions/how-do-i-enable-and-disable-pool-members-using-icontrolrest
@@ -86,6 +86,12 @@ Puppet::Type.type(:f5_node).provide(:rest, parent: Puppet::Provider::F5) do
     message = create_message(basename, partition, message)
     message = string_to_integer(message)
     message = monitor_conversion(message)
+
+    # fix to allow any6 to resolve via DNS. name should be without /partition/ prefix
+    if message[:address] == 'any6'
+      message[:fqdn] = { 'tmName' => message[:name], 'autopopulate' => 'enabled' }
+    end
+    #Puppet.info("parameter message has value '#{message}'")
 
     message.to_json
   end
