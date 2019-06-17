@@ -218,15 +218,15 @@ If you have a '/Common/http_monitor' (which is available by default), then when 
 * [f5_profileserverssl](#f5_profileserverssl): Manage Virtual server server-side proxy SSL profile
 * [f5_sslkey](#f5_sslkey): Import SSL keys from BIG-IP
 * [f5_sslcertificate](#f5_sslcertificate): Import SSL certificate from BIG-IP
-* [f5_snat](#f5_snat): Manage Secure network address translation (SNAT) 
+* [f5_snat](#f5_snat): Manage Secure network address translation (SNAT)
 * [f5_snatpool](#f5_snatpool): Manage SNAT pools on a BIG-IP
 * [f5_datagroup](#f5_datagroup): Manage Internal data group
-* [f5_datagroupexternal](#f5_datagroupexternal): Manage External data group 
+* [f5_datagroupexternal](#f5_datagroupexternal): Manage External data group
 
 
 ### Type: f5_iapp
 
-Manage iApp application services on the F5 device. See [F5 documentation](https://devcentral.f5.com/wiki/iApp.HomePage.ashx) for information about iApps. The best way to get started is to create an application service in the F5 gui, then copy the manifest returned for it via `puppet resource f5_iapp`
+Manage iApp application services on the F5 device. See [F5 documentation](https://devcentral.f5.com/s/articles/getting-started-with-iapps-a-conceptual-overview-20524) for information about iApps. The best way to get started is to create an application service in the F5 gui, then copy the manifest returned for it via `puppet resource f5_iapp`
 
 #### Parameters
 
@@ -252,7 +252,7 @@ Valid options: a hash.
 
 ### Type: f5_node
 
-Manages nodes on the F5 device. See [F5 documentation](https://support.f5.com/kb/en-us/products/big-ip_ltm/manuals/product/ltm_configuration_guide_10_0_0/ltm_nodes.html#1172375) for information about configuring F5 nodes.
+Manages nodes on the F5 device. See [F5 documentation](https://techdocs.f5.com/kb/en-us/products/big-ip_ltm/manuals/product/ltm-concepts-11-5-1/5.html) for information about configuring F5 nodes.
 
 #### Parameters
 
@@ -330,7 +330,7 @@ Valid options: 'enabled', 'disabled' or 'forced_offline'
 
 ### f5_pool
 
-Manages pools of `f5_node` resources on the F5 device. See [F5 documentation](https://support.f5.com/kb/en-us/products/big-ip_ltm/manuals/product/ltm-concepts-11-1-0/ltm_pools.html) to learn more about F5 pools.
+Manages pools of `f5_node` resources on the F5 device. See [F5 documentation](https://techdocs.f5.com/kb/en-us/products/big-ip_ltm/manuals/product/ltm-concepts-11-5-0/5.html) to learn more about F5 pools.
 
 #### Parameters
 
@@ -478,7 +478,7 @@ Valid options: 'disabled' or integers
 
 ### f5_irule
 
-Creates and manages iRule objects on your F5 device. See [F5 documentation](https://devcentral.f5.com/articles/irules-101-01-introduction-to-irules) to learn more about iRules.
+Creates and manages iRule objects on your F5 device. See [F5 documentation](https://techdocs.f5.com/kb/en-us/products/big-ip_ltm/manuals/product/ltm-concepts-11-5-0/18.html) to learn more about iRules.
 
 #### Parameters
 
@@ -508,7 +508,7 @@ Valid options: true or false
 
 ### f5_monitor
 
-Creates and manages monitor objects, which determine the health or performance of pools, individual nodes, or virtual servers. See [F5 documentation](https://support.f5.com/kb/en-us/products/big-ip_ltm/manuals/product/ltm_configuration_guide_10_0_0/ltm_appendixa_monitor_types.html#1172375) to learn more about F5 monitors.
+Creates and manages monitor objects, which determine the health or performance of pools, individual nodes, or virtual servers. See [F5 documentation](https://techdocs.f5.com/kb/en-us/products/big-ip_ltm/manuals/product/ltm-concepts-11-5-0/14.html) to learn more about F5 monitors.
 
 #### Providers
 
@@ -834,7 +834,7 @@ Valid options: 'default', 'enabled', or 'disabled'
 
 ##### bandwidth_controller
 
-Applies a bandwidth controller to enforce the total amount of bandwidth that can be used by the virtual server.  
+Applies a bandwidth controller to enforce the total amount of bandwidth that can be used by the virtual server.
 
 Valid options: 'none' or '/< PARTITION >/< VIRTUAL SERVER NAME >'
 
@@ -950,7 +950,7 @@ Valid options: 'none' or '/< PARTITION >/< VIRTUAL SERVER NAME >'
 
 ##### fix_profile
 
-Enables you to use Financial Information eXchange (FIX) protocol messages in routing, load balancing, persisting, and logging connections. (Requires `standard_profiles` feature.)  
+Enables you to use Financial Information eXchange (FIX) protocol messages in routing, load balancing, persisting, and logging connections. (Requires `standard_profiles` feature.)
 
 Valid options: 'none' or '/< PARTITION >/< VIRTUAL SERVER NAME >'
 
@@ -1212,7 +1212,7 @@ Valid options: a string.
 
 ### f5_vlan
 
-Manages virtual LANs on the F5 device. See [f5 documentation](https://support.f5.com/kb/en-us/products/big-ip_ltm/manuals/product/tmos_management_guide_10_1/tmos_vlans.html#1024711) for information about configuring F5 VLANS.
+Manages virtual LANs on the F5 device. See [f5 documentation](https://techdocs.f5.com/kb/en-us/products/big-ip_ltm/manuals/product/bigip-system-ecmp-mirrored-clustering-12-1-0/2.html) for information about configuring F5 VLANS.
 
 #### Parameters
 
@@ -1350,7 +1350,7 @@ Specifies the protocols and services from which this self IP can accept traffic.
 
 ### f5_dns
 
-Manages system DNS settings on the F5 device. See [F5 documentation](https://support.f5.com/kb/en-us/products/big-ip_ltm/manuals/product/tmos_management_guide_10_1/tmos_device_info_and_config.html#1012408) to learn more about F5 DNS. f5_dns has no `ensure => absent` functionality.
+Manages system DNS settings on the F5 device. See [F5 documentation](https://support.f5.com/csp/article/K26057357) to learn more about F5 DNS. f5_dns has no `ensure => absent` functionality.
 
 
 #### Parameters
@@ -1389,7 +1389,7 @@ Correct format example is: ["localhost","f5.local”]
 
 ### f5_ntp
 
-Manages system NTP settings on the F5 device. See [F5 documentation](https://support.f5.com/kb/en-us/products/big-ip_ltm/manuals/product/tmos_management_guide_10_1/tmos_device_info_and_config.html#1019425) to learn more about F5 DNS.
+Manages system NTP settings on the F5 device. See [F5 documentation](https://support.f5.com/csp/article/K13380) to learn more about F5 DNS.
 
 #### Parameters
 
@@ -1425,7 +1425,7 @@ Specifies the timezone
 
 ### f5_globalsetting
 
-Manages system global settings on the F5 device. See [F5 documentation](https://support.f5.com/kb/en-us/products/big-ip_ltm/manuals/product/tmos_management_guide_10_1/tmos_packet_filters.html#1185763) to learn more about F5 global setting. f5_globalsetting has no `ensure => absent` functionality.
+Manages system global settings on the F5 device. See [F5 documentation](https://support.f5.com/csp/article/K14938) to learn more about F5 global setting. f5_globalsetting has no `ensure => absent` functionality.
 
 #### Parameters
 
@@ -1463,7 +1463,7 @@ The default value is enabled.
 
 ### f5_user
 
-Manages the user account on the F5 device. See [F5 documentation](https://support.f5.com/kb/en-us/products/big-ip_ltm/manuals/product/tmos_management_guide_10_1/tmos_users.html#1006923) to learn more about F5 user account.
+Manages the user account on the F5 device. See [F5 documentation](https://techdocs.f5.com/kb/en-us/products/big-ip_ltm/manuals/product/bigip-user-account-administration-13-0-0.html) to learn more about F5 user account.
 
 #### Parameters
 
@@ -1512,7 +1512,7 @@ Set the user password during creation or modification without prompting or confi
 
 ### f5_route
 
-Configure route on the Big-IP system. See [F5 documentation](https://support.f5.com/kb/en-us/products/big-ip_ltm/manuals/product/tmos_management_guide_10_1/tmos_routes.html#1006923) to learn more about F5 Configuring Routes.
+Configure route on the Big-IP system. See [F5 documentation](https://support.f5.com/csp/article/K13833) to learn more about F5 Configuring Routes.
 
 #### Parameters
 
@@ -1940,7 +1940,7 @@ Valid options: 'enabled', 'disabled'
 
 ##### always_send
 
-Specifies, when enabled, that the cookie persistence entry will be sent to the client on every response, rather than only on the first response. 
+Specifies, when enabled, that the cookie persistence entry will be sent to the client on every response, rather than only on the first response.
 
 Valid options: 'enabled', 'disabled'
 
@@ -2387,7 +2387,7 @@ Specifies the name of the certificate installed on the traffic management system
 
 Valid options: a string.
 
-##### key 
+##### key
 
 Specifies the name of a key file that you generated and installed on the system. The default key name is default.key.
 
@@ -2507,7 +2507,7 @@ Valid options: a string.
 
 ##### description
 
-Sets the description of the SSL key. 
+Sets the description of the SSL key.
 
 Valid options: a string.
 
@@ -2577,7 +2577,7 @@ f5_sslcertificate { '/Common/sslcertificate':
 
 ### f5_snat
 
-Manage Secure network address translation (SNAT) 
+Manage Secure network address translation (SNAT)
 
 #### Parameters
 
@@ -2607,7 +2607,7 @@ Valid options: a string.
 
 ##### origins
 
-Specifies, for each SNAT that you create, the origin addresses that are to be members of that SNAT. 
+Specifies, for each SNAT that you create, the origin addresses that are to be members of that SNAT.
 
 Valid options: an array
 
@@ -2626,7 +2626,7 @@ Valid options: an array
 ~~~puppet
     f5_snatpool { '/Common/snat_pool1':
       ensure => 'absent',
-    } 
+    }
 ~~~
 
 ### f5_snatpool
@@ -2688,7 +2688,7 @@ Valid options: a string.
 
 ##### description
 
-Sets the description of the Internal data group 
+Sets the description of the Internal data group
 
 Valid options: a string.
 
@@ -2735,18 +2735,18 @@ Specifies an IP address, or string  of the string record, or  integer value for 
 ~~~puppet
     f5_datagroup { '/Common/datagroup1':
       ensure => 'absent',
-    }    
+    }
     f5_datagroup { '/Common/datagroup2':
       ensure => 'absent',
-    }  
+    }
     f5_datagroup { '/Common/datagroup3':
       ensure => 'absent',
-    } 
+    }
 ~~~
 
 ### f5_datagroupexternal
 
-Manage External data group 
+Manage External data group
 
 #### Parameters
 
@@ -2758,7 +2758,7 @@ Valid options: a string.
 
 ##### description
 
-Sets the description of the External data group 
+Sets the description of the External data group
 
 Valid options: a string.
 
