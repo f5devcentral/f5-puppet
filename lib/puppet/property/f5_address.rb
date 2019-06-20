@@ -9,7 +9,7 @@ class Puppet::Property::F5Address < Puppet::Property
 
   validate do |value|
     address, route_domain = value.split('%')
-    unless address.match(Resolv::IPv6::Regex) || address.match(Resolv::IPv4::Regex)
+    unless address.match(Resolv::IPv6::Regex) || address.match(Resolv::IPv4::Regex) || address.match("any6")
       fail ArgumentError, "The address of #{name} must be an ipv4 or ipv6 address; got #{address}."
     end
     if route_domain and ! route_domain.match(/^\d+$/)
