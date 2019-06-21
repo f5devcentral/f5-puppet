@@ -162,7 +162,7 @@ Puppet::Type.type(:f5_pool).provide(:rest, parent: Puppet::Provider::F5) do
           member.delete('port')
 
           if node.address == 'any6'
-            member[:autopopulate] = true
+            member[:fqdn] =  { 'tmName' => member['name'], 'autopopulate' => 'enabled' }
           else
             member[:address] = node.address
           end
@@ -204,6 +204,9 @@ Puppet::Type.type(:f5_pool).provide(:rest, parent: Puppet::Provider::F5) do
 
     # Despite only allowing a single entry, profiles must be an array.
     message[:profiles] = Array(message[:profiles])
+
+
+    Puppet.info("parameter message has value '#{message}'")
 
     message.to_json
   end
