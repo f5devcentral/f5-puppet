@@ -162,8 +162,8 @@ Puppet::Type.type(:f5_pool).provide(:rest, parent: Puppet::Provider::F5) do
           member.delete('port')
 
           if node.address == 'any6'
-            # member['name'] = '/PARTITIONNAME/NODENAME'
-            member[:fqdn] =  { 'tmName' => member['name'].split('/')[2], 'autopopulate' => 'enabled' }
+            # member['name'] may be '/PARTITIONNAME/NODENAME' or 'NODENAME' or '/PARTITIONNAME/DIRNAME/NODENAME'
+            member[:fqdn] =  { 'tmName' => member['name'].split('/')[-1], 'autopopulate' => 'enabled' }
           else
             member[:address] = node.address
           end
@@ -205,9 +205,6 @@ Puppet::Type.type(:f5_pool).provide(:rest, parent: Puppet::Provider::F5) do
 
     # Despite only allowing a single entry, profiles must be an array.
     message[:profiles] = Array(message[:profiles])
-
-
-    Puppet.info("parameter message has value '#{message}'")
 
     message.to_json
   end
