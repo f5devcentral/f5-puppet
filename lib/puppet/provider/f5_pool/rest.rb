@@ -161,7 +161,10 @@ Puppet::Type.type(:f5_pool).provide(:rest, parent: Puppet::Provider::F5) do
           member[:name] = "#{member['name']}:#{member['port']}"
           member.delete('port')
 
-          unless node.address == 'any6'
+          if node.address == 'any6'
+            # member['name'] may be '/PARTITIONNAME/NODENAME' or 'NODENAME' or '/PARTITIONNAME/DIRNAME/NODENAME'
+            member[:fqdn] =  { 'tmName' => member['name'].split('/')[-1], 'autopopulate' => 'enabled' }
+          else
             member[:address] = node.address
           end
           converted = convert_underscores(member)
