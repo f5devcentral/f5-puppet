@@ -162,7 +162,7 @@ Puppet::Type.type(:f5_pool).provide(:rest, parent: Puppet::Provider::F5) do
           member.delete('port')
 
           if node.address == 'any6'
-            member[:fqdn] =  { 'autopopulate' => 'enabled' }
+            member[:autopopulate] = true
           else
             member[:address] = node.address
           end
