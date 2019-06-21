@@ -161,7 +161,9 @@ Puppet::Type.type(:f5_pool).provide(:rest, parent: Puppet::Provider::F5) do
           member[:name] = "#{member['name']}:#{member['port']}"
           member.delete('port')
 
-          unless node.address == 'any6'
+          if node.address == 'any6'
+            member[:fqdn] =  { 'tmName' => member['name'], 'autopopulate' => 'enabled' }
+          else
             member[:address] = node.address
           end
           converted = convert_underscores(member)
