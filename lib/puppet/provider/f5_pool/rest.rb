@@ -162,7 +162,8 @@ Puppet::Type.type(:f5_pool).provide(:rest, parent: Puppet::Provider::F5) do
           member.delete('port')
 
           if node.address == 'any6'
-            member[:fqdn] =  { 'tmName' => member['name'], 'autopopulate' => 'enabled' }
+            # member['name'] = '/PARTITIONNAME/NODENAME'
+            member[:fqdn] =  { 'tmName' => member['name'].split('/')[2], 'autopopulate' => 'enabled' }
           else
             member[:address] = node.address
           end
