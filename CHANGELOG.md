@@ -1,6 +1,6 @@
 ## Release 1.9.1
 ### Summary
-This release includes several bug fixes:
+This release includes several bug fixes
 pull request #61: Add failoverState fact
 pull request #60: Update links to aim at extant f5 documentation
 pull request #57: Add property for chain certificate to client ssl profile.
