@@ -6,6 +6,7 @@ describe 'f5 facts' do
       notify {
         "baseMac: ${baseMac}": ;
         "chassisId: ${chassisId}": ;
+        "failoverState: ${failoverState}": ;
         "fullPath: ${fullPath}": ;
         "hostname: ${hostname}": ;
         "managementIp: ${managementIp}": ;
@@ -21,6 +22,7 @@ describe 'f5 facts' do
   end
   it { expect(@result.stdout).to match /\[baseMac: ([0-9a-f][0-9a-f]:){5}[0-9a-f][0-9a-f]\]/ }
   it { expect(@result.stdout).to match /\[chassisId: [-0-9a-f]{31}\]/ }
+  it { expect(@result.stdout).to match /\[failoverState: (active|standby)\]/ }
   it { expect(@result.stdout).to match /\[fullPath: ([-.a-z0-9\/]+)\]/i }
   it { expect(@result.stdout).to match /\[hostname: ([-.a-z0-9]+)\]/ }
   it { expect(@result.stdout).to match /\[managementIp: (\d+\.?){4}\]/ }

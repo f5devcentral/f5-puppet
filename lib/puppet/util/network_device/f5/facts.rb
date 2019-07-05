@@ -28,6 +28,7 @@ class Puppet::Util::NetworkDevice::F5::Facts
       #'uptime',
     [ 'baseMac',
       'chassisId',
+      'failoverState',
       'fullPath',
       'hostname',
       'managementIp',
