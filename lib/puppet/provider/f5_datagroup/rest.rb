@@ -11,12 +11,19 @@ Puppet::Type.type(:f5_datagroup).provide(:rest, parent: Puppet::Provider::F5) do
     dgroups.each do |dgroup|
       full_path_uri = dgroup['fullPath'].gsub('/','~')
 
+      unless dgroup['records'].nil?
+        records = dgroup['records'].sort {|a, b| a['name'] <=> b['name']}
+      else
+        records = nil
+      end
+
+
     instances << new(
       ensure:                   :present,
       name:                     dgroup['fullPath'],
       description:              dgroup['description'],
       type:                     dgroup['type'],
-      records:                  dgroup['records'],
+      records:                  records,
     )
     end
 
