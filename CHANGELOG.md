@@ -1,3 +1,12 @@
+## Release 1.9.1
+### Summary
+This release includes several bug fixes:
+pull request #61: Add failoverState fact
+pull request #60: Update links to aim at extant f5 documentation
+pull request #57: Add property for chain certificate to client ssl profile.
+pull request #43: sort records in datagroup instances
+pull request #30: Allow route domain `%0` to be on end of node names #30
+
 ## Release 1.8.0
 ### Summary
 This release includes new F5 features for:
