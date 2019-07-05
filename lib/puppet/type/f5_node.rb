@@ -1,4 +1,4 @@
-require File.expand_path(File.join(File.dirname(__FILE__),'..','..','puppet/parameter/f5_name.rb'))
+require File.expand_path(File.join(File.dirname(__FILE__),'..','..','puppet/parameter/f5_namewithroutedomain.rb'))
 require File.expand_path(File.join(File.dirname(__FILE__),'..','..','puppet/property/f5_address.rb'))
 require File.expand_path(File.join(File.dirname(__FILE__),'..','..','puppet/property/f5_availability_requirement.rb'))
 require File.expand_path(File.join(File.dirname(__FILE__),'..','..','puppet/property/f5_connection_limit.rb'))
@@ -14,7 +14,7 @@ Puppet::Type.newtype(:f5_node) do
   apply_to_device
   ensurable
 
-  newparam(:name, :parent => Puppet::Parameter::F5Name, :namevar => true)
+  newparam(:name, :parent => Puppet::Parameter::F5NameWithRouteDomain, :namevar => true)
   newproperty(:address, :parent => Puppet::Property::F5Address)
   newproperty(:state, :parent => Puppet::Property::F5State)
   newproperty(:description, :parent => Puppet::Property::F5Description)
