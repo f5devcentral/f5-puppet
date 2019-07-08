@@ -1477,7 +1477,7 @@ Valid options: a string.
 
 ##### description
 
-Sets the description of the user account.
+Sets the description of the user account, on versions of BIG-IP that support user descriptions.
 
 Valid options: a string.
 
@@ -1489,24 +1489,32 @@ Valid options: 'present' or 'absent'.
 
 ##### password
 
-Set the user password during creation or modification without prompting or confirmation.
+Manage the user's password, on older versions of BIG-IP, which use the "password" attribute.
+
+Valid options: a string
+
+##### encrypted_password
+
+Manage the user's encrypted password, on newer versions of BIG-IP, which use the "encryptedPassword" attribute.
+
+Valid options: a string
 
 #### Example
 
-##### Add a user
+##### Ensure a user is present, with the correct password hash
 ~~~puppet
-  f5_user { '/Common/joe':
-    name     => 'joe',
-    ensure   => 'present',
-    password => 'joe',
+  f5_user { '/Common/megan':
+    ensure             => 'present',
+    name               => 'megan',
+    encrypted_password => '$6$0v9y64sl$Yi3$To0many5ecrets$0ZBoqn0MzPp',
   }
 ~~~
 
-##### Delete a user
+##### Ensure a user is absent
 ~~~puppet
   f5_user { '/Common/joe':
-    name   => 'joe',
     ensure => 'absent',
+    name   => 'joe',
   }
 ~~~
 
