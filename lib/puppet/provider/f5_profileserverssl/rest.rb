@@ -63,7 +63,7 @@ Puppet::Type.type(:f5_profileserverssl).provide(:rest, parent: Puppet::Provider:
       :'peer-cert-mode'          => :peerCertMode,
       :'expire-cert-response_control'          => :expireCertResponseControl,
       :'untrusted-cert-response-control'          => :untrustedCertResponseControl,
-      :'retain-certificate'          => :retainCertificate, # check retain_certificate
+      :'retain_certificate'          => :retainCertificate, # check retain_certificate
       :'authenticate-depth'          => :authenticateDepth,
     }
 
