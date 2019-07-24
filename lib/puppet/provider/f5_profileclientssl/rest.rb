@@ -68,7 +68,7 @@ Puppet::Type.type(:f5_profileclientssl).provide(:rest, parent: Puppet::Provider:
       :'peer-cert-mode'          => :peerCertMode,
       :'expire-cert-response_control'          => :expireCertResponseControl,
       :'untrusted-cert-response-control'          => :untrustedCertResponseControl,
-      :'retain-certificate'          => :retainCertificate,
+      :'retain_certificate'          => :retainCertificate,
       :'authenticate-depth'          => :authenticateDepth,
     }
     full_path_uri = resource[:name].gsub('/','~')
