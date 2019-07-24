@@ -41,10 +41,12 @@ Puppet::Type.type(:f5_persistencehash).provide(:rest, parent: Puppet::Provider::
     end
   end
 
-  def create_message(basename, hash)
+  def create_message(basename, partition, hash)
     # Create the message by stripping :present.
+    # bug fix: partition needed
     new_hash            = hash.reject { |k, _| [:ensure, :provider, Puppet::Type.metaparams].flatten.include?(k) }
     new_hash[:name]     = basename
+    new_hash[:partition] = partition
 
     return new_hash
   end
@@ -69,7 +71,7 @@ Puppet::Type.type(:f5_persistencehash).provide(:rest, parent: Puppet::Provider::
 
     message = strip_nil_values(message)
     message = convert_underscores(message)
-    message = create_message(basename, message)
+    message = create_message(basename, partition, message)
     message = rename_keys(map, message)
     message = string_to_integer(message)
 
