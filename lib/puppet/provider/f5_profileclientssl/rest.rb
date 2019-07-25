@@ -46,11 +46,11 @@ Puppet::Type.type(:f5_profileclientssl).provide(:rest, parent: Puppet::Provider:
     new_hash             = hash.reject { |k, _| [:ensure, :provider, Puppet::Type.metaparams].flatten.include?(k) }
     new_hash[:name]      = basename
     if "#{partition}" != 'absent'
-      Puppet.notice("extending message PUT message with partition '#{partition}'")
+      Puppet.info("profileclientssl adding partition '#{partition}'")
       new_hash[:partition] = partition
     else
-      calculated_partition = resource[:name].gsub(%r{/([a-z]*)/(.*)}, '\1')
-      Puppet.notice("bug workaround, do not use 'absent' value of partition, use #{resource[:name]} and calculated #{calculated_partition}" )
+      calculated_partition = resource[:name].split('/')[1]
+      Puppet.notice("bug workaround, ignore bug 'absent' value of partition, use #{resource[:name]} and calculated #{calculated_partition}")
       new_hash[:partition] = calculated_partition
     end
     return new_hash
