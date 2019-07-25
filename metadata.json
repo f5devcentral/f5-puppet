@@ -8,12 +8,7 @@
   "project_page": "https://github.com/parship/f5-puppet",
   "issues_url": "https://github.com/parship/f5-puppet/issues",
   "dependencies": [
-    {
-      "name": "puppetlabs-pe_gem",
-      "version_requirement": ">= 0.1.0 <1.0.0"
-    }
-  ],
-  "operatingsystem_support": [
+    ], "operatingsystem_support": [
     {
       "operatingsystem": "BigIp",
       "operatingsystemrelease": [
@@ -36,7 +31,7 @@
     "LTM",
     "loadbalancer"
   ],
-  "pdk-version": "1.8.0",
+  "pdk-version": "1.5.0",
   "template-url": "file:///opt/puppetlabs/pdk/share/cache/pdk-templates.git",
-  "template-ref": "1.8.0-0-g0d9da00"
+  "template-ref": "1.5.0-0-gd1b3eca"
 }
