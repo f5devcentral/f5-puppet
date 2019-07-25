@@ -80,7 +80,7 @@ Puppet::Type.type(:f5_profileclientssl).provide(:rest, parent: Puppet::Provider:
     Puppet.notice("full_path_uri is '#{full_path_uri}'")
     message = strip_nil_values(message)
     message = convert_underscores(message)
-    message = create_message(basename, partition, message)
+    message = create_message(basename, partition, message, chain)
     message = rename_keys(map, message)
     message = string_to_integer(message)
 
