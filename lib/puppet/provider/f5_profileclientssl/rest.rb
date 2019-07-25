@@ -11,6 +11,10 @@ Puppet::Type.type(:f5_profileclientssl).provide(:rest, parent: Puppet::Provider:
     profiles.each do |profile|
       full_path_uri = profile['fullPath'].gsub('/','~')
 
+      Puppet.notice("load fullPath #{profile['fullPath']}")
+      Puppet.notice("load crt #{profile['crt']}")
+      Puppet.notice("load key #{profile['key']}")
+      Puppet.notice("load chain #{profile['chain']}")
       instances << new(
         ensure:                      :present,
         name:                        profile['fullPath'],
@@ -42,12 +46,12 @@ Puppet::Type.type(:f5_profileclientssl).provide(:rest, parent: Puppet::Provider:
     end
   end
 
-  def create_message(basename, partition, hash)
+  def create_message(basename, partition, hash, chain)
     # Create the message by stripping :present.
     new_hash             = hash.reject { |k, _| [:ensure, :provider, Puppet::Type.metaparams].flatten.include?(k) }
     new_hash[:name]      = basename
     if "#{partition}" != 'absent'
-      Puppet.info("profileclientssl adding partition '#{partition}'")
+      Puppet.info("profileclientssl adding partition '#{partition}' chain=#{chain}")
       new_hash[:partition] = partition
     else
       calculated_partition = resource[:name].split('/')[1]
@@ -86,6 +90,7 @@ Puppet::Type.type(:f5_profileclientssl).provide(:rest, parent: Puppet::Provider:
   def flush
     if @property_hash != {}
       full_path_uri = resource[:name].gsub('/','~')
+      Puppet.notice("put #{message(resource)}")
       result = Puppet::Provider::F5.put("/mgmt/tm/ltm/profile/client-ssl/#{full_path_uri}", message(resource))
     end
     return result
