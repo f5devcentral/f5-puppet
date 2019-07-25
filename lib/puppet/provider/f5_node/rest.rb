@@ -89,7 +89,7 @@ Puppet::Type.type(:f5_node).provide(:rest, parent: Puppet::Provider::F5) do
 
     # fix to allow any6 to resolve via DNS. name should be without /partition/ prefix
     if message[:address] == 'any6'
-      message[:fqdn] = { 'tmName' => message[:name], 'autopopulate' => 'enabled' }
+      message[:fqdn] = { 'tmName' => message[:name], 'autopopulate' => 'enabled', 'interval' => 30 }
     end
     #Puppet.info("parameter message has value '#{message}'")
 
