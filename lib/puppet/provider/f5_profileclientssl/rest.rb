@@ -11,10 +11,14 @@ Puppet::Type.type(:f5_profileclientssl).provide(:rest, parent: Puppet::Provider:
     profiles.each do |profile|
       full_path_uri = profile['fullPath'].gsub('/','~')
 
-      Puppet.notice("load fullPath #{profile['fullPath']}")
-      Puppet.notice("load crt #{profile['crt']}")
-      Puppet.notice("load key #{profile['key']}")
-      Puppet.notice("load chain #{profile['chain']}")
+      #Puppet.notice("fullPath #{profile['fullPath']}")
+      #Puppet.notice("crt:#{profile['cert']}")
+      #Puppet.notice("key:#{profile['key']}")
+      #Puppet.notice("chain:#{profile['chain']}")
+      #Puppet.notice("proxy_ssl:#{profile['proxySsl']}")
+      #Puppet.notice("ssl_forward_proxy:#{profile['proxySSlPassthrough']}")
+      #Puppet.notice("ssl_forward_proxy_bypass:#{profile['sslForwardProxy']}")
+      #Puppet.notice("proxy_ssl_passthrough:#{profile['sslForwardProxyBypass']}")
       instances << new(
         ensure:                      :present,
         name:                        profile['fullPath'],
