@@ -17,6 +17,7 @@ Puppet::Type.type(:f5_profileclientssl).provide(:rest, parent: Puppet::Provider:
         description:                 profile['description'],
         cert:                        profile['cert'],
         key:                         profile['key'],
+        chain:                       profile['chain'],
         proxy_ssl:                   profile['proxySsl'],
         proxy_ssl_passthrough:       profile['proxySslPassthrough'],
         ssl_forward_proxy:           profile['sslForwardProxy'],
@@ -41,14 +42,19 @@ Puppet::Type.type(:f5_profileclientssl).provide(:rest, parent: Puppet::Provider:
     end
   end
 
-  def create_message(basename, hash)
+  def create_message(basename, partition, hash, chain)
     # Create the message by stripping :present.
-    new_hash            = hash.reject { |k, _| [:ensure, :provider, Puppet::Type.metaparams].flatten.include?(k) }
-    new_hash[:name]     = basename
-
+    new_hash             = hash.reject { |k, _| [:ensure, :provider, Puppet::Type.metaparams].flatten.include?(k) }
+    new_hash[:name]      = basename
+    if "#{partition}" != 'absent'
+      new_hash[:partition] = partition
+    else
+      calculated_partition = resource[:name].split('/')[1]
+      Puppet.notice("ignore bug 'absent' value of partition, use #{resource[:name]} and calculated #{calculated_partition}")
+      new_hash[:partition] = calculated_partition
+    end
     return new_hash
   end
-
 
   def message(object)
     # Allows us to pass in resources and get all the attributes out
@@ -62,13 +68,13 @@ Puppet::Type.type(:f5_profileclientssl).provide(:rest, parent: Puppet::Provider:
       :'peer-cert-mode'          => :peerCertMode,
       :'expire-cert-response_control'          => :expireCertResponseControl,
       :'untrusted-cert-response-control'          => :untrustedCertResponseControl,
-      :'retain-certificate'          => :retainCertificate,
+      :'retain_certificate'          => :retainCertificate,
       :'authenticate-depth'          => :authenticateDepth,
     }
-
+    full_path_uri = resource[:name].gsub('/','~')
     message = strip_nil_values(message)
     message = convert_underscores(message)
-    message = create_message(basename, message)
+    message = create_message(basename, partition, message, chain)
     message = rename_keys(map, message)
     message = string_to_integer(message)
 
