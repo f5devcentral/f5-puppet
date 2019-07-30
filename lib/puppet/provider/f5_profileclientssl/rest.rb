@@ -11,14 +11,6 @@ Puppet::Type.type(:f5_profileclientssl).provide(:rest, parent: Puppet::Provider:
     profiles.each do |profile|
       full_path_uri = profile['fullPath'].gsub('/','~')
 
-      #Puppet.notice("fullPath #{profile['fullPath']}")
-      #Puppet.notice("crt:#{profile['cert']}")
-      #Puppet.notice("key:#{profile['key']}")
-      #Puppet.notice("chain:#{profile['chain']}")
-      #Puppet.notice("proxy_ssl:#{profile['proxySsl']}")
-      #Puppet.notice("ssl_forward_proxy:#{profile['proxySSlPassthrough']}")
-      #Puppet.notice("ssl_forward_proxy_bypass:#{profile['sslForwardProxy']}")
-      #Puppet.notice("proxy_ssl_passthrough:#{profile['sslForwardProxyBypass']}")
       instances << new(
         ensure:                      :present,
         name:                        profile['fullPath'],
@@ -55,11 +47,10 @@ Puppet::Type.type(:f5_profileclientssl).provide(:rest, parent: Puppet::Provider:
     new_hash             = hash.reject { |k, _| [:ensure, :provider, Puppet::Type.metaparams].flatten.include?(k) }
     new_hash[:name]      = basename
     if "#{partition}" != 'absent'
-      Puppet.info("profileclientssl adding partition '#{partition}' chain=#{chain}")
       new_hash[:partition] = partition
     else
       calculated_partition = resource[:name].split('/')[1]
-      Puppet.notice("bug workaround, ignore bug 'absent' value of partition, use #{resource[:name]} and calculated #{calculated_partition}")
+      Puppet.notice("ignore bug 'absent' value of partition, use #{resource[:name]} and calculated #{calculated_partition}")
       new_hash[:partition] = calculated_partition
     end
     return new_hash
@@ -81,7 +72,6 @@ Puppet::Type.type(:f5_profileclientssl).provide(:rest, parent: Puppet::Provider:
       :'authenticate-depth'          => :authenticateDepth,
     }
     full_path_uri = resource[:name].gsub('/','~')
-    Puppet.notice("full_path_uri is '#{full_path_uri}'")
     message = strip_nil_values(message)
     message = convert_underscores(message)
     message = create_message(basename, partition, message, chain)
@@ -94,7 +84,6 @@ Puppet::Type.type(:f5_profileclientssl).provide(:rest, parent: Puppet::Provider:
   def flush
     if @property_hash != {}
       full_path_uri = resource[:name].gsub('/','~')
-      Puppet.notice("put #{message(resource)}")
       result = Puppet::Provider::F5.put("/mgmt/tm/ltm/profile/client-ssl/#{full_path_uri}", message(resource))
     end
     return result

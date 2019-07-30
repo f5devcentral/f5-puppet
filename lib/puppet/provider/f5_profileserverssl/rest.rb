@@ -58,13 +58,13 @@ Puppet::Type.type(:f5_profileserverssl).provide(:rest, parent: Puppet::Provider:
 
     # Map for conversion in the message.
     map = {
-      :'proxy-ssl'               => :proxySsl,
-      :'proxy-ssl-passthrough'               => :proxySslPassthrough,
-      :'peer-cert-mode'          => :peerCertMode,
-      :'expire-cert-response_control'          => :expireCertResponseControl,
-      :'untrusted-cert-response-control'          => :untrustedCertResponseControl,
-      :'retain_certificate'          => :retainCertificate, # check retain_certificate
-      :'authenticate-depth'          => :authenticateDepth,
+      :'proxy-ssl'                        => :proxySsl,
+      :'proxy-ssl-passthrough'            => :proxySslPassthrough,
+      :'peer-cert-mode'                   => :peerCertMode,
+      :'expire-cert-response_control'     => :expireCertResponseControl,
+      :'untrusted-cert-response-control'  => :untrustedCertResponseControl,
+      :'retain_certificate'               => :retainCertificate,
+      :'authenticate-depth'               => :authenticateDepth,
     }
 
     message = strip_nil_values(message)
