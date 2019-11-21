@@ -1,94 +1,111 @@
-require File.expand_path(File.join(File.dirname(__FILE__),'..','..','puppet/parameter/f5_name.rb'))
-require File.expand_path(File.join(File.dirname(__FILE__),'..','..','puppet/property/f5_description.rb'))
-require File.expand_path(File.join(File.dirname(__FILE__),'..','..','puppet/property/f5_truthy.rb'))
+require File.join(File.dirname(__FILE__), '../f5')
+require 'json'
 
+Puppet::Type.type(:f5_profileserverssl).provide(:rest, parent: Puppet::Provider::F5) do
 
-Puppet::Type.newtype(:f5_profileserverssl) do
-  @doc = 'Manage Server SSL profile objects'
+  def self.instances
+    instances = []
+    profiles = Puppet::Provider::F5.call_items('/mgmt/tm/ltm/profile/server-ssl')
+    return [] if profiles.nil?
 
-  apply_to_device
-  ensurable
+    profiles.each do |profile|
+      full_path_uri = profile['fullPath'].gsub('/','~')
 
-  newparam(:name) do
-    def self.postinit
-      @doc ||= "The name of the object.
-      Valid options: <String>"
+      instances << new(
+        ensure:                          :present,
+        name:                            profile['fullPath'],
+        description:                     profile['description'],
+        defaults_from: 			             profile['defaultsFrom'],
+        cert:                            profile['cert'],
+        key:                             profile['key'],
+        proxy_ssl:                       profile['proxySsl'],
+        proxy_ssl_passthrough:           profile['proxySslPassthrough'],
+        ssl_forward_proxy:               profile['sslForwardProxy'],
+        ssl_forward_proxy_bypass:        profile['sslForwardProxyBypass'],
+        peer_cert_mode:                  profile['peerCertMode'],
+        expire_cert_response_control:    profile['expireCertResponseControl'],
+        untrusted_cert_response_control: profile['untrustedCertResponseControl'],
+        authenticate:                    profile['authenticate'],
+        retain_certificate:              profile['retainCertificate'],
+        authenticate_depth:              profile['authenticateDepth'],
+          )
     end
 
-    validate do |value|
-      fail ArgumentError, "#{name} must be a String" unless value.is_a?(String)
-    end
-
-    isnamevar
-
+    instances
   end
 
-  newproperty(:defaults_from) do
-    desc "Specifies the serverssl profile that you want to use as the parent profile. Your new profile inherits all settings and values from the parent profile specified."
-    validate do |value|
-      fail ArgumentError, "Values must take the form /Partition/name; #{value} does not" unless value =~ /^\/[\w\.-]+\/[\w|\.-]+$/
+  def self.prefetch(resources)
+    profiles = instances
+    resources.keys.each do |name|
+      if provider = profiles.find { |profile| profile.name == name }
+        resources[name].provider = provider
+      end
     end
   end
 
-  newproperty(:description, :parent => Puppet::Property::F5Description)
-
-# newproperty(:cert, :required_features => :cert,  :parent => Puppet::Property::F5Profile) do
-#  end
- newproperty(:cert) do
-    desc "cert"
+  def create_message(basename, partition, hash)
+    # Create the message by stripping :present.
+    new_hash            = hash.reject { |k, _| [:ensure, :provider, Puppet::Type.metaparams].flatten.include?(k) }
+    new_hash[:name]     = basename
+    new_hash[:partition]     = partition
+    return new_hash
   end
 
- newproperty(:key) do
-    desc "key"
+
+  def message(object)
+    # Allows us to pass in resources and get all the attributes out
+    # in the form of a hash.
+    message = object.to_hash
+
+    # Map for conversion in the message.
+    map = {
+      :'proxy-ssl'                        => :proxySsl,
+      :'proxy-ssl-passthrough'            => :proxySslPassthrough,
+      :'peer-cert-mode'                   => :peerCertMode,
+      :'expire-cert-response_control'     => :expireCertResponseControl,
+      :'untrusted-cert-response-control'  => :untrustedCertResponseControl,
+      :'retain_certificate'               => :retainCertificate,
+      :'authenticate-depth'               => :authenticateDepth,
+      :'defaults-from'                    => :defaultsFrom,
+    }
+
+    message = strip_nil_values(message)
+    message = convert_underscores(message)
+    message = create_message(basename, partition, message)
+    message = rename_keys(map, message)
+    message = string_to_integer(message)
+
+    message.to_json
   end
 
-  newproperty(:proxy_ssl, :parent => Puppet::Property::F5truthy) do
-    desc "Valid values are 'enabled' or 'disabled'."
-    truthy_property('Fail Safe')
+  def flush
+    if @property_hash != {}
+      full_path_uri = resource[:name].gsub('/','~')
+      result = Puppet::Provider::F5.put("/mgmt/tm/ltm/profile/server-ssl/#{full_path_uri}", message(resource))
+    end
+    return result
   end
 
-  newproperty(:proxy_ssl_passthrough, :parent => Puppet::Property::F5truthy) do
-    desc "Valid values are 'enabled' or 'disabled'."
-    truthy_property('Fail Safe')
+  def exists?
+    @property_hash[:ensure] == :present
   end
 
-  newproperty(:ssl_forward_proxy, :parent => Puppet::Property::F5truthy) do
-    desc "Valid values are 'enabled' or 'disabled'."
-    truthy_property('Fail Safe')
+  def create
+    result = Puppet::Provider::F5.post("/mgmt/tm/ltm/profile/server-ssl", message(resource))
+    # We clear the hash here to stop flush from triggering.
+    @property_hash.clear
+
+    return result
   end
 
-  newproperty(:ssl_forward_proxy_bypass, :parent => Puppet::Property::F5truthy) do
-    desc "Valid values are 'enabled' or 'disabled'."
-    truthy_property('Fail Safe')
+  def destroy
+    full_path_uri = resource[:name].gsub('/','~')
+    result = Puppet::Provider::F5.delete("/mgmt/tm/ltm/profile/server-ssl/#{full_path_uri}")
+    @property_hash.clear
+
+    return result
   end
 
-  newproperty(:peer_cert_mode) do
-    desc "peer_cert_mode."
-    newvalues(:ignore, :'require')
-  end
-
-  newproperty(:expire_cert_response_control) do
-    desc "expire_cert_response_control."
-    newvalues(:'drop', :'ignore')
-  end
-
-  newproperty(:untrusted_cert_response_control) do
-    desc "untrusted_cert_response_control."
-    newvalues(:'drop', :'ignore')
-  end
-
-  newproperty(:authenticate) do
-    desc "authenticate."
-    newvalues(:'once', :'always')
-  end
-
-  newproperty(:retain_certificate, :parent => Puppet::Property::F5truthy) do
-    desc "Valid values are 'enabled' or 'disabled'."
-    truthy_property('Fail Safe')
-  end
-
-  newproperty(:authenticate_depth) do
-    desc "authenticate_depth."
-  end
+  mk_resource_methods
 
 end
