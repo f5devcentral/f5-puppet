@@ -15,7 +15,6 @@ Puppet::Type.type(:f5_profileserverssl).provide(:rest, parent: Puppet::Provider:
         ensure:                          :present,
         name:                            profile['fullPath'],
         description:                     profile['description'],
-        # need to process defaultsFrom
         defaults_from: 			             profile['defaultsFrom'],
         cert:                            profile['cert'],
         key:                             profile['key'],
