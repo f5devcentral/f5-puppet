@@ -15,6 +15,7 @@ Puppet::Type.type(:f5_profileserverssl).provide(:rest, parent: Puppet::Provider:
         ensure:                          :present,
         name:                            profile['fullPath'],
         description:                     profile['description'],
+        # need to process defaultsFrom
         defaults_from: 			             profile['defaultsFrom'],
         cert:                            profile['cert'],
         key:                             profile['key'],
@@ -57,7 +58,7 @@ Puppet::Type.type(:f5_profileserverssl).provide(:rest, parent: Puppet::Provider:
     # in the form of a hash.
     message = object.to_hash
 
-    # Map for conversion in the message.
+    # Map for conversion in the message. Include defaultsFrom
     map = {
       :'proxy-ssl'                        => :proxySsl,
       :'proxy-ssl-passthrough'            => :proxySslPassthrough,
@@ -84,7 +85,7 @@ Puppet::Type.type(:f5_profileserverssl).provide(:rest, parent: Puppet::Provider:
       result = Puppet::Provider::F5.put("/mgmt/tm/ltm/profile/server-ssl/#{full_path_uri}", message(resource))
     end
     return result
-  end
+  enddefaults
 
   def exists?
     @property_hash[:ensure] == :present
@@ -102,7 +103,7 @@ Puppet::Type.type(:f5_profileserverssl).provide(:rest, parent: Puppet::Provider:
     full_path_uri = resource[:name].gsub('/','~')
     result = Puppet::Provider::F5.delete("/mgmt/tm/ltm/profile/server-ssl/#{full_path_uri}")
     @property_hash.clear
-
+defaults
     return result
   end
 
