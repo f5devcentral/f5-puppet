@@ -2,8 +2,9 @@ class Puppet::Util::NetworkDevice::F5::Facts
 
   attr_reader :transport
 
-  def initialize(transport)
+  def initialize(transport, hostfqdn)
     @transport = transport
+    @hostfqdn = hostfqdn
   end
 
   def retrieve
@@ -17,7 +18,11 @@ class Puppet::Util::NetworkDevice::F5::Facts
     }
 
     if response = @transport.call('/mgmt/tm/cm/device') and items = response['items']
-      result = items.first
+       if  (items.first['name']) ==  @hostfqdn
+         result = items.first
+       else
+         result = items.last
+       end
     else
       Puppet.warning("Did not receive device details. iControl REST requires Administrator level access.")
       return facts
