@@ -19,7 +19,7 @@ class Puppet::Util::NetworkDevice::F5::Device
     end
     if @autoloader.load(*autoloader_params)
       @transport = Puppet::Util::NetworkDevice::Transport::F5.new(url,options[:debug])
-      @fqdn = url.split("@").last
+      @fqdn = url.split("@").last.downcase
     end
   end
 
