@@ -18,7 +18,7 @@ class Puppet::Util::NetworkDevice::F5::Facts
     }
 
     if response = @transport.call('/mgmt/tm/cm/device') and items = response['items']
-       if  (items.first['name']) ==  @hostfqdn
+       if  (items.first['name'].downcase) ==  @hostfqdn
          result = items.first
        else
          result = items.last
