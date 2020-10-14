@@ -17,7 +17,7 @@ Puppet::Type.type(:f5_profileclientssl).provide(:rest, parent: Puppet::Provider:
         description:                 profile['description'],
         cert:                        profile['cert'],
         key:                         profile['key'],
-        chain:                       profile['chain']
+        chain:                       profile['chain'],
         proxy_ssl:                   profile['proxySsl'],
         proxy_ssl_passthrough:       profile['proxySslPassthrough'],
         ssl_forward_proxy:           profile['sslForwardProxy'],
