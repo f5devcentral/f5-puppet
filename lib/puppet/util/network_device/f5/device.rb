@@ -19,11 +19,12 @@ class Puppet::Util::NetworkDevice::F5::Device
     end
     if @autoloader.load(*autoloader_params)
       @transport = Puppet::Util::NetworkDevice::Transport::F5.new(url,options[:debug])
+      @fqdn = url.split("@").last.downcase
     end
   end
 
   def facts
-    @facts ||= Puppet::Util::NetworkDevice::F5::Facts.new(@transport)
+    @facts ||= Puppet::Util::NetworkDevice::F5::Facts.new(@transport, @fqdn)
 
     return @facts.retrieve
   end
