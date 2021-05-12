@@ -2802,5 +2802,4 @@ Puppet modules on the Puppet Forge are open projects, and community contribution
 For more information, see our [module contribution guide.](https://docs.puppetlabs.com/forge/contributing.html)
 
 ## Support
-
-Support for this module is provided by F5.  To file an issue, please visit this [link](https://github.com/f5devcentral/f5-puppet/issues/new)
+Support for this module is provided by the F5 community. To file an issue, please visit this [link](https://github.com/f5devcentral/f5-puppet/issues/new), and a contributor may be able to help. This is not actively developed by F5 at this time.
