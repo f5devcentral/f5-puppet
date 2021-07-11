@@ -31,6 +31,11 @@ Puppet::Type.newtype(:f5_user) do
   newproperty(:description, :parent => Puppet::Property::F5Description)
 
   newproperty(:password) do
-    desc "password"
+    desc "password value, used by old BIG-IP versions"
   end
+
+  newproperty(:encrypted_password) do
+    desc "encryptedPassword value, used by newer BIG-IP versions"
+  end
+
 end

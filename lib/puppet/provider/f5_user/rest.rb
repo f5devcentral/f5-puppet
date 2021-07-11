@@ -15,6 +15,7 @@ Puppet::Type.type(:f5_user).provide(:rest, parent: Puppet::Provider::F5) do
         name:                     user['fullPath'],
         description:              user['description'],
         password:                 user['password'],
+        encrypted_password:       user['encryptedPassword'],
       )
     end
 
